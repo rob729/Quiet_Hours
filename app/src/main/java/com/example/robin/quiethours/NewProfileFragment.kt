@@ -50,6 +50,7 @@ class NewProfileFragment : Fragment() {
         val binding = DataBindingUtil.inflate<FragmentNewProfileBinding>(inflater, R.layout.fragment_new_profile, container, false)
 
         profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
+        binding.dayPicker.clearSelection()
 
         binding.StartTime.setOnClickListener {
             val mcurrentTime = Calendar.getInstance()
@@ -104,6 +105,8 @@ class NewProfileFragment : Fragment() {
         }
 
         binding.makeProfileFab.setOnClickListener {
+            daysSelected = binding.dayPicker.selectedDays
+            Days(daysSelected)
             if(binding.userToDoEditText.text.toString() == ""){
                 snackbar = Snackbar.make(it, "Please enter the Profile name",
                     Snackbar.LENGTH_LONG).setAction("Action", null)
@@ -112,7 +115,7 @@ class NewProfileFragment : Fragment() {
                 snackbar = Snackbar.make(it, "Please enter different start and end time",
                     Snackbar.LENGTH_LONG).setAction("Action", null)
                 snackbar.show()
-            } else if (days == noDaySelected) {
+            } else if (binding.dayPicker.selectedDays.size == 0) {
                 snackbar = Snackbar.make(it, "Please select the day(s)",
                     Snackbar.LENGTH_LONG).setAction("Action", null)
                 snackbar.show()

@@ -32,7 +32,7 @@ class MainFragment : Fragment() {
 
         profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
 
-        val profileListAdapter = ProfileListAdapter(profileViewModel)
+        val profileListAdapter = ProfileListAdapter(profileViewModel, binding.rv.rootView)
 
         binding.rv.adapter = profileListAdapter
         binding.rv.layoutManager = LinearLayoutManager(context)

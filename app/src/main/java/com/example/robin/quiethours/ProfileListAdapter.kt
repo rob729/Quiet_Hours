@@ -2,6 +2,7 @@ package com.example.robin.quiethours
 
 import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -9,9 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.robin.quiethours.Database.Profile
 import com.example.robin.quiethours.Database.ProfileViewModel
 import com.example.robin.quiethours.databinding.ItemRowBinding
+import com.google.android.material.snackbar.Snackbar
 import kotlin.random.Random
 
-class ProfileListAdapter(val profileViewModel: ProfileViewModel): ListAdapter<Profile, ProfileListAdapter.ViewHolder>(ProfileDiffCallbacks()){
+class ProfileListAdapter( val profileViewModel: ProfileViewModel, val parentView: View): ListAdapter<Profile, ProfileListAdapter.ViewHolder>(ProfileDiffCallbacks()){
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -23,19 +25,22 @@ class ProfileListAdapter(val profileViewModel: ProfileViewModel): ListAdapter<Pr
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item, profileViewModel)
+        holder.bind(item, profileViewModel, parentView)
     }
 
     class ViewHolder(val binding: ItemRowBinding): RecyclerView.ViewHolder(binding.root) {
 
         private val bgColors: IntArray = intArrayOf( Color.rgb(220,85,31), Color.rgb(17,94,231), Color.rgb(9,187,69), Color.rgb(105,19, 191), Color.rgb(191, 27, 19))
 
-        fun bind(item: Profile, profileViewModel: ProfileViewModel){
+        fun bind(item: Profile, profileViewModel: ProfileViewModel, parentView: View){
             binding.ProfileName.text = item.name
             binding.TxtImg.setText(item.name[0].toString())
             binding.TxtImg.avatarBackgroundColor = bgColors[Random.nextInt(0, 5)]
             binding.profileCard.setOnLongClickListener {
                 profileViewModel.delete(item)
+                val snackbar = Snackbar.make(parentView, "Profile Deleted",
+                    Snackbar.LENGTH_LONG).setAction("Action", null)
+                snackbar.show()
                 return@setOnLongClickListener true
             }
         }
