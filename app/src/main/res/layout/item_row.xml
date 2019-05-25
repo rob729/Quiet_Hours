@@ -34,7 +34,7 @@
                     android:transitionName="profileName"
                     android:layout_marginTop="12dp"
                     android:layout_marginStart="18dp"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/textColor"
                     android:textSize="24sp"/>
 
         </RelativeLayout>

@@ -1,4 +1,4 @@
-package com.example.robin.quiethours
+package com.example.robin.quiethours.Fragments
 
 
 import android.app.TimePickerDialog
@@ -7,17 +7,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TimePicker
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import ca.antonious.materialdaypicker.MaterialDayPicker
 import com.example.robin.quiethours.Database.Profile
 import com.example.robin.quiethours.Database.ProfileViewModel
+import com.example.robin.quiethours.EndAlarm
+import com.example.robin.quiethours.R
+import com.example.robin.quiethours.StartAlarm
 import com.example.robin.quiethours.databinding.FragmentNewProfileBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 
@@ -47,7 +53,8 @@ class NewProfileFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 
-        val binding = DataBindingUtil.inflate<FragmentNewProfileBinding>(inflater, R.layout.fragment_new_profile, container, false)
+        val binding = DataBindingUtil.inflate<FragmentNewProfileBinding>(inflater,
+            R.layout.fragment_new_profile, container, false)
 
         profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
         binding.dayPicker.clearSelection()
@@ -57,7 +64,7 @@ class NewProfileFragment : Fragment() {
             val hour = mcurrentTime.get(Calendar.HOUR_OF_DAY)
             val minute = mcurrentTime.get(Calendar.MINUTE)
             sTimePicker = TimePickerDialog(context,
-                TimePickerDialog.OnTimeSetListener { timePicker, i, i1 ->
+                TimePickerDialog.OnTimeSetListener { _, i, i1 ->
                     hourText = if(i<10){
                         "0$i"
                     }else{
@@ -83,7 +90,7 @@ class NewProfileFragment : Fragment() {
             val hour = mcurrentTime.get(Calendar.HOUR_OF_DAY)
             val minute = mcurrentTime.get(Calendar.MINUTE)
             eTimePicker = TimePickerDialog(context,
-                TimePickerDialog.OnTimeSetListener { timePicker, i, i1 ->
+                TimePickerDialog.OnTimeSetListener { _, i, i1 ->
                     hourText = if(i<10){
                         "0$i"
                     }else{
@@ -124,6 +131,14 @@ class NewProfileFragment : Fragment() {
                 val profile = Profile(name = binding.userToDoEditText.text.toString(), shr = shr, smin = smin, ehr = ehr, emin = emin, d = daySelected.toJson(days))
                 profileViewModel.insert(profile)
                 Navigation.findNavController(it).navigate(NewProfileFragmentDirections.actionNewProfileFragmentToMainFragment())
+                var i=0
+                while(i<7){
+                    if(days[i]){
+                        sAlarm(i+1, profile)
+                        eAlarm(i+1, profile.profileId.toString())
+                    }
+                    ++i
+                }
             }
         }
 
@@ -159,6 +174,51 @@ class NewProfileFragment : Fragment() {
             days.add(6, true)
         else
             days.add(6, false)
+    }
+
+    private fun sAlarm(dayOfWeek: Int, profile: Profile) {
+        val c = Calendar.getInstance()
+        c.set(Calendar.DAY_OF_WEEK, dayOfWeek)
+        c.set(Calendar.HOUR_OF_DAY, shr)
+        c.set(Calendar.MINUTE, smin)
+        c.set(Calendar.SECOND, 0)
+        c.set(Calendar.MILLISECOND, 0)
+
+
+        if (c.timeInMillis < System.currentTimeMillis()) {
+            c.add(Calendar.DAY_OF_YEAR, 7)
+        }
+
+        val profileData = workDataOf(Pair("Profile_Name", profile.name))
+
+        val startAlarmRequest = OneTimeWorkRequest.Builder(StartAlarm::class.java)
+            .addTag(profile.profileId.toString())
+            .setInputData(profileData)
+            .setInitialDelay(c.timeInMillis - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+            .build()
+        WorkManager.getInstance().enqueue(startAlarmRequest)
+
+    }
+
+    private fun eAlarm(dayOfWeek: Int, tag: String) {
+
+        val c = Calendar.getInstance()
+        c.set(Calendar.DAY_OF_WEEK, dayOfWeek)
+        c.set(Calendar.HOUR_OF_DAY, ehr)
+        c.set(Calendar.MINUTE, emin)
+        c.set(Calendar.SECOND, 0)
+        c.set(Calendar.MILLISECOND, 0)
+
+        if (c.timeInMillis < System.currentTimeMillis()) {
+            c.add(Calendar.DAY_OF_YEAR, 7)
+        }
+
+        val endAlarmRequest = OneTimeWorkRequest.Builder(EndAlarm::class.java)
+            .addTag(tag)
+            .setInitialDelay(c.timeInMillis - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+            .build()
+
+        WorkManager.getInstance().enqueue(endAlarmRequest)
     }
 
 

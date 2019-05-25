@@ -1,4 +1,4 @@
-package com.example.robin.quiethours
+package com.example.robin.quiethours.Activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

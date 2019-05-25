@@ -4,7 +4,8 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'androidx.navigation.safeargs'
+apply plugin: "androidx.navigation.safeargs.kotlin"
+
 
 android {
     compileSdkVersion 28
@@ -70,6 +71,8 @@ dependencies {
 
     //for WorkManager
     implementation "androidx.work:work-runtime-ktx:$work_version"
+
+    implementation "androidx.preference:preference-ktx:1.1.0-alpha05"
 
 
 

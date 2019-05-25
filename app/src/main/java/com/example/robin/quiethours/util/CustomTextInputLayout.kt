@@ -1,4 +1,4 @@
-package com.example.robin.quiethours
+package com.example.robin.quiethours.util
 
 import android.content.Context
 import android.graphics.Canvas

@@ -7,4 +7,6 @@
     <string name="profile_name">Profile Name</string>
     <string name="start_time">Start time</string>
     <string name="end_time">End time</string>
+    <string name="name">Name</string>
+    <string name="settings">settings</string>
 </resources>

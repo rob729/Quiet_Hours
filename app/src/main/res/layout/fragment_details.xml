@@ -2,7 +2,7 @@
 <layout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        tools:context=".DetailsFragment">
+        tools:context=".Fragments.DetailsFragment">
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -13,18 +13,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:hint=" Name"
+                android:hint="@string/name"
                 android:transitionName="profileName"
                 android:layout_marginTop="20dp"
                 android:textSize="24sp"
-                android:textColor="@android:color/black" />
+                android:textColor="@color/textColor" />
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/txt1"
                 android:layout_marginTop="20dp"
                 android:hint="Start Time"
-                android:layout_toStartOf="@id/col1"
+
+                android:layout_alignStart="@id/end_txt"
                 android:layout_marginEnd="50dp"
                 android:textSize="18sp"/>
         <TextView
@@ -47,6 +48,7 @@
                 android:textSize="18sp"
                 android:hint="TIME"/>
         <TextView
+                android:id="@+id/end_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/col1"
@@ -82,7 +84,9 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_below="@id/col2"
-                android:layout_marginTop="40dp" />
+                android:layout_marginTop="40dp"
+                android:filterTouchesWhenObscured="true"
+                android:clickable="false"/>
 
 
     </RelativeLayout>
