@@ -27,3 +27,5 @@ back to it's initial condition after the profile time ends.
 </table>        
 
 ##### Download[ .apk](https://github.com/rob729/Quiet_Hours/raw/master/Quiet_Hours.apk)
+
+<div>Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a></div>
