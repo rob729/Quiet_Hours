@@ -1,6 +1,7 @@
 # Quiet_Hours
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/204a7b7e715543efb9171d82757a6476)](https://app.codacy.com/app/rob729/Quiet_Hours?utm_source=github.com&utm_medium=referral&utm_content=rob729/Quiet_Hours&utm_campaign=Badge_Grade_Dashboard)
 [![Build Status](https://travis-ci.org/rob729/Quiet_Hours.svg?branch=master)](https://travis-ci.org/rob729/Quiet_Hours)
+[![Maintainability](https://api.codeclimate.com/v1/badges/7cce8f6e010d88945691/maintainability)](https://codeclimate.com/github/rob729/Quiet_Hours/maintainability)
 [![Platform](https://img.shields.io/badge/platform-android-blue.svg)](http://developer.android.com/index.html)
 [![API](https://img.shields.io/badge/API-20%2B-blue.svg?style=flat)](https://android-arsenal.com/api?level=20)
 ### Quiet Hours is an android app which keeps your phone on silent / vibrate for defined time
