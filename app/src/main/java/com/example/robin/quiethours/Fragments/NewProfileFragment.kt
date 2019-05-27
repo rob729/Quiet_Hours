@@ -43,9 +43,12 @@ class NewProfileFragment : Fragment() {
     private var hourText = ""
     private var days: MutableList<Boolean> = ArrayList<Boolean>()
     private val noDaySelected = listOf(false, false, false, false, false, false, false )
-    private var daysSelected: List<MaterialDayPicker.Weekday> = ArrayList<MaterialDayPicker.Weekday>()
+    private var daysSelected: List<MaterialDayPicker.Weekday> = ArrayList()
     private lateinit var snackbar: Snackbar
     private lateinit var profileViewModel: ProfileViewModel
+    val mcurrentTime = Calendar.getInstance()
+    val hour = mcurrentTime.get(Calendar.HOUR_OF_DAY)
+    val minute = mcurrentTime.get(Calendar.MINUTE)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,22 +63,11 @@ class NewProfileFragment : Fragment() {
         binding.dayPicker.clearSelection()
 
         binding.StartTime.setOnClickListener {
-            val mcurrentTime = Calendar.getInstance()
-            val hour = mcurrentTime.get(Calendar.HOUR_OF_DAY)
-            val minute = mcurrentTime.get(Calendar.MINUTE)
             sTimePicker = TimePickerDialog(context,
                 TimePickerDialog.OnTimeSetListener { _, i, i1 ->
-                    hourText = if(i<10){
-                        "0$i"
-                    }else{
-                        "$i"
-                    }
+                    hourText = setTimeString(i)
 
-                    minText = if(i1<10){
-                        "0$i1"
-                    }else{
-                        "$i1"
-                    }
+                    minText = setTimeString(i1)
 
                     binding.StartTime.setText("$hourText:$minText")
                     shr = i
@@ -86,22 +78,11 @@ class NewProfileFragment : Fragment() {
         }
 
         binding.EndTime.setOnClickListener {
-            val mcurrentTime = Calendar.getInstance()
-            val hour = mcurrentTime.get(Calendar.HOUR_OF_DAY)
-            val minute = mcurrentTime.get(Calendar.MINUTE)
             eTimePicker = TimePickerDialog(context,
                 TimePickerDialog.OnTimeSetListener { _, i, i1 ->
-                    hourText = if(i<10){
-                        "0$i"
-                    }else{
-                        "$i"
-                    }
+                    hourText = setTimeString(i)
 
-                    minText = if(i1<10){
-                        "0$i1"
-                    }else{
-                        "$i1"
-                    }
+                    minText = setTimeString(i1)
 
                     binding.EndTime.setText("$hourText:$minText")
                     ehr = i
@@ -145,35 +126,29 @@ class NewProfileFragment : Fragment() {
         return  binding.root
     }
 
+    private fun setTimeString(i: Int): String {
+        return if (i < 10) {
+            "0$i"
+        } else {
+            "$i"
+        }
+    }
+
     private fun Days(daysSelected: List<MaterialDayPicker.Weekday>) {
-        if (daysSelected.contains(MaterialDayPicker.Weekday.SUNDAY))
+        setDay(daysSelected, MaterialDayPicker.Weekday.SUNDAY)
+        setDay(daysSelected, MaterialDayPicker.Weekday.MONDAY)
+        setDay(daysSelected, MaterialDayPicker.Weekday.TUESDAY)
+        setDay(daysSelected, MaterialDayPicker.Weekday.WEDNESDAY)
+        setDay(daysSelected, MaterialDayPicker.Weekday.THURSDAY)
+        setDay(daysSelected, MaterialDayPicker.Weekday.FRIDAY)
+        setDay(daysSelected, MaterialDayPicker.Weekday.SATURDAY)
+    }
+
+    private fun setDay(daysSelected: List<MaterialDayPicker.Weekday>, day: MaterialDayPicker.Weekday) {
+        if (daysSelected.contains(day))
             days.add(0, true)
         else
             days.add(0, false)
-        if (daysSelected.contains(MaterialDayPicker.Weekday.MONDAY))
-            days.add(1, true)
-        else
-            days.add(1, false)
-        if (daysSelected.contains(MaterialDayPicker.Weekday.TUESDAY))
-            days.add(2, true)
-        else
-            days.add(2, false)
-        if (daysSelected.contains(MaterialDayPicker.Weekday.WEDNESDAY))
-            days.add(3, true)
-        else
-            days.add(3, false)
-        if (daysSelected.contains(MaterialDayPicker.Weekday.THURSDAY))
-            days.add(4, true)
-        else
-            days.add(4, false)
-        if (daysSelected.contains(MaterialDayPicker.Weekday.FRIDAY))
-            days.add(5, true)
-        else
-            days.add(5, false)
-        if (daysSelected.contains(MaterialDayPicker.Weekday.SATURDAY))
-            days.add(6, true)
-        else
-            days.add(6, false)
     }
 
     private fun sAlarm(dayOfWeek: Int, profile: Profile) {
