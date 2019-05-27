@@ -2,12 +2,12 @@
 [![Build Status](https://travis-ci.org/rob729/Quiet_Hours.svg?branch=master)](https://travis-ci.org/rob729/Quiet_Hours)
 [![Platform](https://img.shields.io/badge/platform-android-blue.svg)](http://developer.android.com/index.html)
 [![API](https://img.shields.io/badge/API-20%2B-blue.svg?style=flat)](https://android-arsenal.com/api?level=20)
-#### Quiet Hours is an android app which keeps your phone on silent / vibrate for defined time.
+### Quiet Hours is an android app which keeps your phone on silent / vibrate for defined time
 
 Quiet Hours automatically enters your phone into silent or vibrate mode for the given time period and come 
 back to it's initial condition after the profile time ends.
 
-## Screenshots
+### Screenshots
 <table>
         <tr>
 <td><img src = "https://user-images.githubusercontent.com/31350501/58404970-03d77100-8084-11e9-84ca-c439fc1f9740.jpeg" height = "480" width="270"></td>
@@ -26,6 +26,6 @@ back to it's initial condition after the profile time ends.
         </tr>
 </table>        
 
-##### Download[ .apk](https://github.com/rob729/Quiet_Hours/raw/master/Quiet_Hours.apk)
+#### Download[ .apk](https://github.com/rob729/Quiet_Hours/raw/master/Quiet_Hours.apk)
 
 <div>Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a></div>
