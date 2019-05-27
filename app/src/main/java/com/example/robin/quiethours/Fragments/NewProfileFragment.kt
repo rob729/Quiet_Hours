@@ -66,9 +66,7 @@ class NewProfileFragment : Fragment() {
             sTimePicker = TimePickerDialog(context,
                 TimePickerDialog.OnTimeSetListener { _, i, i1 ->
                     hourText = setTimeString(i)
-
                     minText = setTimeString(i1)
-
                     binding.StartTime.setText("$hourText:$minText")
                     shr = i
                     smin = i1
@@ -81,9 +79,7 @@ class NewProfileFragment : Fragment() {
             eTimePicker = TimePickerDialog(context,
                 TimePickerDialog.OnTimeSetListener { _, i, i1 ->
                     hourText = setTimeString(i)
-
                     minText = setTimeString(i1)
-
                     binding.EndTime.setText("$hourText:$minText")
                     ehr = i
                     emin = i1
@@ -96,17 +92,12 @@ class NewProfileFragment : Fragment() {
             daysSelected = binding.dayPicker.selectedDays
             Days(daysSelected)
             if(binding.userToDoEditText.text.toString() == ""){
-                snackbar = Snackbar.make(it, "Please enter the Profile name",
-                    Snackbar.LENGTH_LONG).setAction("Action", null)
+                viewSnackBar(it, "Please enter the Profile name")
                 snackbar.show()
             } else if ((shr==ehr)&&(smin==emin)){
-                snackbar = Snackbar.make(it, "Please enter different start and end time",
-                    Snackbar.LENGTH_LONG).setAction("Action", null)
-                snackbar.show()
+                viewSnackBar(it, "Please enter different start and end time")
             } else if (binding.dayPicker.selectedDays.size == 0) {
-                snackbar = Snackbar.make(it, "Please select the day(s)",
-                    Snackbar.LENGTH_LONG).setAction("Action", null)
-                snackbar.show()
+                viewSnackBar(it, "Please select the day(s)")
             } else {
                 val daySelected = Gson()
                 val profile = Profile(name = binding.userToDoEditText.text.toString(), shr = shr, smin = smin, ehr = ehr, emin = emin, d = daySelected.toJson(days))
@@ -124,6 +115,14 @@ class NewProfileFragment : Fragment() {
         }
 
         return  binding.root
+    }
+
+    private fun viewSnackBar(it: View, message: String) {
+        snackbar = Snackbar.make(
+            it, message,
+            Snackbar.LENGTH_LONG
+        ).setAction("Action", null)
+        snackbar.show()
     }
 
     private fun setTimeString(i: Int): String {
@@ -184,9 +183,7 @@ class NewProfileFragment : Fragment() {
         c.set(Calendar.SECOND, 0)
         c.set(Calendar.MILLISECOND, 0)
 
-        if (c.timeInMillis < System.currentTimeMillis()) {
-            c.add(Calendar.DAY_OF_YEAR, 7)
-        }
+        timeCheck(c)
 
         val endAlarmRequest = OneTimeWorkRequest.Builder(EndAlarm::class.java)
             .addTag(tag)
@@ -194,6 +191,12 @@ class NewProfileFragment : Fragment() {
             .build()
 
         WorkManager.getInstance().enqueue(endAlarmRequest)
+    }
+
+    private fun timeCheck(c: Calendar) {
+        if (c.timeInMillis < System.currentTimeMillis()) {
+            c.add(Calendar.DAY_OF_YEAR, 7)
+        }
     }
 
 
