@@ -12,13 +12,14 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.robin.quiethours.Activity.SplashScreen
 
-class StartAlarm(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams){
+class StartAlarm(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
 
-    private val b = "420"
+    private val b = "422"
 
     override fun doWork(): Result {
 
-        val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             val notificationChannel = NotificationChannel(b, "Default Channel", NotificationManager.IMPORTANCE_DEFAULT)
             notificationManager.createNotificationChannel(notificationChannel)
@@ -30,10 +31,10 @@ class StartAlarm(appContext: Context, workerParams: WorkerParameters) : Worker(a
         audioManager.ringerMode = AudioManager.RINGER_MODE_VIBRATE
 
         val intent = Intent(applicationContext, SplashScreen::class.java)
-        val pi = PendingIntent.getActivity(applicationContext,333, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pi = PendingIntent.getActivity(applicationContext, 333, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         val notification = NotificationCompat.Builder(applicationContext, b)
-            .setSmallIcon(R.drawable.ic_notify)
-            .setColor(Color.rgb(30,136, 229))
+            .setSmallIcon(R.drawable.ic_notifications_off)
+            .setColor(Color.rgb(30, 136, 229))
             .setContentTitle("Profile Active")
             .setContentText("$profileName profile has started")
             .setAutoCancel(true)

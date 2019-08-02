@@ -24,15 +24,26 @@ android {
         }
     }
 
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+
+    androidExtensions {
+        experimental = true
+    }
+
     dataBinding.enabled = true
 }
 
 dependencies {
     def room_version = "2.1.0-alpha07"
-    def nav_version = "2.1.0-alpha04"
-    def work_version = "2.0.1"
-
-
+    def nav_version = "2.1.0-beta02"
+    def work_version = "2.1.0"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -48,7 +59,7 @@ dependencies {
     implementation 'com.android.support:cardview-v7:28.0.0'
 
     // material design library
-    implementation 'com.google.android.material:material:1.1.0-alpha06'
+    implementation 'com.google.android.material:material:1.1.0-alpha08'
 
     // Room components
     implementation "android.arch.persistence.room:runtime:$room_version"
@@ -72,8 +83,5 @@ dependencies {
     //for WorkManager
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
-    implementation "androidx.preference:preference-ktx:1.1.0-alpha05"
-
-
-
+    implementation "androidx.preference:preference-ktx:1.1.0-rc01"
 }

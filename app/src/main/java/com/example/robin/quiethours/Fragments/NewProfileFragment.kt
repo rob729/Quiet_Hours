@@ -3,6 +3,7 @@ package com.example.robin.quiethours.Fragments
 
 import android.app.TimePickerDialog
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -62,14 +63,17 @@ class NewProfileFragment : Fragment() {
         profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
         binding.dayPicker.clearSelection()
 
+        binding.userToDoEditText.requestFocus()
+
         binding.StartTime.setOnClickListener {
             sTimePicker = TimePickerDialog(context,
                 TimePickerDialog.OnTimeSetListener { _, i, i1 ->
                     hourText = setTimeString(i)
                     minText = setTimeString(i1)
-                    binding.StartTime.setText("$hourText:$minText")
-                    shr = i
-                    smin = i1
+                    Log.e("TAG", "$hourText : $minText")
+                    binding.StartTime.setText(String.format(resources.getString(R.string.Time), hourText, minText))
+                    shr = setTimeString(i).toInt()
+                    smin = setTimeString(i1).toInt()
                 }, hour, minute, false
             )
             sTimePicker.show()
@@ -80,9 +84,9 @@ class NewProfileFragment : Fragment() {
                 TimePickerDialog.OnTimeSetListener { _, i, i1 ->
                     hourText = setTimeString(i)
                     minText = setTimeString(i1)
-                    binding.EndTime.setText("$hourText:$minText")
-                    ehr = i
-                    emin = i1
+                    binding.EndTime.setText(String.format(resources.getString(R.string.Time), hourText, minText))
+                    ehr = setTimeString(i).toInt()
+                    emin = setTimeString(i1).toInt()
                 }, hour, minute, false
             )
             eTimePicker.show()
@@ -98,6 +102,8 @@ class NewProfileFragment : Fragment() {
                 viewSnackBar(it, "Please enter different start and end time")
             } else if (binding.dayPicker.selectedDays.size == 0) {
                 viewSnackBar(it, "Please select the day(s)")
+            } else if((shr>ehr)||((shr==ehr)&&(smin>emin))){
+                viewSnackBar(it, "Please enter valid start and end time")
             } else {
                 val daySelected = Gson()
                 val profile = Profile(name = binding.userToDoEditText.text.toString(), shr = shr, smin = smin, ehr = ehr, emin = emin, d = daySelected.toJson(days))
@@ -134,20 +140,21 @@ class NewProfileFragment : Fragment() {
     }
 
     private fun Days(daysSelected: List<MaterialDayPicker.Weekday>) {
-        setDay(daysSelected, MaterialDayPicker.Weekday.SUNDAY)
-        setDay(daysSelected, MaterialDayPicker.Weekday.MONDAY)
-        setDay(daysSelected, MaterialDayPicker.Weekday.TUESDAY)
-        setDay(daysSelected, MaterialDayPicker.Weekday.WEDNESDAY)
-        setDay(daysSelected, MaterialDayPicker.Weekday.THURSDAY)
-        setDay(daysSelected, MaterialDayPicker.Weekday.FRIDAY)
-        setDay(daysSelected, MaterialDayPicker.Weekday.SATURDAY)
+        setDay(daysSelected, MaterialDayPicker.Weekday.SUNDAY, 0)
+        setDay(daysSelected, MaterialDayPicker.Weekday.MONDAY, 1)
+        setDay(daysSelected, MaterialDayPicker.Weekday.TUESDAY, 2)
+        setDay(daysSelected, MaterialDayPicker.Weekday.WEDNESDAY, 3)
+        setDay(daysSelected, MaterialDayPicker.Weekday.THURSDAY, 4)
+        setDay(daysSelected, MaterialDayPicker.Weekday.FRIDAY, 5)
+        setDay(daysSelected, MaterialDayPicker.Weekday.SATURDAY, 6)
     }
 
-    private fun setDay(daysSelected: List<MaterialDayPicker.Weekday>, day: MaterialDayPicker.Weekday) {
+    private fun setDay(daysSelected: List<MaterialDayPicker.Weekday>, day: MaterialDayPicker.Weekday, index: Int) {
         if (daysSelected.contains(day))
-            days.add(0, true)
+            days.add(index, true)
         else
-            days.add(0, false)
+            days.add(index, false)
+
     }
 
     private fun sAlarm(dayOfWeek: Int, profile: Profile) {
@@ -170,7 +177,7 @@ class NewProfileFragment : Fragment() {
             .setInputData(profileData)
             .setInitialDelay(c.timeInMillis - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
             .build()
-        WorkManager.getInstance().enqueue(startAlarmRequest)
+        context?.let { WorkManager.getInstance(it).enqueue(startAlarmRequest) }
 
     }
 
@@ -190,7 +197,7 @@ class NewProfileFragment : Fragment() {
             .setInitialDelay(c.timeInMillis - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
             .build()
 
-        WorkManager.getInstance().enqueue(endAlarmRequest)
+        context?.let { WorkManager.getInstance(it).enqueue(endAlarmRequest) }
     }
 
     private fun timeCheck(c: Calendar) {

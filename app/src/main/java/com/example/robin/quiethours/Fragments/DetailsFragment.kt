@@ -3,18 +3,18 @@ package com.example.robin.quiethours.Fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import ca.antonious.materialdaypicker.MaterialDayPicker
 import com.example.robin.quiethours.Database.Profile
 import com.example.robin.quiethours.R
 import com.example.robin.quiethours.databinding.FragmentDetailsBinding
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import java.util.ArrayList
+import java.util.*
 
 
 /**
@@ -23,7 +23,7 @@ import java.util.ArrayList
  */
 class DetailsFragment : Fragment() {
 
-     private var days: List<Boolean> = ArrayList()
+    private var days: List<Boolean> = ArrayList()
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -31,8 +31,10 @@ class DetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val binding = DataBindingUtil.inflate<FragmentDetailsBinding>(inflater,
-            R.layout.fragment_details, container, false)
+        val binding = DataBindingUtil.inflate<FragmentDetailsBinding>(
+            inflater,
+            R.layout.fragment_details, container, false
+        )
 
         val args = arguments?.getParcelable<Profile>("Profile")
         val daysSelected = Gson()

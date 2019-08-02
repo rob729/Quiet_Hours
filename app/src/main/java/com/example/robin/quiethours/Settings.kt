@@ -3,9 +3,6 @@ package com.example.robin.quiethours
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import com.example.robin.quiethours.Activity.MainActivity
@@ -16,7 +13,6 @@ class Settings : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenc
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.pref_quiet_hours)
-        val pmanager = preferenceManager
         pref = findPreference("nightMode")
 
     }

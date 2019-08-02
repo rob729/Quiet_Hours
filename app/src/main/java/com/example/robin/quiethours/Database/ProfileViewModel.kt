@@ -7,7 +7,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlin.coroutines.CoroutineContext
 
 class ProfileViewModel (application: Application): AndroidViewModel(Application()){
 
@@ -19,7 +18,7 @@ class ProfileViewModel (application: Application): AndroidViewModel(Application(
     val allProfiles: LiveData<List<Profile>>
 
     init {
-        val profileDao = ProfileRoomDatabase.getDatabase(application, scope).profileDao()
+        val profileDao = ProfileRoomDatabase.getDatabase(application).profileDao()
         repository = ProfileRepository(profileDao)
         allProfiles = repository.allProfiles
     }

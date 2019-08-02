@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import kotlinx.coroutines.CoroutineScope
 
 @Database(entities = [Profile::class], version = 1)
 abstract class ProfileRoomDatabase :RoomDatabase() {
@@ -15,7 +14,7 @@ abstract class ProfileRoomDatabase :RoomDatabase() {
         @Volatile
         private var INSTANCE: ProfileRoomDatabase? = null
 
-        fun getDatabase(context: Context, scope: CoroutineScope): ProfileRoomDatabase{
+        fun getDatabase(context: Context): ProfileRoomDatabase{
             val tempInstance = INSTANCE
             if(tempInstance != null){
                 return tempInstance

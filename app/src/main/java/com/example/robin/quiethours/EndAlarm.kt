@@ -5,7 +5,7 @@ import android.media.AudioManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 
-class EndAlarm(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams){
+class EndAlarm(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
 
     override fun doWork(): Result {
 

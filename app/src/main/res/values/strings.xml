@@ -9,4 +9,6 @@
     <string name="end_time">End time</string>
     <string name="name">Name</string>
     <string name="settings">settings</string>
+
+    <string name="Time">%1$s:%2$s</string>
 </resources>
