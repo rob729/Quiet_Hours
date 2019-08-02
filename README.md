@@ -4,10 +4,9 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/7cce8f6e010d88945691/maintainability)](https://codeclimate.com/github/rob729/Quiet_Hours/maintainability)
 [![Platform](https://img.shields.io/badge/platform-android-blue.svg)](http://developer.android.com/index.html)
 [![API](https://img.shields.io/badge/API-20%2B-blue.svg?style=flat)](https://android-arsenal.com/api?level=20)
-### Quiet Hours is an android app which keeps your phone on silent / vibrate for defined time
+### Quiet Hours automatically enable/disable your mobile's silent mode
 
-Quiet Hours automatically enters your phone into silent or vibrate mode for the given time period and come 
-back to it's initial condition after the profile time ends.
+This App will ensure that your mobile device enters and exits the Silent Mode or Vibration Mode between a given period of time.
 
 ### Screenshots
 <table>
