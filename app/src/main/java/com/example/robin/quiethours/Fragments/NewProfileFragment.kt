@@ -107,6 +107,7 @@ class NewProfileFragment : Fragment() {
             } else {
                 val daySelected = Gson()
                 val profile = Profile(name = binding.userToDoEditText.text.toString(), shr = shr, smin = smin, ehr = ehr, emin = emin, d = daySelected.toJson(days))
+                profile.profileId = System.currentTimeMillis()
                 profileViewModel.insert(profile)
                 Navigation.findNavController(it).navigate(NewProfileFragmentDirections.actionNewProfileFragmentToMainFragment())
                 var i=0

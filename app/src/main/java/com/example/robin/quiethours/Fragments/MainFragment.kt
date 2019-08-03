@@ -5,7 +5,6 @@ import android.app.AlertDialog
 import android.app.NotificationManager
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.*
@@ -35,6 +34,8 @@ class MainFragment : Fragment() {
 
     private lateinit var profileViewModel: ProfileViewModel
     private lateinit var binding: FragmentMainBinding
+    val notificationManager = context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -71,38 +72,12 @@ class MainFragment : Fragment() {
 
         val notificationManager = context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !notificationManager!!.isNotificationPolicyAccessGranted) {
-
-            val dialog = AlertDialog.Builder(context)
-                .setTitle("Permission Required")
-                .setMessage("Please give the necessary permissions for the app to work properly.")
-                .setCancelable(false)
-                .setPositiveButton("Ok") { i, dialogInterface ->
-                    val intent = Intent(
-                        android.provider.Settings
-                            .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS
-                    )
-
-                    startActivity(intent)
-                }
-                .show()
+            permissionDialog()
         }
 
         binding.floatingActionButton.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !notificationManager!!.isNotificationPolicyAccessGranted) {
-
-                val dialog = AlertDialog.Builder(context)
-                    .setTitle("Permission Required")
-                    .setMessage("Please click Ok to give the necessary permissions for the app to work properly.")
-                    .setCancelable(false)
-                    .setPositiveButton("Ok") { i, dialogInterface ->
-                        val intent = Intent(
-                            android.provider.Settings
-                                .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS
-                        )
-
-                        startActivity(intent)
-                    }
-                    .show()
+                permissionDialog()
             } else {
                 Navigation.findNavController(it)
                     .navigate(MainFragmentDirections.actionMainFragmentToNewProfileFragment())
@@ -133,29 +108,51 @@ class MainFragment : Fragment() {
     private fun enableSwipeToDeleteAndUndo(profileListAdapter: ProfileListAdapter) {
         val swipeToDeleteCallback = object : SwipeToDeleteCallback(context) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) {
-
-
                 val position = viewHolder.adapterPosition
+                profileListAdapter.removeitem(position)
                 val item = profileListAdapter.getList()[position]
 
-                profileListAdapter.removeitem(position)
-
-
-                val snackbar = Snackbar
-                    .make(binding.coordLayout, "Item was removed from the list.", Snackbar.LENGTH_LONG)
-                snackbar.setAction("UNDO") {
-                    profileListAdapter.restoreItem(item, position)
-                    binding.rv.scrollToPosition(position)
-                }
-                snackbar.setActionTextColor(Color.YELLOW)
-                snackbar.show()
-
+                AlertDialog.Builder(context)
+                    .setTitle("Delete Profile")
+                    .setMessage("Are you sure you want to delete this profile?")
+                    .setPositiveButton("Yes") { _, dialogInterface ->
+                        profileListAdapter.removeWork(item.profileId.toString())
+                        Snackbar
+                            .make(binding.coordLayout, "Profile is removed from the list.", Snackbar.LENGTH_LONG)
+                            .show()
+                    }
+                    .setNegativeButton("No"){ _, dialogInterface ->
+                        profileListAdapter.restoreItem(item, position)
+                    }
+                    .show()
             }
         }
 
         val itemTouchhelper = ItemTouchHelper(swipeToDeleteCallback)
         itemTouchhelper.attachToRecyclerView(binding.rv)
     }
+
+    private fun permissionDialog(){
+
+        AlertDialog.Builder(context)
+            .setTitle("Permission Required")
+            .setMessage("Please give the necessary permissions for the app to work properly.")
+            .setCancelable(false)
+            .setPositiveButton("Ok") { i, dialogInterface ->
+                val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    Intent(
+                        android.provider.Settings
+                            .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS
+                    )
+                } else {
+                    TODO("VERSION.SDK_INT < M")
+                }
+
+                startActivity(intent)
+            }
+            .show()
+    }
+
 
 
 }

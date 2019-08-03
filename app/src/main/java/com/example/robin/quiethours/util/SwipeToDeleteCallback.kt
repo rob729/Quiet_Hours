@@ -99,7 +99,7 @@ abstract class SwipeToDeleteCallback internal constructor(mContext: Context?) : 
     }
 
     override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
-        return 0.7f
+        return 0.55f
     }
 }
 

@@ -80,7 +80,6 @@ class ProfileListAdapter(val profileViewModel: ProfileViewModel, val parentView:
 
     fun removeitem(position: Int) {
         profileViewModel.delete(profiles[position])
-        WorkManager.getInstance(profileViewModel.getApplication()).cancelAllWorkByTag(profiles[position].profileId.toString())
         notifyItemRemoved(position)
     }
 
@@ -88,6 +87,10 @@ class ProfileListAdapter(val profileViewModel: ProfileViewModel, val parentView:
         profiles.add(position, profile)
         notifyItemChanged(position)
         profileViewModel.insert(profile)
+    }
+
+    fun removeWork(tag: String){
+        WorkManager.getInstance(profileViewModel.getApplication()).cancelAllWorkByTag(tag)
     }
 
     fun getList() = profiles
