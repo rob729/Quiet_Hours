@@ -1,4 +1,4 @@
-package com.example.robin.quiethours.Adapter
+package com.rob729.quiethours.Adapter
 
 import android.graphics.Color
 import android.os.Bundle
@@ -11,10 +11,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.WorkManager
-import com.example.robin.quiethours.Database.Profile
-import com.example.robin.quiethours.Database.ProfileViewModel
-import com.example.robin.quiethours.R
-import com.example.robin.quiethours.databinding.ItemRowBinding
+import com.rob729.quiethours.Database.Profile
+import com.rob729.quiethours.Database.ProfileViewModel
+import com.rob729.quiethours.R
+import com.rob729.quiethours.databinding.ItemRowBinding
 import kotlin.random.Random
 
 class ProfileListAdapter(val profileViewModel: ProfileViewModel, val parentView: View) :

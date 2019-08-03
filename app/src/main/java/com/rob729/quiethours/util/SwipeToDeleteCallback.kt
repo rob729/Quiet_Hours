@@ -1,4 +1,4 @@
-package com.example.robin.quiethours.util
+package com.rob729.quiethours.util
 
 import android.content.Context
 import android.graphics.Canvas
@@ -10,10 +10,9 @@ import android.graphics.drawable.Animatable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.example.robin.quiethours.R
+import com.rob729.quiethours.R
 
 
 abstract class SwipeToDeleteCallback internal constructor(mContext: Context?) : ItemTouchHelper.Callback() {

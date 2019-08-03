@@ -1,9 +1,9 @@
-package com.example.robin.quiethours.Activity
+package com.rob729.quiethours.Activity
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.robin.quiethours.R
+import com.rob729.quiethours.R
 
 class SplashScreen : AppCompatActivity() {
 

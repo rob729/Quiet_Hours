@@ -10,7 +10,7 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.example.robin.quiethours"
+        applicationId "com.rob729.quiethours"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1

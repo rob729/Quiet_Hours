@@ -1,11 +1,11 @@
-package com.example.robin.quiethours
+package com.rob729.quiethours
 
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
-import com.example.robin.quiethours.Activity.MainActivity
+import com.rob729.quiethours.Activity.MainActivity
 
 class Settings : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 

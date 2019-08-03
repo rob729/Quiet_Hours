@@ -1,4 +1,4 @@
-package com.example.robin.quiethours.Fragments
+package com.rob729.quiethours.Fragments
 
 
 import android.annotation.SuppressLint
@@ -9,9 +9,9 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import ca.antonious.materialdaypicker.MaterialDayPicker
-import com.example.robin.quiethours.Database.Profile
-import com.example.robin.quiethours.R
-import com.example.robin.quiethours.databinding.FragmentDetailsBinding
+import com.rob729.quiethours.Database.Profile
+import com.rob729.quiethours.R
+import com.rob729.quiethours.databinding.FragmentDetailsBinding
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.util.*

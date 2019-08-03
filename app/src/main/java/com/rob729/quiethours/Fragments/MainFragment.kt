@@ -1,4 +1,4 @@
-package com.example.robin.quiethours.Fragments
+package com.rob729.quiethours.Fragments
 
 
 import android.app.AlertDialog
@@ -17,12 +17,12 @@ import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.robin.quiethours.Adapter.ProfileListAdapter
-import com.example.robin.quiethours.Database.Profile
-import com.example.robin.quiethours.Database.ProfileViewModel
-import com.example.robin.quiethours.R
-import com.example.robin.quiethours.databinding.FragmentMainBinding
-import com.example.robin.quiethours.util.SwipeToDeleteCallback
+import com.rob729.quiethours.Adapter.ProfileListAdapter
+import com.rob729.quiethours.Database.Profile
+import com.rob729.quiethours.Database.ProfileViewModel
+import com.rob729.quiethours.R
+import com.rob729.quiethours.databinding.FragmentMainBinding
+import com.rob729.quiethours.util.SwipeToDeleteCallback
 import com.google.android.material.snackbar.Snackbar
 
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.example.robin.quiethours">
+          package="com.rob729.quiethours">
 
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
@@ -12,10 +12,10 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".Activity.MainActivity"
+        <activity android:name="com.rob729.quiethours.Activity.MainActivity"
                   android:windowSoftInputMode="adjustPan">
         </activity>
-        <activity android:name=".Activity.SplashScreen"
+        <activity android:name="com.rob729.quiethours.Activity.SplashScreen"
                   android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

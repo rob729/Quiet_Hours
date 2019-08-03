@@ -1,4 +1,4 @@
-package com.example.robin.quiethours
+package com.rob729.quiethours
 
 import org.junit.Test
 

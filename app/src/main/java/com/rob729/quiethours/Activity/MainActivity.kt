@@ -1,4 +1,4 @@
-package com.example.robin.quiethours.Activity
+package com.rob729.quiethours.Activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -7,8 +7,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import androidx.preference.PreferenceManager
-import com.example.robin.quiethours.R
-import com.example.robin.quiethours.databinding.ActivityMainBinding
+import com.rob729.quiethours.R
+import com.rob729.quiethours.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
