@@ -4,7 +4,10 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/7cce8f6e010d88945691/maintainability)](https://codeclimate.com/github/rob729/Quiet_Hours/maintainability)
 [![Platform](https://img.shields.io/badge/platform-android-blue.svg)](http://developer.android.com/index.html)
 [![API](https://img.shields.io/badge/API-20%2B-blue.svg?style=flat)](https://android-arsenal.com/api?level=20)
-### Quiet Hours automatically enable/disable your mobile's silent mode
+### No more trouble to make silent mode ON/OFF manually every time.
+
+<a href='https://play.google.com/store/apps/details?id=com.rob729.quiethours'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' width="30%" height="30%"/></a>
+
 
 This App will ensure that your mobile device enters and exits the Silent Mode or Vibration Mode between a given period of time.
 
@@ -26,7 +29,5 @@ This App will ensure that your mobile device enters and exits the Silent Mode or
 <td><img src = "https://user-images.githubusercontent.com/31350501/58405274-a98ae000-8084-11e9-8494-c307298d3c8f.jpeg" height = "480" width="270"></td>
         </tr>
 </table>        
-
-#### Download[ .apk](https://github.com/rob729/Quiet_Hours/raw/master/Quiet_Hours.apk)
 
 <div>Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a></div>
