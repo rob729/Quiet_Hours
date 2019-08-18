@@ -23,7 +23,7 @@
     </fragment>
     <fragment android:id="@+id/detailsFragment" android:name="com.rob729.quiethours.Fragments.DetailsFragment"
               android:label="Details" tools:layout="@layout/fragment_details">
-        <argument android:name="profile" app:argType="com.example.robin.quiethours.Database.Profile"/>
+        <argument android:name="profile" app:argType="com.rob729.quiethours.Database.Profile"/>
     </fragment>
     <fragment android:id="@+id/action_settings" android:name="com.rob729.quiethours.Settings"
               android:label="Settings"/>

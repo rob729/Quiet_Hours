@@ -17,13 +17,17 @@ import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import co.mobiwise.materialintro.shape.Focus
+import co.mobiwise.materialintro.shape.FocusGravity
+import co.mobiwise.materialintro.shape.ShapeType
+import co.mobiwise.materialintro.view.MaterialIntroView
+import com.google.android.material.snackbar.Snackbar
 import com.rob729.quiethours.Adapter.ProfileListAdapter
 import com.rob729.quiethours.Database.Profile
 import com.rob729.quiethours.Database.ProfileViewModel
 import com.rob729.quiethours.R
 import com.rob729.quiethours.databinding.FragmentMainBinding
 import com.rob729.quiethours.util.SwipeToDeleteCallback
-import com.google.android.material.snackbar.Snackbar
 
 
 /**
@@ -34,6 +38,7 @@ class MainFragment : Fragment() {
 
     private lateinit var profileViewModel: ProfileViewModel
     private lateinit var binding: FragmentMainBinding
+    lateinit var profileListAdapter: ProfileListAdapter
     val notificationManager = context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
 
     override fun onCreateView(
@@ -46,10 +51,12 @@ class MainFragment : Fragment() {
             R.layout.fragment_main, container, false
         )
 
+        introFab()
+
         profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
 
-        val profileListAdapter =
-            ProfileListAdapter(profileViewModel, binding.rv.rootView)
+        profileListAdapter =
+            ProfileListAdapter(profileViewModel, binding.rv.rootView, activity)
 
         binding.rv.adapter = profileListAdapter
         binding.rv.layoutManager = LinearLayoutManager(context)
@@ -69,6 +76,7 @@ class MainFragment : Fragment() {
             profileListAdapter.profiles = it as ArrayList<Profile>
 
         })
+
 
         val notificationManager = context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !notificationManager!!.isNotificationPolicyAccessGranted) {
@@ -121,7 +129,7 @@ class MainFragment : Fragment() {
                             .make(binding.coordLayout, "Profile is removed from the list.", Snackbar.LENGTH_LONG)
                             .show()
                     }
-                    .setNegativeButton("No"){ _, dialogInterface ->
+                    .setNegativeButton("No") { _, dialogInterface ->
                         profileListAdapter.restoreItem(item, position)
                     }
                     .show()
@@ -132,7 +140,7 @@ class MainFragment : Fragment() {
         itemTouchhelper.attachToRecyclerView(binding.rv)
     }
 
-    private fun permissionDialog(){
+    private fun permissionDialog() {
 
         AlertDialog.Builder(context)
             .setTitle("Permission Required")
@@ -153,6 +161,21 @@ class MainFragment : Fragment() {
             .show()
     }
 
-
+    private fun introFab() {
+        MaterialIntroView.Builder(activity)
+            .enableDotAnimation(false)
+            .enableIcon(true)
+            .setFocusGravity(FocusGravity.CENTER)
+            .setFocusType(Focus.ALL)
+            .setDelayMillis(500)
+            .enableFadeAnimation(true)
+            .performClick(false)
+            .dismissOnTouch(true)
+            .setInfoText("Click the + sign to add new profile")
+            .setShape(ShapeType.CIRCLE)
+            .setTarget(binding.floatingActionButton)
+            .setUsageId("intro_card_1") //THIS SHOULD BE UNIQUE ID
+            .show()
+    }
 
 }

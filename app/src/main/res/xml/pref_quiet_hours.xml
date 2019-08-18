@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <SwitchPreference
-        android:title="Night Mode"
+        android:title="Dark Mode"
         android:key="nightMode"
         android:summaryOff="Disabled"
         android:summaryOn="Enabled"/>

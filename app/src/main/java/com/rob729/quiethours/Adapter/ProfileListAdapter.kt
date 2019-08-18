@@ -5,24 +5,34 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.WorkManager
+import co.mobiwise.materialintro.shape.Focus
+import co.mobiwise.materialintro.shape.FocusGravity
+import co.mobiwise.materialintro.shape.ShapeType
+import co.mobiwise.materialintro.view.MaterialIntroView
 import com.rob729.quiethours.Database.Profile
 import com.rob729.quiethours.Database.ProfileViewModel
 import com.rob729.quiethours.R
 import com.rob729.quiethours.databinding.ItemRowBinding
 import kotlin.random.Random
 
-class ProfileListAdapter(val profileViewModel: ProfileViewModel, val parentView: View) :
+class ProfileListAdapter(
+    val profileViewModel: ProfileViewModel,
+    val parentView: View,
+    val activity: FragmentActivity?
+) :
     ListAdapter<Profile, ProfileListAdapter.ViewHolder>(
         ProfileDiffCallbacks()
     ) {
 
-     var profiles = ArrayList<Profile>()
+    var profiles = ArrayList<Profile>()
+    lateinit var firstView: View
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -34,6 +44,9 @@ class ProfileListAdapter(val profileViewModel: ProfileViewModel, val parentView:
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item, profileViewModel, parentView)
+        if (position == 0) {
+            introDetail(holder.binding.profileCard)
+        }
     }
 
     class ViewHolder(val binding: ItemRowBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -89,10 +102,46 @@ class ProfileListAdapter(val profileViewModel: ProfileViewModel, val parentView:
         profileViewModel.insert(profile)
     }
 
-    fun removeWork(tag: String){
+    fun removeWork(tag: String) {
         WorkManager.getInstance(profileViewModel.getApplication()).cancelAllWorkByTag(tag)
     }
 
     fun getList() = profiles
 
+    private fun introDelete(view: View) {
+        MaterialIntroView.Builder(activity)
+            .enableDotAnimation(false)
+            .enableIcon(true)
+            .setFocusGravity(FocusGravity.RIGHT)
+            .setFocusType(Focus.MINIMUM)
+            .setDelayMillis(400)
+            .enableFadeAnimation(true)
+            .performClick(false)
+            .dismissOnTouch(true)
+            .setInfoText("Slide the profile towards right to delete it")
+            .setShape(ShapeType.CIRCLE)
+            .setTarget(view)
+            .setUsageId("intro_card") //THIS SHOULD BE UNIQUE ID
+            .show()
+    }
+
+    private fun introDetail(view: View) {
+        MaterialIntroView.Builder(activity)
+            .enableDotAnimation(true)
+            .enableIcon(true)
+            .setFocusGravity(FocusGravity.CENTER)
+            .setFocusType(Focus.NORMAL)
+            .setDelayMillis(400)
+            .enableFadeAnimation(true)
+            .performClick(false)
+            .dismissOnTouch(true)
+            .setInfoText("Click on the profile to get profile details")
+            .setShape(ShapeType.CIRCLE)
+            .setTarget(view)
+            .setUsageId("intro_card_2") //THIS SHOULD BE UNIQUE ID
+            .setListener {
+                introDelete(view)
+            }
+            .show()
+    }
 }
