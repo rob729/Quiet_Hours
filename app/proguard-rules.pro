@@ -20,8 +20,17 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+
 -keepattributes Exceptions, InnerClasses, Signature, Deprecated, SourceFile, LineNumberTable, *Annotation*, EnclosingMethod
 
 -keepclassmembers class com.rob729.quiethours.** {
       *;
     }
+
+-dontwarn com.rob729.quiethours.**
+
+-keepclasseswithmembernames class * {
+    native <methods>;
+}
+
+-keep class com.rob729.quiethours.Database.Profile

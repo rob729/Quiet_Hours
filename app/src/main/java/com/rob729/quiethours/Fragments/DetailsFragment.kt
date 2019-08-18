@@ -9,11 +9,11 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import ca.antonious.materialdaypicker.MaterialDayPicker
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.rob729.quiethours.Database.Profile
 import com.rob729.quiethours.R
 import com.rob729.quiethours.databinding.FragmentDetailsBinding
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import java.util.*
 
 
@@ -44,13 +44,21 @@ class DetailsFragment : Fragment() {
             days = daysSelected.fromJson(args.d, type)
             dayPicker(days, binding.dayPicker)
             binding.txt1.text = args.name
-            binding.str.text = "${args.shr}:${args.smin}"
-            binding.end.text = "${args.ehr}:${args.emin}"
+            binding.str.text = "${setTimeString(args.shr)}:${setTimeString(args.smin)}"
+            binding.end.text = "${setTimeString(args.ehr)}:${setTimeString(args.emin)}"
         }
 
 
         return binding.root
 
+    }
+
+    private fun setTimeString(i: Int): String {
+        return if (i < 10) {
+            "0$i"
+        } else {
+            "$i"
+        }
     }
 
     private fun dayPicker(d: List<Boolean>, materialDayPicker: MaterialDayPicker) {

@@ -132,6 +132,7 @@ class MainFragment : Fragment() {
                     .setNegativeButton("No") { _, dialogInterface ->
                         profileListAdapter.restoreItem(item, position)
                     }
+                    .setCancelable(false)
                     .show()
             }
         }
