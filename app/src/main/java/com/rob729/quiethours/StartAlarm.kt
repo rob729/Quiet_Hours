@@ -44,5 +44,4 @@ class StartAlarm(appContext: Context, workerParams: WorkerParameters) : Worker(a
 
         return Result.success()
     }
-
 }

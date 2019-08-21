@@ -14,5 +14,4 @@ class EndAlarm(appContext: Context, workerParams: WorkerParameters) : Worker(app
 
         return Result.success()
     }
-
 }

@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.rob729.quiethours.R
 
-
 abstract class SwipeToDeleteCallback internal constructor(mContext: Context?) : ItemTouchHelper.Callback() {
     private val mClearPaint: Paint = Paint()
     private val mBackground: ColorDrawable = ColorDrawable()
@@ -22,7 +21,6 @@ abstract class SwipeToDeleteCallback internal constructor(mContext: Context?) : 
     private val deleteDrawable: Drawable?
     private val intrinsicWidth: Int
     private val intrinsicHeight: Int
-
 
     init {
         mClearPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
@@ -81,24 +79,20 @@ abstract class SwipeToDeleteCallback internal constructor(mContext: Context?) : 
         val deleteIconRight = itemView.right - deleteIconMargin
         val deleteIconBottom = deleteIconTop + intrinsicHeight
 
-
         deleteDrawable!!.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
         deleteDrawable.draw(c)
         (deleteDrawable as Animatable).start()
 
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-
     }
 
     private fun clearCanvas(c: Canvas, left: Float?, top: Float?, right: Float?, bottom: Float?) {
         if ((left != null) && (top != null) && (right != null) && (bottom != null)) {
             c.drawRect(left, top, right, bottom, mClearPaint)
         }
-
     }
 
     override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
         return 0.55f
     }
 }
-

@@ -1,6 +1,5 @@
 package com.rob729.quiethours.Fragments
 
-
 import android.app.AlertDialog
 import android.app.NotificationManager
 import android.content.Context.NOTIFICATION_SERVICE
@@ -29,7 +28,6 @@ import com.rob729.quiethours.R
 import com.rob729.quiethours.databinding.FragmentMainBinding
 import com.rob729.quiethours.util.SwipeToDeleteCallback
 
-
 /**
  * A simple [Fragment] subclass.
  *
@@ -42,7 +40,8 @@ class MainFragment : Fragment() {
     val notificationManager = context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
@@ -74,9 +73,7 @@ class MainFragment : Fragment() {
 
             profileListAdapter.submitList(it)
             profileListAdapter.profiles = it as ArrayList<Profile>
-
         })
-
 
         val notificationManager = context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !notificationManager!!.isNotificationPolicyAccessGranted) {
@@ -94,7 +91,6 @@ class MainFragment : Fragment() {
 
         setHasOptionsMenu(true)
         return binding.root
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -110,7 +106,6 @@ class MainFragment : Fragment() {
                 it
             )
         }!! || super.onOptionsItemSelected(item)
-
     }
 
     private fun enableSwipeToDeleteAndUndo(profileListAdapter: ProfileListAdapter) {
@@ -175,8 +170,7 @@ class MainFragment : Fragment() {
             .setInfoText("Click the + sign to add new profile")
             .setShape(ShapeType.CIRCLE)
             .setTarget(binding.floatingActionButton)
-            .setUsageId("intro_card_1") //THIS SHOULD BE UNIQUE ID
+            .setUsageId("intro_card_1") // THIS SHOULD BE UNIQUE ID
             .show()
     }
-
 }

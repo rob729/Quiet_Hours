@@ -18,6 +18,11 @@ buildscript {
     }
 }
 
+plugins {
+    id "org.jlleitschuh.gradle.ktlint" version "8.2.0"
+}
+
+
 allprojects {
     repositories {
         google()
@@ -28,6 +33,8 @@ allprojects {
 
         
     }
+
+    apply plugin: "org.jlleitschuh.gradle.ktlint"
 }
 
 task clean(type: Delete) {

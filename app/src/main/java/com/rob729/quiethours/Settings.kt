@@ -14,7 +14,6 @@ class Settings : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenc
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.pref_quiet_hours)
         pref = findPreference("nightMode")
-
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
@@ -36,6 +35,4 @@ class Settings : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenc
         preferenceScreen.sharedPreferences
             .registerOnSharedPreferenceChangeListener(this)
     }
-
-
 }

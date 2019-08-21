@@ -40,7 +40,6 @@ class ProfileListAdapter(
         return ViewHolder(binding)
     }
 
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item, profileViewModel, parentView)
@@ -84,11 +83,9 @@ class ProfileListAdapter(
             return oldItem.profileId == newItem.profileId
         }
 
-
         override fun areContentsTheSame(oldItem: Profile, newItem: Profile): Boolean {
             return oldItem == newItem
         }
-
     }
 
     fun removeitem(position: Int) {
@@ -121,7 +118,7 @@ class ProfileListAdapter(
             .setInfoText("Slide the profile towards right to delete it")
             .setShape(ShapeType.CIRCLE)
             .setTarget(view)
-            .setUsageId("intro_card") //THIS SHOULD BE UNIQUE ID
+            .setUsageId("intro_card") // THIS SHOULD BE UNIQUE ID
             .show()
     }
 
@@ -138,7 +135,7 @@ class ProfileListAdapter(
             .setInfoText("Click on the profile to get profile details")
             .setShape(ShapeType.CIRCLE)
             .setTarget(view)
-            .setUsageId("intro_card_2") //THIS SHOULD BE UNIQUE ID
+            .setUsageId("intro_card_2") // THIS SHOULD BE UNIQUE ID
             .setListener {
                 introDelete(view)
             }

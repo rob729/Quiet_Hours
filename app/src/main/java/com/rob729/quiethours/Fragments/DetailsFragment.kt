@@ -1,6 +1,5 @@
 package com.rob729.quiethours.Fragments
 
-
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,7 +15,6 @@ import com.rob729.quiethours.R
 import com.rob729.quiethours.databinding.FragmentDetailsBinding
 import java.util.*
 
-
 /**
  * A simple [Fragment] subclass.
  *
@@ -27,7 +25,8 @@ class DetailsFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
@@ -48,9 +47,7 @@ class DetailsFragment : Fragment() {
             binding.end.text = "${setTimeString(args.ehr)}:${setTimeString(args.emin)}"
         }
 
-
         return binding.root
-
     }
 
     private fun setTimeString(i: Int): String {
@@ -77,6 +74,4 @@ class DetailsFragment : Fragment() {
         if (d[6])
             materialDayPicker.selectDay(MaterialDayPicker.Weekday.SATURDAY)
     }
-
-
 }

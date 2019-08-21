@@ -16,5 +16,4 @@ class ProfileRepository(private val profileDAO: ProfileDAO) {
     fun delete(profile: Profile) {
         profileDAO.deleteProfile(profile)
     }
-
 }

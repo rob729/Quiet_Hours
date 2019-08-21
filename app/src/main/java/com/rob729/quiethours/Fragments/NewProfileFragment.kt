@@ -1,6 +1,5 @@
 package com.rob729.quiethours.Fragments
 
-
 import android.app.TimePickerDialog
 import android.os.Bundle
 import android.util.Log
@@ -27,7 +26,6 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
-
 /**
  * A simple [Fragment] subclass.
  *
@@ -43,7 +41,7 @@ class NewProfileFragment : Fragment() {
     private var minText = ""
     private var hourText = ""
     private var days: MutableList<Boolean> = ArrayList<Boolean>()
-    private val noDaySelected = listOf(false, false, false, false, false, false, false )
+    private val noDaySelected = listOf(false, false, false, false, false, false, false)
     private var daysSelected: List<MaterialDayPicker.Weekday> = ArrayList()
     private lateinit var snackbar: Snackbar
     private lateinit var profileViewModel: ProfileViewModel
@@ -52,7 +50,8 @@ class NewProfileFragment : Fragment() {
     val minute = mcurrentTime.get(Calendar.MINUTE)
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
@@ -95,14 +94,14 @@ class NewProfileFragment : Fragment() {
         binding.makeProfileFab.setOnClickListener {
             daysSelected = binding.dayPicker.selectedDays
             Days(daysSelected)
-            if(binding.userToDoEditText.text.toString() == ""){
+            if (binding.userToDoEditText.text.toString() == "") {
                 viewSnackBar(it, "Please enter the Profile name")
                 snackbar.show()
-            } else if ((shr==ehr)&&(smin==emin)){
+            } else if ((shr == ehr) && (smin == emin)) {
                 viewSnackBar(it, "Please enter different start and end time")
             } else if (binding.dayPicker.selectedDays.size == 0) {
                 viewSnackBar(it, "Please select the day(s)")
-            } else if((shr>ehr)||((shr==ehr)&&(smin>emin))){
+            } else if ((shr> ehr) || ((shr == ehr) && (smin> emin))) {
                 viewSnackBar(it, "Please enter valid start and end time")
             } else {
                 val daySelected = Gson()
@@ -110,18 +109,18 @@ class NewProfileFragment : Fragment() {
                 profile.profileId = System.currentTimeMillis()
                 profileViewModel.insert(profile)
                 Navigation.findNavController(it).navigate(NewProfileFragmentDirections.actionNewProfileFragmentToMainFragment())
-                var i=0
-                while(i<7){
-                    if(days[i]){
-                        sAlarm(i+1, profile)
-                        eAlarm(i+1, profile.profileId.toString())
+                var i = 0
+                while (i <7) {
+                    if (days[i]) {
+                        sAlarm(i + 1, profile)
+                        eAlarm(i + 1, profile.profileId.toString())
                     }
                     ++i
                 }
             }
         }
 
-        return  binding.root
+        return binding.root
     }
 
     private fun viewSnackBar(it: View, message: String) {
@@ -155,7 +154,6 @@ class NewProfileFragment : Fragment() {
             days.add(index, true)
         else
             days.add(index, false)
-
     }
 
     private fun sAlarm(dayOfWeek: Int, profile: Profile) {
@@ -165,7 +163,6 @@ class NewProfileFragment : Fragment() {
         c.set(Calendar.MINUTE, smin)
         c.set(Calendar.SECOND, 0)
         c.set(Calendar.MILLISECOND, 0)
-
 
         if (c.timeInMillis < System.currentTimeMillis()) {
             c.add(Calendar.DAY_OF_YEAR, 7)
@@ -179,7 +176,6 @@ class NewProfileFragment : Fragment() {
             .setInitialDelay(c.timeInMillis - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
             .build()
         context?.let { WorkManager.getInstance(it).enqueue(startAlarmRequest) }
-
     }
 
     private fun eAlarm(dayOfWeek: Int, tag: String) {
@@ -206,6 +202,4 @@ class NewProfileFragment : Fragment() {
             c.add(Calendar.DAY_OF_YEAR, 7)
         }
     }
-
-
 }

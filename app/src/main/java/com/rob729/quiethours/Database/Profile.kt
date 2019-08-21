@@ -8,7 +8,8 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @Entity(tableName = "profile_table")
 data class Profile(
-    @PrimaryKey(autoGenerate = true) var profileId: Long = 0L, var name: String,
+    @PrimaryKey(autoGenerate = true) var profileId: Long = 0L,
+    var name: String,
     var shr: Int,
     var smin: Int,
     var ehr: Int,

@@ -8,11 +8,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class ProfileViewModel (application: Application): AndroidViewModel(Application()){
+class ProfileViewModel(application: Application) : AndroidViewModel(Application()) {
 
     private var parentJob = Job()
-    private val scope= CoroutineScope(parentJob + Dispatchers.Main)
-
+    private val scope = CoroutineScope(parentJob + Dispatchers.Main)
 
     private val repository: ProfileRepository
     val allProfiles: LiveData<List<Profile>>
