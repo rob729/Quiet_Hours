@@ -2,9 +2,16 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <SwitchPreference
-        android:title="Dark Mode"
-        android:key="nightMode"
-        android:summaryOff="Disabled"
-        android:summaryOn="Enabled"/>
+            android:key="nightMode"
+            android:summaryOff="Disabled"
+            android:summaryOn="Enabled"
+            android:title="Dark Mode" />
+
+    <SwitchPreference
+            android:defaultValue="true"
+            android:key="vibrate"
+            android:summaryOff="Silent mode on"
+            android:summaryOn="Vibrate mode on"
+            android:title="Vibrate Mode" />
 
 </PreferenceScreen>

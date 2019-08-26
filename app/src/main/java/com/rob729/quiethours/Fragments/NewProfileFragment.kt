@@ -3,25 +3,25 @@ package com.rob729.quiethours.Fragments
 import android.app.TimePickerDialog
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import androidx.work.workDataOf
 import ca.antonious.materialdaypicker.MaterialDayPicker
+import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import com.rob729.quiethours.Database.Profile
 import com.rob729.quiethours.Database.ProfileViewModel
 import com.rob729.quiethours.EndAlarm
 import com.rob729.quiethours.R
 import com.rob729.quiethours.StartAlarm
 import com.rob729.quiethours.databinding.FragmentNewProfileBinding
-import com.google.android.material.snackbar.Snackbar
-import com.google.gson.Gson
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
@@ -56,8 +56,10 @@ class NewProfileFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 
-        val binding = DataBindingUtil.inflate<FragmentNewProfileBinding>(inflater,
-            R.layout.fragment_new_profile, container, false)
+        val binding = DataBindingUtil.inflate<FragmentNewProfileBinding>(
+            inflater,
+            R.layout.fragment_new_profile, container, false
+        )
 
         profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
         binding.dayPicker.clearSelection()
@@ -65,12 +67,19 @@ class NewProfileFragment : Fragment() {
         binding.userToDoEditText.requestFocus()
 
         binding.StartTime.setOnClickListener {
-            sTimePicker = TimePickerDialog(context,
+            sTimePicker = TimePickerDialog(
+                context,
                 TimePickerDialog.OnTimeSetListener { _, i, i1 ->
                     hourText = setTimeString(i)
                     minText = setTimeString(i1)
                     Log.e("TAG", "$hourText : $minText")
-                    binding.StartTime.setText(String.format(resources.getString(R.string.Time), hourText, minText))
+                    binding.StartTime.setText(
+                        String.format(
+                            resources.getString(R.string.Time),
+                            hourText,
+                            minText
+                        )
+                    )
                     shr = setTimeString(i).toInt()
                     smin = setTimeString(i1).toInt()
                 }, hour, minute, false
@@ -79,11 +88,18 @@ class NewProfileFragment : Fragment() {
         }
 
         binding.EndTime.setOnClickListener {
-            eTimePicker = TimePickerDialog(context,
+            eTimePicker = TimePickerDialog(
+                context,
                 TimePickerDialog.OnTimeSetListener { _, i, i1 ->
                     hourText = setTimeString(i)
                     minText = setTimeString(i1)
-                    binding.EndTime.setText(String.format(resources.getString(R.string.Time), hourText, minText))
+                    binding.EndTime.setText(
+                        String.format(
+                            resources.getString(R.string.Time),
+                            hourText,
+                            minText
+                        )
+                    )
                     ehr = setTimeString(i).toInt()
                     emin = setTimeString(i1).toInt()
                 }, hour, minute, false
@@ -101,19 +117,27 @@ class NewProfileFragment : Fragment() {
                 viewSnackBar(it, "Please enter different start and end time")
             } else if (binding.dayPicker.selectedDays.size == 0) {
                 viewSnackBar(it, "Please select the day(s)")
-            } else if ((shr> ehr) || ((shr == ehr) && (smin> emin))) {
+            } else if ((shr > ehr) || ((shr == ehr) && (smin > emin))) {
                 viewSnackBar(it, "Please enter valid start and end time")
             } else {
                 val daySelected = Gson()
-                val profile = Profile(name = binding.userToDoEditText.text.toString(), shr = shr, smin = smin, ehr = ehr, emin = emin, d = daySelected.toJson(days))
+                val profile = Profile(
+                    name = binding.userToDoEditText.text.toString(),
+                    shr = shr,
+                    smin = smin,
+                    ehr = ehr,
+                    emin = emin,
+                    d = daySelected.toJson(days)
+                )
                 profile.profileId = System.currentTimeMillis()
                 profileViewModel.insert(profile)
-                Navigation.findNavController(it).navigate(NewProfileFragmentDirections.actionNewProfileFragmentToMainFragment())
+                Navigation.findNavController(it)
+                    .navigate(NewProfileFragmentDirections.actionNewProfileFragmentToMainFragment())
                 var i = 0
-                while (i <7) {
+                while (i < 7) {
                     if (days[i]) {
                         sAlarm(i + 1, profile)
-                        eAlarm(i + 1, profile.profileId.toString())
+                        eAlarm(i + 1, profile)
                     }
                     ++i
                 }
@@ -149,7 +173,11 @@ class NewProfileFragment : Fragment() {
         setDay(daysSelected, MaterialDayPicker.Weekday.SATURDAY, 6)
     }
 
-    private fun setDay(daysSelected: List<MaterialDayPicker.Weekday>, day: MaterialDayPicker.Weekday, index: Int) {
+    private fun setDay(
+        daysSelected: List<MaterialDayPicker.Weekday>,
+        day: MaterialDayPicker.Weekday,
+        index: Int
+    ) {
         if (daysSelected.contains(day))
             days.add(index, true)
         else
@@ -178,7 +206,7 @@ class NewProfileFragment : Fragment() {
         context?.let { WorkManager.getInstance(it).enqueue(startAlarmRequest) }
     }
 
-    private fun eAlarm(dayOfWeek: Int, tag: String) {
+    private fun eAlarm(dayOfWeek: Int, profile: Profile) {
 
         val c = Calendar.getInstance()
         c.set(Calendar.DAY_OF_WEEK, dayOfWeek)
@@ -188,9 +216,11 @@ class NewProfileFragment : Fragment() {
         c.set(Calendar.MILLISECOND, 0)
 
         timeCheck(c)
+        val profileData = workDataOf(Pair("Profile_Name", profile.name))
 
         val endAlarmRequest = OneTimeWorkRequest.Builder(EndAlarm::class.java)
-            .addTag(tag)
+            .addTag(profile.profileId.toString())
+            .setInputData(profileData)
             .setInitialDelay(c.timeInMillis - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
             .build()
 
