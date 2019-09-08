@@ -63,7 +63,6 @@ class StartAlarm(appContext: Context, workerParams: WorkerParameters) :
             audioManager.ringerMode = AudioManager.RINGER_MODE_SILENT
         }
 
-
         return Result.success()
     }
 }

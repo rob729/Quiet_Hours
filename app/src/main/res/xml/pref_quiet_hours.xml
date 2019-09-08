@@ -14,4 +14,15 @@
             android:summaryOn="Vibrate mode on"
             android:title="Vibrate Mode" />
 
+    <PreferenceScreen
+            android:title="@string/pref_rate_title"
+            android:key="rate"
+            android:summary="@string/pref_rate_summary" />
+
+    <PreferenceScreen
+            android:title="@string/pref_share_title"
+            android:key="share"
+            android:summary="@string/pref_share_summary" />
+
+
 </PreferenceScreen>
