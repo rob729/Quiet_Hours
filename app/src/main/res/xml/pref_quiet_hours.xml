@@ -14,6 +14,12 @@
             android:summaryOn="Vibrate mode on"
             android:title="Vibrate Mode" />
 
+    <CheckBoxPreference
+            android:key="time format"
+            android:title="Use 24 Hour Time Format"
+            android:summaryOff="12 Hour Time Format on"
+            android:summaryOn="24 Hour Time Format on"/>
+
     <PreferenceScreen
             android:title="@string/pref_rate_title"
             android:key="rate"

@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
+import androidx.preference.PreferenceManager
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import androidx.work.workDataOf
@@ -64,6 +65,8 @@ class NewProfileFragment : Fragment() {
         profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
         binding.dayPicker.clearSelection()
 
+        val appSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
+
         binding.userToDoEditText.requestFocus()
 
         binding.StartTime.setOnClickListener {
@@ -82,7 +85,7 @@ class NewProfileFragment : Fragment() {
                     )
                     shr = setTimeString(i).toInt()
                     smin = setTimeString(i1).toInt()
-                }, hour, minute, false
+                }, hour, minute, appSharedPrefs.getBoolean("time format", false)
             )
             sTimePicker.show()
         }
@@ -102,7 +105,7 @@ class NewProfileFragment : Fragment() {
                     )
                     ehr = setTimeString(i).toInt()
                     emin = setTimeString(i1).toInt()
-                }, hour, minute, false
+                }, hour, minute, appSharedPrefs.getBoolean("time format", false)
             )
             eTimePicker.show()
         }

@@ -15,12 +15,14 @@ class Settings : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenc
     var pref: SwitchPreference? = null
     lateinit var rate: Preference
     lateinit var share: Preference
+    lateinit var format: Preference
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.pref_quiet_hours)
         pref = findPreference("nightMode")
         rate = findPreference("rate")!!
         share = findPreference("share")!!
+        format = findPreference("time format")!!
 
         rate.setOnPreferenceClickListener {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + context?.packageName)))
