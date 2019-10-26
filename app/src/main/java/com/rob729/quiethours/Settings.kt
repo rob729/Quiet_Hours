@@ -43,7 +43,6 @@ class Settings : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenc
             }
             true
         }
-
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
