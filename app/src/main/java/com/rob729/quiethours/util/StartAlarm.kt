@@ -1,4 +1,4 @@
-package com.rob729.quiethours
+package com.rob729.quiethours.util
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -12,6 +12,7 @@ import androidx.core.app.NotificationCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.rob729.quiethours.Activity.SplashScreen
+import com.rob729.quiethours.R
 
 class StartAlarm(appContext: Context, workerParams: WorkerParameters) :
     Worker(appContext, workerParams) {

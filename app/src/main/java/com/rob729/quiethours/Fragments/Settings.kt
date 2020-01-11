@@ -1,4 +1,4 @@
-package com.rob729.quiethours
+package com.rob729.quiethours.Fragments
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -9,6 +9,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import com.rob729.quiethours.Activity.MainActivity
+import com.rob729.quiethours.R
 
 class Settings : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 

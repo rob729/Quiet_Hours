@@ -19,9 +19,9 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.rob729.quiethours.Database.Profile
 import com.rob729.quiethours.Database.ProfileViewModel
-import com.rob729.quiethours.EndAlarm
+import com.rob729.quiethours.util.EndAlarm
 import com.rob729.quiethours.R
-import com.rob729.quiethours.StartAlarm
+import com.rob729.quiethours.util.StartAlarm
 import com.rob729.quiethours.databinding.FragmentNewProfileBinding
 import java.util.*
 import java.util.concurrent.TimeUnit

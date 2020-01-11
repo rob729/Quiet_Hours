@@ -1,4 +1,4 @@
-package com.rob729.quiethours
+package com.rob729.quiethours.util
 
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -10,6 +10,7 @@ import androidx.core.app.NotificationCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.rob729.quiethours.Activity.SplashScreen
+import com.rob729.quiethours.R
 
 class EndAlarm(appContext: Context, workerParams: WorkerParameters) :
     Worker(appContext, workerParams) {

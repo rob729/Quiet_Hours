@@ -25,6 +25,6 @@
               android:label="Details" tools:layout="@layout/fragment_details">
         <argument android:name="profile" app:argType="com.rob729.quiethours.Database.Profile"/>
     </fragment>
-    <fragment android:id="@+id/action_settings" android:name="com.rob729.quiethours.Settings"
+    <fragment android:id="@+id/action_settings" android:name="com.rob729.quiethours.Fragments.Settings"
               android:label="Settings"/>
 </navigation>
