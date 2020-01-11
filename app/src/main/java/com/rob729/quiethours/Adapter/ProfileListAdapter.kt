@@ -63,6 +63,7 @@ class ProfileListAdapter(
 
         fun bind(item: Profile, profileViewModel: ProfileViewModel, parentView: View) {
             binding.ProfileName.text = item.name
+            binding.createdTimeStamp.text = item.cft
             binding.TxtImg.setText(item.name[0].toString())
             binding.TxtImg.avatarBackgroundColor = bgColors[Random.nextInt(0, 8)]
 

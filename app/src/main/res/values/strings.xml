@@ -18,4 +18,5 @@
     <string name="promo_msg_template">Hey, try this. - %s . You will love it.</string>
     <string name="app_share_url" translatable="false">https://play.google.com/store/apps/details?id=%s</string>
     <string name="error_msg_retry">Please Try Again</string>
+    <string name="createdTimeStamp">No Time given</string>
 </resources>

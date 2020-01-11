@@ -14,6 +14,7 @@ data class Profile(
     var smin: Int,
     var ehr: Int,
     var emin: Int,
-    var d: String
+    var d: String,
+    var cft: String
 ) :
     Parcelable

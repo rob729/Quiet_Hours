@@ -5,4 +5,5 @@
     <color name="colorAccent"> #1976d2</color>
 
     <color name="textColor">#FFFFFF</color>
+    <color name="fadedTextColor">#8CFFFFFF</color>
 </resources>

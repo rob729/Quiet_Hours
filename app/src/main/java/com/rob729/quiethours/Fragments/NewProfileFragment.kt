@@ -23,6 +23,7 @@ import com.rob729.quiethours.util.EndAlarm
 import com.rob729.quiethours.R
 import com.rob729.quiethours.util.StartAlarm
 import com.rob729.quiethours.databinding.FragmentNewProfileBinding
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
@@ -111,6 +112,7 @@ class NewProfileFragment : Fragment() {
         }
 
         binding.makeProfileFab.setOnClickListener {
+            val formattedCurrentTime = getCurrentTime()
             daysSelected = binding.dayPicker.selectedDays
             Days(daysSelected)
             if (binding.userToDoEditText.text.toString() == "") {
@@ -130,7 +132,8 @@ class NewProfileFragment : Fragment() {
                     smin = smin,
                     ehr = ehr,
                     emin = emin,
-                    d = daySelected.toJson(days)
+                    d = daySelected.toJson(days),
+                    cft = formattedCurrentTime
                 )
                 profile.profileId = System.currentTimeMillis()
                 profileViewModel.insert(profile)
@@ -234,5 +237,14 @@ class NewProfileFragment : Fragment() {
         if (c.timeInMillis < System.currentTimeMillis()) {
             c.add(Calendar.DAY_OF_YEAR, 7)
         }
+    }
+
+    /*Return current date and time in format
+    * Created by Anshul1507
+    * */
+    private fun getCurrentTime() : String{
+        val formattedTime = SimpleDateFormat("EEE, d MMM yyyy HH:mm", Locale.getDefault())
+        val time: String = formattedTime.format(Date())
+        return time
     }
 }
