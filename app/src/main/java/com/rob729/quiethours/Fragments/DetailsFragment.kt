@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import ca.antonious.materialdaypicker.MaterialDayPicker
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.rob729.quiethours.Database.Profile
@@ -19,8 +20,14 @@ import java.util.*
  * A simple [Fragment] subclass.
  *
  */
-class DetailsFragment : Fragment() {
-
+class DetailsFragment : BottomSheetDialogFragment() {
+    companion object {
+        fun newInstance(args: Bundle) = DetailsFragment().apply {
+            val fragment = DetailsFragment()
+            fragment.arguments = args
+            return fragment
+        }
+    }
     private var days: List<Boolean> = ArrayList()
 
     @SuppressLint("SetTextI18n")

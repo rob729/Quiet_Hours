@@ -40,6 +40,15 @@
                     android:textColor="@color/textColor"
                     android:textSize="24sp"/>
 
+            <TextView
+                    android:id="@+id/Date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ProfileName"
+                    android:layout_alignStart="@+id/ProfileName"
+                    android:layout_marginTop="2dp"
+                    android:text="Date" />
+
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
