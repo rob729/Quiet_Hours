@@ -23,6 +23,7 @@ import com.rob729.quiethours.util.EndAlarm
 import com.rob729.quiethours.R
 import com.rob729.quiethours.util.StartAlarm
 import com.rob729.quiethours.databinding.FragmentNewProfileBinding
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
@@ -120,17 +121,21 @@ class NewProfileFragment : Fragment() {
                 viewSnackBar(it, "Please enter different start and end time")
             } else if (binding.dayPicker.selectedDays.size == 0) {
                 viewSnackBar(it, "Please select the day(s)")
-            } else if ((shr > ehr) || ((shr == ehr) && (smin > emin))) {
-                viewSnackBar(it, "Please enter valid start and end time")
+            } else if ((shr > ehr) && (shr - ehr <= 12)) {
+                viewSnackBar(it, "Please enter a valid time.(Within 12 hour limit)")
             } else {
                 val daySelected = Gson()
+                // Generating Formated Time
+                var myFormatedTime = SimpleDateFormat("EEE, d MMM yyyy hh:mm").format(Date())
                 val profile = Profile(
                     name = binding.userToDoEditText.text.toString(),
                     shr = shr,
                     smin = smin,
                     ehr = ehr,
                     emin = emin,
-                    d = daySelected.toJson(days)
+                    d = daySelected.toJson(days),
+                    // Passing Formatted Timestamp
+                    timeInstance = myFormatedTime
                 )
                 profile.profileId = System.currentTimeMillis()
                 profileViewModel.insert(profile)
@@ -140,7 +145,15 @@ class NewProfileFragment : Fragment() {
                 while (i < 7) {
                     if (days[i]) {
                         sAlarm(i + 1, profile)
-                        eAlarm(i + 1, profile)
+                        if (shr > ehr) {
+                            if (i == 6) {
+                                eAlarm(1, profile)
+                            } else {
+                                eAlarm(i + 2, profile)
+                            }
+                        } else {
+                            eAlarm(i + 1, profile)
+                        }
                     }
                     ++i
                 }

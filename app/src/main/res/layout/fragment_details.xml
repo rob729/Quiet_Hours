@@ -3,90 +3,98 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         tools:context=".Fragments.DetailsFragment">
+
     <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center">
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="30dp">
 
         <TextView
                 android:id="@+id/txt1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:hint="@string/name"
-                android:transitionName="profileName"
                 android:layout_marginTop="20dp"
+                android:hint="@string/name"
+                android:textColor="@color/textColor"
                 android:textSize="24sp"
-                android:textColor="@color/textColor" />
+                android:transitionName="profileName" />
+
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/txt1"
-                android:layout_marginTop="20dp"
-                android:hint="Start Time"
-
                 android:layout_alignStart="@id/end_txt"
+                android:layout_marginTop="20dp"
+
                 android:layout_marginEnd="50dp"
-                android:textSize="18sp"/>
+                android:hint="Start Time"
+                android:textSize="18sp" />
+
         <TextView
                 android:id="@+id/col1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/txt1"
                 android:layout_centerHorizontal="true"
-                android:hint=":"
                 android:layout_marginTop="20dp"
-                android:textSize="18sp"/>
+                android:hint=":"
+                android:textSize="18sp" />
+
         <TextView
                 android:id="@+id/str"
-                android:layout_toEndOf="@id/col1"
-                android:layout_below="@id/txt1"
-                android:layout_marginStart="50dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/txt1"
+                android:layout_marginStart="50dp"
                 android:layout_marginTop="20dp"
-                android:textSize="18sp"
-                android:hint="TIME"/>
+                android:layout_toEndOf="@id/col1"
+                android:hint="TIME"
+                android:textSize="18sp" />
+
         <TextView
                 android:id="@+id/end_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/col1"
                 android:layout_marginTop="20dp"
-                android:hint="End Time"
-                android:layout_toStartOf="@id/col2"
                 android:layout_marginEnd="50dp"
-                android:textSize="18sp"/>
+                android:layout_toStartOf="@id/col2"
+                android:hint="End Time"
+                android:textSize="18sp" />
+
         <TextView
                 android:id="@+id/col2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/col1"
                 android:layout_centerHorizontal="true"
-                android:hint=":"
                 android:layout_marginTop="20dp"
-                android:textSize="18sp"/>
+                android:hint=":"
+                android:textSize="18sp" />
+
         <TextView
                 android:id="@+id/end"
-                android:layout_toEndOf="@id/col2"
-                android:layout_below="@id/col1"
-                android:layout_marginStart="50dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/col1"
+                android:layout_marginStart="50dp"
                 android:layout_marginTop="20dp"
-                android:textSize="18sp"
-                android:hint="TIME"/>
+                android:layout_toEndOf="@id/col2"
+                android:hint="TIME"
+                android:textSize="18sp" />
 
         <ca.antonious.materialdaypicker.MaterialDayPicker
                 android:id="@+id/day_picker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
                 android:layout_below="@id/col2"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="40dp"
-                android:filterTouchesWhenObscured="true"
-                android:clickable="false"/>
+                android:layout_marginEnd="20dp"
+                android:clickable="false"
+                android:filterTouchesWhenObscured="true" />
 
 
     </RelativeLayout>
