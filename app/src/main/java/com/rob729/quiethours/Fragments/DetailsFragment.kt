@@ -24,16 +24,9 @@ class DetailsFragment : Fragment() {
     private var days: List<Boolean> = ArrayList()
 
     @SuppressLint("SetTextI18n")
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        val binding = DataBindingUtil.inflate<FragmentDetailsBinding>(
-            inflater,
-            R.layout.fragment_details, container, false
-        )
+        val binding = DataBindingUtil.inflate<FragmentDetailsBinding>(inflater, R.layout.fragment_details, container, false)
 
         val args = arguments?.getParcelable<Profile>("Profile")
         val daysSelected = Gson()

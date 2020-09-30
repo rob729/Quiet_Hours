@@ -25,11 +25,7 @@ import kotlin.random.Random
 class ProfileListAdapter(
     val profileViewModel: ProfileViewModel,
     val parentView: View,
-    val activity: FragmentActivity?
-) :
-    ListAdapter<Profile, ProfileListAdapter.ViewHolder>(
-        ProfileDiffCallbacks()
-    ) {
+    val activity: FragmentActivity?): ListAdapter<Profile, ProfileListAdapter.ViewHolder>(ProfileDiffCallbacks()) {
 
     var profiles = ArrayList<Profile>()
     lateinit var firstView: View
@@ -65,6 +61,8 @@ class ProfileListAdapter(
             binding.ProfileName.text = item.name
             binding.TxtImg.setText(item.name[0].toString())
             binding.TxtImg.avatarBackgroundColor = bgColors[Random.nextInt(0, 8)]
+            // setting value of timeInstance
+            binding.Date.text = item.timeInstance
 
             binding.profileCard.setOnClickListener {
                 val args = Bundle()

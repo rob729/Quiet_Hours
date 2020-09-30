@@ -23,6 +23,7 @@ import com.rob729.quiethours.util.EndAlarm
 import com.rob729.quiethours.R
 import com.rob729.quiethours.util.StartAlarm
 import com.rob729.quiethours.databinding.FragmentNewProfileBinding
+import java.text.DateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
@@ -50,17 +51,9 @@ class NewProfileFragment : Fragment() {
     val hour = mcurrentTime.get(Calendar.HOUR_OF_DAY)
     val minute = mcurrentTime.get(Calendar.MINUTE)
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-
-        val binding = DataBindingUtil.inflate<FragmentNewProfileBinding>(
-            inflater,
-            R.layout.fragment_new_profile, container, false
-        )
+        val binding = DataBindingUtil.inflate<FragmentNewProfileBinding>(inflater, R.layout.fragment_new_profile, container, false)
 
         profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
         binding.dayPicker.clearSelection()
@@ -124,13 +117,17 @@ class NewProfileFragment : Fragment() {
                 viewSnackBar(it, "Please enter valid start and end time")
             } else {
                 val daySelected = Gson()
+                // Making instance of DateFormat
+                var myTimeInstance = DateFormat.getDateTimeInstance().format(Date())
                 val profile = Profile(
                     name = binding.userToDoEditText.text.toString(),
                     shr = shr,
                     smin = smin,
                     ehr = ehr,
                     emin = emin,
-                    d = daySelected.toJson(days)
+                    d = daySelected.toJson(days),
+                    // passing DateFormat instance
+                    timeInstance = myTimeInstance
                 )
                 profile.profileId = System.currentTimeMillis()
                 profileViewModel.insert(profile)
@@ -146,15 +143,11 @@ class NewProfileFragment : Fragment() {
                 }
             }
         }
-
         return binding.root
     }
 
     private fun viewSnackBar(it: View, message: String) {
-        snackbar = Snackbar.make(
-            it, message,
-            Snackbar.LENGTH_LONG
-        ).setAction("Action", null)
+        snackbar = Snackbar.make(it, message, Snackbar.LENGTH_LONG).setAction("Action", null)
         snackbar.show()
     }
 

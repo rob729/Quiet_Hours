@@ -48,19 +48,11 @@ class MainFragment : Fragment() {
     private val appUpdateManager: AppUpdateManager by lazy { AppUpdateManagerFactory.create(context) }
     private val appUpdateInfoTask: Task<AppUpdateInfo> by lazy { appUpdateManager.appUpdateInfo }
     private val MY_REQUEST_CODE = 111
-    val notificationManager =
-        context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
+    val notificationManager = context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_main, container, false
-        )
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
 
         checkForUpdates()
 
@@ -68,8 +60,7 @@ class MainFragment : Fragment() {
 
         profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
 
-        profileListAdapter =
-            ProfileListAdapter(profileViewModel, binding.rv.rootView, activity)
+        profileListAdapter = ProfileListAdapter(profileViewModel, binding.rv.rootView, activity)
 
         binding.rv.adapter = profileListAdapter
         binding.rv.layoutManager = LinearLayoutManager(context)
@@ -89,8 +80,7 @@ class MainFragment : Fragment() {
             profileListAdapter.profiles = it as ArrayList<Profile>
         })
 
-        val notificationManager =
-            context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
+        val notificationManager = context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !notificationManager!!.isNotificationPolicyAccessGranted) {
             permissionDialog()
         }

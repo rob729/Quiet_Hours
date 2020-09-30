@@ -30,8 +30,6 @@ allprojects {
         maven {
             url 'https://jitpack.io'
         }
-
-        
     }
 
     apply plugin: "org.jlleitschuh.gradle.ktlint"

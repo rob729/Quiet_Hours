@@ -8,12 +8,14 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @Entity(tableName = "profile_table")
 data class Profile(
-    @PrimaryKey(autoGenerate = true) var profileId: Long = 0L,
+    @PrimaryKey(autoGenerate = true)
+    var profileId: Long = 0L,
     var name: String,
     var shr: Int,
     var smin: Int,
     var ehr: Int,
     var emin: Int,
-    var d: String
-) :
-    Parcelable
+    var d: String,
+    // Adding parameter for timestamp
+    var timeInstance: String
+) : Parcelable
