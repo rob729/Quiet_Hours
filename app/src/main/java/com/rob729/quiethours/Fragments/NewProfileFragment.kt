@@ -27,7 +27,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
-import kotlin.random.Random
 
 /**
  * A simple [Fragment] subclass.
