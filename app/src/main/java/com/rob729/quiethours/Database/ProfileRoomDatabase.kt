@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Profile::class], version = 2)
+@Database(entities = [Profile::class], version = 1)
 abstract class ProfileRoomDatabase : RoomDatabase() {
 
     abstract fun profileDao(): ProfileDAO
@@ -20,8 +20,7 @@ abstract class ProfileRoomDatabase : RoomDatabase() {
                 return tempInstance
             }
             synchronized(this) {
-                val instance = Room.databaseBuilder(context.applicationContext, ProfileRoomDatabase::class.java, "Profile_Database")
-                 .fallbackToDestructiveMigration().build()
+                val instance = Room.databaseBuilder(context.applicationContext, ProfileRoomDatabase::class.java, "Profile_Database").build()
                 INSTANCE = instance
                 return instance
             }

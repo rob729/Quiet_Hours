@@ -25,7 +25,8 @@ import kotlin.random.Random
 class ProfileListAdapter(
     val profileViewModel: ProfileViewModel,
     val parentView: View,
-    val activity: FragmentActivity?): ListAdapter<Profile, ProfileListAdapter.ViewHolder>(ProfileDiffCallbacks()) {
+    val activity: FragmentActivity?
+) : ListAdapter<Profile, ProfileListAdapter.ViewHolder>(ProfileDiffCallbacks()) {
 
     var profiles = ArrayList<Profile>()
     lateinit var firstView: View
