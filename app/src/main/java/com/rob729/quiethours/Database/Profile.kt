@@ -14,6 +14,8 @@ data class Profile(
     var smin: Int,
     var ehr: Int,
     var emin: Int,
-    var d: String
+    var d: String,
+    // To store profile color in the database
+    var colorIndex: Int
 ) :
     Parcelable

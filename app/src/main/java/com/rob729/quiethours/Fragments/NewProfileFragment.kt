@@ -26,6 +26,7 @@ import com.rob729.quiethours.databinding.FragmentNewProfileBinding
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
+import kotlin.random.Random
 
 /**
  * A simple [Fragment] subclass.
@@ -130,7 +131,8 @@ class NewProfileFragment : Fragment() {
                     smin = smin,
                     ehr = ehr,
                     emin = emin,
-                    d = daySelected.toJson(days)
+                    d = daySelected.toJson(days),
+                    colorIndex = Random.nextInt(0, 8)
                 )
                 profile.profileId = System.currentTimeMillis()
                 profileViewModel.insert(profile)
