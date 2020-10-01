@@ -23,7 +23,6 @@ import com.rob729.quiethours.util.EndAlarm
 import com.rob729.quiethours.R
 import com.rob729.quiethours.util.StartAlarm
 import com.rob729.quiethours.databinding.FragmentNewProfileBinding
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
