@@ -20,7 +20,6 @@ import com.rob729.quiethours.Database.Profile
 import com.rob729.quiethours.Database.ProfileViewModel
 import com.rob729.quiethours.R
 import com.rob729.quiethours.databinding.ItemRowBinding
-import kotlin.random.Random
 
 class ProfileListAdapter(
     val profileViewModel: ProfileViewModel,

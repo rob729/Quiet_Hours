@@ -176,7 +176,7 @@ class MainFragment : Fragment() {
 
         AlertDialog.Builder(context)
             .setTitle("Permission Required")
-            .setMessage("Please give the necessary permissions for the app to work properly.")
+            .setMessage("Please give the Do Not Disturb access permission for the app to work properly. Click OK to continue.")
             .setCancelable(false)
             .setPositiveButton("Ok") { i, dialogInterface ->
                 val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
