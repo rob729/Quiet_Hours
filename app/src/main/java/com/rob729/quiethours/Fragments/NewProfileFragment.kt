@@ -117,7 +117,7 @@ class NewProfileFragment : Fragment() {
                 viewSnackBar(it, "Please enter valid start and end time")
             } else {
                 val daySelected = Gson()
-                // generating formated time
+                // Generating Formated Time
                 var myFormatedTime = SimpleDateFormat("EEE, d MMM yyyy hh:mm").format(Date())
                 val profile = Profile(
                     name = binding.userToDoEditText.text.toString(),
@@ -126,7 +126,7 @@ class NewProfileFragment : Fragment() {
                     ehr = ehr,
                     emin = emin,
                     d = daySelected.toJson(days),
-                    // passing formatted Timestamp
+                    // Passing Formatted Timestamp
                     timeInstance = myFormatedTime
                 )
                 profile.profileId = System.currentTimeMillis()
