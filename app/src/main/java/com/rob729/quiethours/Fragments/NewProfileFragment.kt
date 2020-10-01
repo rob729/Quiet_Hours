@@ -24,6 +24,7 @@ import com.rob729.quiethours.R
 import com.rob729.quiethours.util.StartAlarm
 import com.rob729.quiethours.databinding.FragmentNewProfileBinding
 import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
@@ -117,8 +118,8 @@ class NewProfileFragment : Fragment() {
                 viewSnackBar(it, "Please enter valid start and end time")
             } else {
                 val daySelected = Gson()
-                // Making instance of DateFormat
-                var myTimeInstance = DateFormat.getDateTimeInstance().format(Date())
+                // generating formated time
+                var myFormatedTime = SimpleDateFormat("EEE, d MMM yyyy hh:mm").format(Date())
                 val profile = Profile(
                     name = binding.userToDoEditText.text.toString(),
                     shr = shr,
@@ -126,8 +127,8 @@ class NewProfileFragment : Fragment() {
                     ehr = ehr,
                     emin = emin,
                     d = daySelected.toJson(days),
-                    // passing DateFormat instance
-                    timeInstance = myTimeInstance
+                    // passing formatted time
+                    timeInstance = myFormatedTime
                 )
                 profile.profileId = System.currentTimeMillis()
                 profileViewModel.insert(profile)
