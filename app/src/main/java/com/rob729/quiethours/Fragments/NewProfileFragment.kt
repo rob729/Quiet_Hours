@@ -52,7 +52,7 @@ class NewProfileFragment : Fragment() {
     val minute = mcurrentTime.get(Calendar.MINUTE)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
+        // Inflate the layout for this Fragment
         val binding = DataBindingUtil.inflate<FragmentNewProfileBinding>(inflater, R.layout.fragment_new_profile, container, false)
 
         profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
