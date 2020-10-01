@@ -126,7 +126,7 @@ class NewProfileFragment : Fragment() {
                     ehr = ehr,
                     emin = emin,
                     d = daySelected.toJson(days),
-                    // passing formatted timestamp
+                    // passing formatted Timestamp
                     timeInstance = myFormatedTime
                 )
                 profile.profileId = System.currentTimeMillis()
