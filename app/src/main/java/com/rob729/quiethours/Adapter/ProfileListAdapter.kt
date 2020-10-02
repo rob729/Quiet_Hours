@@ -6,8 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
-import androidx.navigation.NavOptions
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +16,7 @@ import co.mobiwise.materialintro.shape.ShapeType
 import co.mobiwise.materialintro.view.MaterialIntroView
 import com.rob729.quiethours.Database.Profile
 import com.rob729.quiethours.Database.ProfileViewModel
-import com.rob729.quiethours.R
+import com.rob729.quiethours.Fragments.DetailsFragment
 import com.rob729.quiethours.databinding.ItemRowBinding
 
 class ProfileListAdapter(
@@ -68,11 +66,8 @@ class ProfileListAdapter(
             binding.profileCard.setOnClickListener {
                 val args = Bundle()
                 args.putParcelable("Profile", item)
-                val navOptions = NavOptions.Builder().setEnterAnim(R.anim.nav_default_enter_anim).setExitAnim(
-                    R.anim.nav_default_exit_anim
-                ).setPopEnterAnim(R.anim.nav_default_pop_enter_anim).setPopExitAnim(R.anim.nav_default_pop_exit_anim)
-                    .build()
-                Navigation.findNavController(it).navigate(R.id.detailsFragment, args, navOptions)
+                val dialog = DetailsFragment.newInstance(args)
+                dialog.show((parentView.context as FragmentActivity).supportFragmentManager, "DialogFragment")
             }
         }
     }
