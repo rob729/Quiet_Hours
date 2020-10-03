@@ -15,7 +15,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
                 android:hint="@string/name"
                 android:textColor="@color/textColor"
                 android:textSize="24sp"
@@ -27,9 +26,9 @@
                 android:layout_below="@id/txt1"
                 android:layout_alignStart="@id/end_txt"
                 android:layout_marginTop="20dp"
-
                 android:layout_marginEnd="50dp"
-                android:hint="Start Time"
+                android:text="Start Time"
+                android:textColor="@color/textColor"
                 android:textSize="18sp" />
 
         <TextView
@@ -39,7 +38,8 @@
                 android:layout_below="@id/txt1"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
-                android:hint=":"
+                android:text=":"
+                android:textColor="@color/textColor"
                 android:textSize="18sp" />
 
         <TextView
@@ -51,6 +51,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_toEndOf="@id/col1"
                 android:hint="TIME"
+                android:textColor="@color/textColor"
                 android:textSize="18sp" />
 
         <TextView
@@ -61,7 +62,8 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="50dp"
                 android:layout_toStartOf="@id/col2"
-                android:hint="End Time"
+                android:text="End Time"
+                android:textColor="@color/textColor"
                 android:textSize="18sp" />
 
         <TextView
@@ -71,7 +73,8 @@
                 android:layout_below="@id/col1"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
-                android:hint=":"
+                android:text=":"
+                android:textColor="@color/textColor"
                 android:textSize="18sp" />
 
         <TextView
@@ -83,6 +86,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_toEndOf="@id/col2"
                 android:hint="TIME"
+                android:textColor="@color/textColor"
                 android:textSize="18sp" />
 
         <ca.antonious.materialdaypicker.MaterialDayPicker

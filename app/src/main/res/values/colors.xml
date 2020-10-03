@@ -6,4 +6,5 @@
     <color name="buttonLabel">#d3d3d3</color>
     <color name="icons">#FFFFFF</color>
     <color name="textColor">#000000</color>
+    <color name="bgColor">#fafafa</color>
 </resources>
