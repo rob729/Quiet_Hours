@@ -121,8 +121,8 @@ class NewProfileFragment : Fragment() {
                 viewSnackBar(it, "Please enter different start and end time")
             } else if (binding.dayPicker.selectedDays.size == 0) {
                 viewSnackBar(it, "Please select the day(s)")
-            } else if ((shr > ehr) || ((shr == ehr) && (smin > emin))) {
-                viewSnackBar(it, "Please enter valid start and end time")
+            } else if ((shr > ehr) && (shr - ehr <= 12)) {
+                viewSnackBar(it, "Please enter a valid time.(Within 12 hour limit)")
             } else {
                 val daySelected = Gson()
                 val profile = Profile(
@@ -142,7 +142,15 @@ class NewProfileFragment : Fragment() {
                 while (i < 7) {
                     if (days[i]) {
                         sAlarm(i + 1, profile)
-                        eAlarm(i + 1, profile)
+                        if (shr > ehr) {
+                            if (i == 6) {
+                                eAlarm(1, profile)
+                            } else {
+                                eAlarm(i + 2, profile)
+                            }
+                        } else {
+                            eAlarm(i + 1, profile)
+                        }
                     }
                     ++i
                 }
