@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
+import kotlin.random.Random
 
 /**
  * A simple [Fragment] subclass.
@@ -121,8 +122,8 @@ class NewProfileFragment : Fragment() {
                 viewSnackBar(it, "Please enter different start and end time")
             } else if (binding.dayPicker.selectedDays.size == 0) {
                 viewSnackBar(it, "Please select the day(s)")
-            } else if ((shr > ehr) || ((shr == ehr) && (smin > emin))) {
-                viewSnackBar(it, "Please enter valid start and end time")
+            } else if ((shr > ehr) && (shr - ehr <= 12)) {
+                viewSnackBar(it, "Please enter a valid time.(Within 12 hour limit)")
             } else {
                 val daySelected = Gson()
                 // Generating Formated Time
@@ -135,7 +136,8 @@ class NewProfileFragment : Fragment() {
                     emin = emin,
                     d = daySelected.toJson(days),
                     // Passing Formatted Timestamp
-                    timeInstance = myFormatedTime
+                    timeInstance = myFormatedTime,
+                    colorIndex = Random.nextInt(0, 8)
                 )
                 profile.profileId = System.currentTimeMillis()
                 profileViewModel.insert(profile)
@@ -145,7 +147,15 @@ class NewProfileFragment : Fragment() {
                 while (i < 7) {
                     if (days[i]) {
                         sAlarm(i + 1, profile)
-                        eAlarm(i + 1, profile)
+                        if (shr > ehr) {
+                            if (i == 6) {
+                                eAlarm(1, profile)
+                            } else {
+                                eAlarm(i + 2, profile)
+                            }
+                        } else {
+                            eAlarm(i + 1, profile)
+                        }
                     }
                     ++i
                 }
