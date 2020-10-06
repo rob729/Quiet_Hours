@@ -3,8 +3,15 @@ package com.rob729.quiethours.Fragments
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
+import android.widget.Toolbar
+import androidx.annotation.RequiresApi
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
@@ -44,6 +51,27 @@ class Settings : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenc
             }
             true
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = super.onCreateView(inflater, container, savedInstanceState)!!
+        (view.rootView as LinearLayout).addView(createToolbar(), 0)
+        return view
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun createToolbar(): Toolbar {
+        val settingsToolBar = Toolbar(requireContext())
+        settingsToolBar.title = "Settings"
+        settingsToolBar.titleMarginStart = 300
+        settingsToolBar.setNavigationIcon(R.drawable.arrow)
+        settingsToolBar.setNavigationOnClickListener { activity!!.onBackPressed() }
+        return settingsToolBar
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {

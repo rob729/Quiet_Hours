@@ -1,7 +1,6 @@
 package com.rob729.quiethours.Fragments
 
 import android.app.Activity.RESULT_OK
-import android.app.AlertDialog
 import android.app.NotificationManager
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
@@ -9,6 +8,8 @@ import android.content.IntentSender
 import android.os.Build
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -61,6 +62,7 @@ class MainFragment : Fragment() {
             inflater,
             R.layout.fragment_main, container, false
         )
+        (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
 
         checkForUpdates()
 
@@ -157,7 +159,7 @@ class MainFragment : Fragment() {
                 profileListAdapter.removeitem(position)
                 val item = profileListAdapter.getList()[position]
 
-                AlertDialog.Builder(context)
+                AlertDialog.Builder(requireContext())
                     .setTitle("Delete Profile")
                     .setMessage("Are you sure you want to delete this profile?")
                     .setPositiveButton("Yes") { _, dialogInterface ->
@@ -184,7 +186,7 @@ class MainFragment : Fragment() {
 
     private fun permissionDialog() {
 
-        AlertDialog.Builder(context)
+        AlertDialog.Builder(requireContext())
             .setTitle("Permission Required")
             .setMessage("Please give the Do Not Disturb access permission for the app to work properly. Click OK to continue.")
             .setCancelable(false)
