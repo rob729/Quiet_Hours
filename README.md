@@ -14,20 +14,20 @@ This App will ensure that your mobile device enters and exits the Silent Mode or
 ### Screenshots
 <table>
         <tr>
-<td><img src = "https://user-images.githubusercontent.com/31350501/58404970-03d77100-8084-11e9-84ca-c439fc1f9740.jpeg" height = "480" width="270"></td>
-<td><img src = "https://user-images.githubusercontent.com/31350501/58405067-397c5a00-8084-11e9-872a-cffafde56201.jpeg" height = "480" width="270"></td>
-<td><img src = "https://user-images.githubusercontent.com/31350501/58405079-3d0fe100-8084-11e9-992f-73b8da1bfbce.jpeg" height = "480" width="270"></td>
+<td><img src = "https://user-images.githubusercontent.com/61552810/95298754-35786300-089a-11eb-86b2-54084ba85680.png" height = "480" width="250"></td>
+<td><img src = "https://user-images.githubusercontent.com/61552810/95298759-36a99000-089a-11eb-9b7c-2e7362b38e95.png" height = "480" width="250"></td>
+<td><img src = "https://user-images.githubusercontent.com/61552810/95299814-ef240380-089b-11eb-9b6a-d29d4f5a97cd.png" height = "480" width="250"></td>
         </tr>
           <tr>
-<td><img src = "https://user-images.githubusercontent.com/31350501/58405137-69c3f880-8084-11e9-91ff-af5a5d1fcb91.jpeg" height = "480" width="270"></td>
-<td><img src = "https://user-images.githubusercontent.com/31350501/58405126-5dd83680-8084-11e9-9973-1a6cea191f90.jpeg" height = "480" width="270"></td>
-<td><img src = "https://user-images.githubusercontent.com/31350501/58405130-60d32700-8084-11e9-8aed-95ced1e2c88b.jpeg" height = "480" width="270"></td>
-        </tr>
+<td><img src = "https://user-images.githubusercontent.com/61552810/95299799-ea5f4f80-089b-11eb-8c7c-8118d999fa0c.png" height = "480" width="250"></td>
+<td><img src = "https://user-images.githubusercontent.com/61552810/95298766-38735380-089a-11eb-9adc-ba1d30714a04.png" height = "480" width="250"></td>
+<td><img src = "https://user-images.githubusercontent.com/61552810/95299503-7624ac00-089b-11eb-82dd-459b755d8e42.png" height = "480" width="250"></td>
+        </tr>        </tr>
         <tr>
-<td><img src = "https://user-images.githubusercontent.com/31350501/58405268-a68fef80-8084-11e9-80a9-ba33b9b5850c.jpeg" height = "480" width="270"></td>
-<td><img src = "https://user-images.githubusercontent.com/31350501/58405273-a7c11c80-8084-11e9-915f-d8f500be34a7.jpeg" height = "480" width="270"></td>
-<td><img src = "https://user-images.githubusercontent.com/31350501/58405274-a98ae000-8084-11e9-8494-c307298d3c8f.jpeg" height = "480" width="270"></td>
-        </tr>
+<td><img src = "https://user-images.githubusercontent.com/61552810/95299149-d6ffb480-089a-11eb-846c-ca36e47ee6b8.png" height = "480" width="250"></td>
+<td><img src = "https://user-images.githubusercontent.com/61552810/95299493-72912500-089b-11eb-827a-c8ba777e08a0.png" height = "480" width="250"></td>
+<td><img src = "https://user-images.githubusercontent.com/61552810/95299151-d830e180-089a-11eb-9fcf-dc613ac92b96.png" height = "480" width="250"></td>
+
 </table>        
 
 <div>Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a></div>
