@@ -19,11 +19,12 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.rob729.quiethours.Database.Profile
 import com.rob729.quiethours.Database.ProfileViewModel
-import com.rob729.quiethours.util.EndAlarm
 import com.rob729.quiethours.R
-import com.rob729.quiethours.util.StartAlarm
 import com.rob729.quiethours.databinding.FragmentNewProfileBinding
 import java.text.SimpleDateFormat
+import com.rob729.quiethours.util.EndAlarm
+import com.rob729.quiethours.util.StartAlarm
+import kotlinx.android.synthetic.main.fragment_new_profile.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
@@ -63,6 +64,7 @@ class NewProfileFragment : Fragment() {
             inflater,
             R.layout.fragment_new_profile, container, false
         )
+        binding.toolBar.setNavigationOnClickListener { activity!!.onBackPressed() }
 
         profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
         binding.dayPicker.clearSelection()
