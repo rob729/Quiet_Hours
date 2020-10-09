@@ -39,6 +39,7 @@ abstract class ProfileRoomDatabase : RoomDatabase() {
             }
         }
 
+        // adding RoomDatabase Migration policy
         val MIGRATION_2_3: Migration = object : Migration(2, 3) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("ALTER TABLE profile_table " +
