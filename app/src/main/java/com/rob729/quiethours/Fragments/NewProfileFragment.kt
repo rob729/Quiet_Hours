@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
+import kotlin.random.Random
 
 /**
  * A simple [Fragment] subclass.
@@ -135,7 +136,8 @@ class NewProfileFragment : Fragment() {
                     emin = emin,
                     d = daySelected.toJson(days),
                     // Passing Formatted Timestamp
-                    timeInstance = myFormatedTime
+                    timeInstance = myFormatedTime,
+                    colorIndex = Random.nextInt(0, 8)
                 )
                 profile.profileId = System.currentTimeMillis()
                 profileViewModel.insert(profile)
