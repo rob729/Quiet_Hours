@@ -111,12 +111,24 @@
                     android:layout_height="wrap_content" />
         </LinearLayout>
 
+        <Switch
+                android:id="@+id/vibSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/dayLayout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="50dp"
+                android:checked="true"
+                android:enabled="true"
+                android:switchPadding="5dp"
+                android:text="Vibrate"
+                android:textSize="20sp" />
         <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="50dp"
-                android:layout_below="@id/dayLayout"
+                android:layout_below="@id/vibSwitch"
                 android:gravity="bottom|center_horizontal">
 
             <androidx.appcompat.widget.AppCompatButton

@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.media.AudioManager
-import android.preference.PreferenceManager
 import androidx.core.app.NotificationCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
@@ -18,16 +17,8 @@ class StartAlarm(appContext: Context, workerParams: WorkerParameters) :
     Worker(appContext, workerParams) {
 
     private val b = "422"
-    var vibrate: Boolean = false
 
     override fun doWork(): Result {
-
-        val appSharedPrefs = PreferenceManager
-            .getDefaultSharedPreferences(applicationContext)
-        if (appSharedPrefs.contains("vibrate")) {
-            vibrate = appSharedPrefs.getBoolean("vibrate", false)
-        }
-
         val notificationManager =
             applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -37,6 +28,7 @@ class StartAlarm(appContext: Context, workerParams: WorkerParameters) :
         }
 
         val profileName = inputData.getString("Profile_Name")
+        val vibrate = inputData.getBoolean("VibrateKey", true)
 
         val audioManager =
             applicationContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager

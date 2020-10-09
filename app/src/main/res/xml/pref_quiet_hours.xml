@@ -7,13 +7,6 @@
             android:summaryOn="Enabled"
             android:title="Dark Mode" />
 
-    <SwitchPreference
-            android:defaultValue="true"
-            android:key="vibrate"
-            android:summaryOff="Silent mode on"
-            android:summaryOn="Vibrate mode on"
-            android:title="Vibrate Mode" />
-
     <CheckBoxPreference
             android:key="time format"
             android:title="Use 24 Hour Time Format"

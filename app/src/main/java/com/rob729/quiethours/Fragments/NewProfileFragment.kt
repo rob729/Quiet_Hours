@@ -64,10 +64,15 @@ class NewProfileFragment : Fragment() {
             R.layout.fragment_new_profile, container, false
         )
         binding.toolBar.setNavigationOnClickListener { activity!!.onBackPressed() }
-
+        binding.vibSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                binding.vibSwitch.text = "Vibrate"
+            } else {
+                binding.vibSwitch.text = "Silent"
+            }
+        }
         profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
         binding.dayPicker.clearSelection()
-
         val appSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
 
         binding.userToDoEditText.requestFocus()
@@ -134,7 +139,8 @@ class NewProfileFragment : Fragment() {
                     ehr = ehr,
                     emin = emin,
                     d = daySelected.toJson(days),
-                    colorIndex = Random.nextInt(0, 8)
+                    colorIndex = Random.nextInt(0, 8),
+                    vibSwitch = binding.vibSwitch.isChecked
                 )
                 profile.profileId = System.currentTimeMillis()
                 profileViewModel.insert(profile)
@@ -212,10 +218,12 @@ class NewProfileFragment : Fragment() {
         }
 
         val profileData = workDataOf(Pair("Profile_Name", profile.name))
+        val vibData = workDataOf(Pair("VibrateKey", profile.vibSwitch))
 
         val startAlarmRequest = OneTimeWorkRequest.Builder(StartAlarm::class.java)
             .addTag(profile.profileId.toString())
             .setInputData(profileData)
+            .setInputData(vibData)
             .setInitialDelay(c.timeInMillis - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
             .build()
         context?.let { WorkManager.getInstance(it).enqueue(startAlarmRequest) }

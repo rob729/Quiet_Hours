@@ -53,6 +53,8 @@ class DetailsFragment : BottomSheetDialogFragment() {
             binding.txt1.text = args.name
             binding.str.text = "${setTimeString(args.shr)}:${setTimeString(args.smin)}"
             binding.end.text = "${setTimeString(args.ehr)}:${setTimeString(args.emin)}"
+            if (args.vibSwitch) binding.audioMode.setImageResource(R.drawable.vibration)
+            else binding.audioMode.setImageResource(R.drawable.mute)
         }
 
         return binding.root
