@@ -68,7 +68,7 @@ class Settings : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenc
     private fun createToolbar(): Toolbar {
         val settingsToolBar = Toolbar(requireContext())
         settingsToolBar.title = "Settings"
-        settingsToolBar.titleMarginStart = 300
+        settingsToolBar.setTitleTextAppearance(context, R.style.TextAppearance_MaterialComponents_Headline6)
         settingsToolBar.setNavigationIcon(R.drawable.arrow)
         settingsToolBar.setNavigationOnClickListener { activity!!.onBackPressed() }
         return settingsToolBar

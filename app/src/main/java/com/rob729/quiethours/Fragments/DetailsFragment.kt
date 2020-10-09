@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import ca.antonious.materialdaypicker.MaterialDayPicker
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -80,5 +81,11 @@ class DetailsFragment : BottomSheetDialogFragment() {
             materialDayPicker.selectDay(MaterialDayPicker.Weekday.FRIDAY)
         if (d[6])
             materialDayPicker.selectDay(MaterialDayPicker.Weekday.SATURDAY)
+    }
+    override fun onStart() {
+        super.onStart()
+        // this forces the sheet to appear at max height even on landscape
+        val behavior = BottomSheetBehavior.from(requireView().parent as View)
+        behavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 }
