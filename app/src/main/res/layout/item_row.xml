@@ -5,12 +5,12 @@
             android:id="@+id/card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:elevation="16dp"
-            app:cardCornerRadius="8dp"
-            android:padding="5dp">
+            android:padding="5dp"
+            app:cardCornerRadius="8dp">
 
         <RelativeLayout
                 android:id="@+id/profile_card"
@@ -23,22 +23,32 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:padding="3dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@android:color/white"
                     app:avatarBackgroundColor="@color/colorAccent"
+                    app:strokeColor="@android:color/white"
+                    app:strokeWidth="1dp"
                     app:text="A"
-                    app:textSize="22sp"/>
+                    app:textSize="22sp" />
+
             <TextView
                     android:id="@+id/ProfileName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="18dp"
+                    android:layout_marginTop="12dp"
                     android:layout_toEndOf="@id/TxtImg"
                     android:text="@string/profile_name"
-                    android:transitionName="profileName"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginStart="18dp"
                     android:textColor="@color/textColor"
-                    android:textSize="24sp"/>
+                    android:textSize="24sp"
+                    android:transitionName="profileName" />
+
+            <TextView
+                    android:id="@+id/Date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ProfileName"
+                    android:layout_alignStart="@+id/ProfileName"
+                    android:layout_marginTop="2dp"
+                    android:text="Date" />
 
             <TextView
                     android:id="@+id/Date"

@@ -18,7 +18,6 @@ import com.rob729.quiethours.Database.Profile
 import com.rob729.quiethours.Database.ProfileViewModel
 import com.rob729.quiethours.Fragments.DetailsFragment
 import com.rob729.quiethours.databinding.ItemRowBinding
-import kotlin.random.Random
 
 class ProfileListAdapter(
     val profileViewModel: ProfileViewModel,
@@ -62,9 +61,9 @@ class ProfileListAdapter(
         fun bind(item: Profile, profileViewModel: ProfileViewModel, parentView: View) {
             binding.ProfileName.text = item.name
             binding.TxtImg.setText(item.name[0].toString())
-            binding.TxtImg.avatarBackgroundColor = bgColors[Random.nextInt(0, 8)]
             // setting value of timeInstance
             binding.Date.text = item.timeInstance
+            binding.TxtImg.avatarBackgroundColor = bgColors[item.colorIndex]
 
             binding.profileCard.setOnClickListener {
                 val args = Bundle()

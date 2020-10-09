@@ -16,6 +16,8 @@ data class Profile(
     var emin: Int,
     var d: String,
     // Adding parameter for timestamp
-    var timeInstance: String
+    var timeInstance: String,
+    // To store profile color in the database
+    var colorIndex: Int
 ) :
     Parcelable
