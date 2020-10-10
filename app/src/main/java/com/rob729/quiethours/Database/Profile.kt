@@ -16,6 +16,7 @@ data class Profile(
     var emin: Int,
     var d: String,
     // To store profile color in the database
-    var colorIndex: Int
+    var colorIndex: Int,
+    var vibSwitch: Boolean
 ) :
     Parcelable
