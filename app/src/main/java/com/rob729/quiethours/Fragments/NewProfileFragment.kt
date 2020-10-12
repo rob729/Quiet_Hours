@@ -24,6 +24,7 @@ import com.rob729.quiethours.databinding.FragmentNewProfileBinding
 import com.rob729.quiethours.util.EndAlarm
 import com.rob729.quiethours.util.StartAlarm
 import kotlinx.android.synthetic.main.fragment_new_profile.*
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
@@ -132,6 +133,8 @@ class NewProfileFragment : Fragment() {
                 viewSnackBar(it, "Please enter a valid time.(Within 12 hour limit)")
             } else {
                 val daySelected = Gson()
+                // Generating formated current time
+                var currentTime = SimpleDateFormat("EEE, d MMM yyyy hh:mm").format(Date())
                 val profile = Profile(
                     name = binding.userToDoEditText.text.toString(),
                     shr = shr,
@@ -140,7 +143,8 @@ class NewProfileFragment : Fragment() {
                     emin = emin,
                     d = daySelected.toJson(days),
                     colorIndex = Random.nextInt(0, 8),
-                    vibSwitch = binding.vibSwitch.isChecked
+                    vibSwitch = binding.vibSwitch.isChecked,
+                    timeInstance = currentTime
                 )
                 profile.profileId = System.currentTimeMillis()
                 profileViewModel.insert(profile)
