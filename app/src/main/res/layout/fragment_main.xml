@@ -55,12 +55,75 @@
                     android:text="@string/no_profile"
                     android:textSize="14sp" />
         </RelativeLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv"
+        <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="70dp" />
+                android:layout_height="match_parent"
+                android:layout_marginTop="70dp"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                        android:id="@+id/activeCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:elevation="16dp"
+                        android:padding="5dp"
+                        app:cardCornerRadius="8dp">
+
+                    <RelativeLayout
+                            android:id="@+id/activeProfile"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:padding="5dp">
+
+                        <ImageView
+                                android:id="@+id/vibIconImg"
+                                android:layout_width="60dp"
+                                android:layout_height="50dp"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/vibration" />
+
+                        <TextView
+                                android:id="@+id/activeName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_toEndOf="@id/vibIconImg"
+                                android:text="Currently Active Profile: "
+                                android:textColor="@color/textColor"
+                                android:textSize="18sp"
+                                android:transitionName="profileName" />
+
+                        <TextView
+                                android:id="@+id/endTimeTxt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/activeName"
+                                android:layout_marginStart="15dp"
+                                android:layout_marginTop="4dp"
+                                android:layout_marginBottom="5dp"
+                                android:layout_toEndOf="@id/vibIconImg"
+                                android:text="End Time: "
+                                android:textColor="@color/textColor"
+                                android:textSize="14sp"
+                                android:transitionName="profileName" />
+
+                    </RelativeLayout>
+
+                </androidx.cardview.widget.CardView>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+            </androidx.recyclerview.widget.RecyclerView>
+        </LinearLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/floating_action_button"

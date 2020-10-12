@@ -217,13 +217,12 @@ class NewProfileFragment : Fragment() {
             c.add(Calendar.DAY_OF_YEAR, 7)
         }
 
-        val profileData = workDataOf(Pair("Profile_Name", profile.name))
-        val vibData = workDataOf(Pair("VibrateKey", profile.vibSwitch))
+        var etime = "End Time: ${profile.ehr}:${profile.emin}"
+        val profileData = workDataOf(Pair("Profile_Name", profile.name), (Pair("VibrateKey", profile.vibSwitch)), (Pair("EndTimeKey", etime)))
 
         val startAlarmRequest = OneTimeWorkRequest.Builder(StartAlarm::class.java)
             .addTag(profile.profileId.toString())
             .setInputData(profileData)
-            .setInputData(vibData)
             .setInitialDelay(c.timeInMillis - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
             .build()
         context?.let { WorkManager.getInstance(it).enqueue(startAlarmRequest) }

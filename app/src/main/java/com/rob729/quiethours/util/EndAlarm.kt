@@ -14,7 +14,6 @@ import com.rob729.quiethours.R
 
 class EndAlarm(appContext: Context, workerParams: WorkerParameters) :
     Worker(appContext, workerParams) {
-
     private val b = "422"
 
     override fun doWork(): Result {
@@ -26,6 +25,7 @@ class EndAlarm(appContext: Context, workerParams: WorkerParameters) :
         val audioManager =
             applicationContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         audioManager.ringerMode = AudioManager.RINGER_MODE_NORMAL
+        StoreSession.writeInt(AppConstants.BEGIN_STATUS, StoreSession.readInt(AppConstants.BEGIN_STATUS) - 1)
 
         val intent = Intent(applicationContext, SplashScreen::class.java)
         val pi = PendingIntent.getActivity(

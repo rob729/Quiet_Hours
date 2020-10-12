@@ -15,7 +15,6 @@ import com.rob729.quiethours.R
 
 class StartAlarm(appContext: Context, workerParams: WorkerParameters) :
     Worker(appContext, workerParams) {
-
     private val b = "422"
 
     override fun doWork(): Result {
@@ -27,8 +26,9 @@ class StartAlarm(appContext: Context, workerParams: WorkerParameters) :
             notificationManager.createNotificationChannel(notificationChannel)
         }
 
-        val profileName = inputData.getString("Profile_Name")
+        val profileName = "Currently Active Profile: ${inputData.getString("Profile_Name")}"
         val vibrate = inputData.getBoolean("VibrateKey", true)
+        val profileEndTime = inputData.getString("EndTimeKey")
 
         val audioManager =
             applicationContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
@@ -49,7 +49,14 @@ class StartAlarm(appContext: Context, workerParams: WorkerParameters) :
             .setContentIntent(pi)
             .build()
         notificationManager.notify(1112, notification)
-
+        StoreSession.writeInt(AppConstants.BEGIN_STATUS, StoreSession.readInt(AppConstants.BEGIN_STATUS) + 1)
+        StoreSession.writeString(AppConstants.ACTIVE_PROFILE_NAME, profileName)
+        if (vibrate) {
+            StoreSession.writeInt(AppConstants.VIBRATE_STATE_ICON, 1)
+        } else {
+            StoreSession.writeInt(AppConstants.VIBRATE_STATE_ICON, 0)
+        }
+        StoreSession.writeString(AppConstants.END_TIME, profileEndTime!!)
         if (vibrate) {
             audioManager.ringerMode = AudioManager.RINGER_MODE_VIBRATE
         } else {

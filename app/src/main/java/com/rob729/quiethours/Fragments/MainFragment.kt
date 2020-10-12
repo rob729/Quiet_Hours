@@ -35,14 +35,13 @@ import com.rob729.quiethours.Database.Profile
 import com.rob729.quiethours.Database.ProfileViewModel
 import com.rob729.quiethours.R
 import com.rob729.quiethours.databinding.FragmentMainBinding
-import com.rob729.quiethours.util.SwipeToDeleteCallback
+import com.rob729.quiethours.util.*
 
 /**
  * A simple [Fragment] subclass.
  *
  */
 class MainFragment : Fragment() {
-
     private lateinit var profileViewModel: ProfileViewModel
     private lateinit var binding: FragmentMainBinding
     lateinit var profileListAdapter: ProfileListAdapter
@@ -105,11 +104,26 @@ class MainFragment : Fragment() {
                     .navigate(MainFragmentDirections.actionMainFragmentToNewProfileFragment())
             }
         }
-
+        currentlyActiveProfile()
         setHasOptionsMenu(true)
         return binding.root
     }
 
+    private fun currentlyActiveProfile() {
+        if (StoreSession.readInt(AppConstants.BEGIN_STATUS) > 0) {
+            binding.activeProfile.visibility = View.VISIBLE
+            binding.activeName.text = StoreSession.readString(AppConstants.ACTIVE_PROFILE_NAME)
+            binding.endTimeTxt.text = StoreSession.readString(AppConstants.END_TIME)
+
+            if (StoreSession.readInt(AppConstants.VIBRATE_STATE_ICON) == 1) {
+                binding.vibIconImg.setImageResource(R.drawable.vibration)
+            } else {
+                binding.vibIconImg.setImageResource(R.drawable.mute)
+            }
+        } else {
+            binding.activeProfile.visibility = View.GONE
+        }
+    }
     override fun onResume() {
         super.onResume()
         appUpdateManager.appUpdateInfo.addOnSuccessListener { result: AppUpdateInfo? ->
