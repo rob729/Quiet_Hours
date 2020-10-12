@@ -62,6 +62,7 @@ class ProfileListAdapter(
             binding.ProfileName.text = item.name
             binding.TxtImg.setText(item.name[0].toString())
             binding.TxtImg.avatarBackgroundColor = bgColors[item.colorIndex]
+            binding.timeStamp.text = item.timeInstance
 
             binding.profileCard.setOnClickListener {
                 val args = Bundle()

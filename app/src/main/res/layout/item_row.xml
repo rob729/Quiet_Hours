@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.cardview.widget.CardView
             android:id="@+id/card"
@@ -34,12 +35,22 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="18dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="6dp"
                     android:layout_toEndOf="@id/TxtImg"
                     android:text="@string/profile_name"
                     android:textColor="@color/textColor"
                     android:textSize="24sp"
                     android:transitionName="profileName" />
+
+            <TextView
+                    android:id="@+id/timeStamp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ProfileName"
+                    android:layout_marginStart="18dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_toEndOf="@id/TxtImg"
+                    android:textSize="12sp" />
 
         </RelativeLayout>
 

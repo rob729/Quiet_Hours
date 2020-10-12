@@ -17,6 +17,8 @@ data class Profile(
     var d: String,
     // To store profile color in the database
     var colorIndex: Int,
-    var vibSwitch: Boolean
+    var vibSwitch: Boolean,
+    // Adding parameter for timestamp
+    var timeInstance: String
 ) :
     Parcelable
