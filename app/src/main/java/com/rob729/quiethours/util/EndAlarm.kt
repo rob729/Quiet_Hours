@@ -24,8 +24,13 @@ class EndAlarm(appContext: Context, workerParams: WorkerParameters) :
 
         val audioManager =
             applicationContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        audioManager.ringerMode = AudioManager.RINGER_MODE_NORMAL
         StoreSession.writeInt(AppConstants.BEGIN_STATUS, StoreSession.readInt(AppConstants.BEGIN_STATUS) - 1)
+        audioManager.ringerMode = if (StoreSession.readInt(AppConstants.BEGIN_STATUS)> 0) {
+            if (StoreSession.readInt(AppConstants.VIBRATE_STATE_ICON) == 1)
+                AudioManager.RINGER_MODE_VIBRATE
+            else
+                AudioManager.RINGER_MODE_SILENT
+        } else AudioManager.RINGER_MODE_NORMAL
 
         val intent = Intent(applicationContext, SplashScreen::class.java)
         val pi = PendingIntent.getActivity(
