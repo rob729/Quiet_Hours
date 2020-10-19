@@ -136,4 +136,11 @@ class ProfileListAdapter(
             }
             .show()
     }
+    fun deleteAll() {
+        val size: Int = profiles.size
+        for (i in 0 until size) {
+                removeitem(i)
+                removeWork(profiles[i].profileId.toString())
+            }
+    }
 }

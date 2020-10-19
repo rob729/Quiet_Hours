@@ -157,13 +157,40 @@ class MainFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        return view?.let { Navigation.findNavController(it) }?.let {
-            NavigationUI.onNavDestinationSelected(
-                item,
-                it
-            )
-        }!! || super.onOptionsItemSelected(item)
+        return when (item.itemId) {
+            R.id.action_settings -> {
+                return view?.let { Navigation.findNavController(it) }?.let {
+                    NavigationUI.onNavDestinationSelected(
+                        item,
+                        it
+                    )
+                }!! || super.onOptionsItemSelected(item)
+            }
+            R.id.action_delete -> {
+                if (binding.emrl.visibility == View.GONE) {
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Delete All Profiles")
+                    .setMessage("Are you sure you want to delete all the profiles?")
+                    .setPositiveButton("Yes") { _, dialogInterface ->
+                        profileListAdapter.deleteAll()
+                    }
+                    .setNegativeButton("No") { _, dialogInterface ->
+                    }
+                    .setCancelable(true)
+                    .show()
+            } else {
+                Snackbar
+                    .make(
+                        binding.coordLayout,
+                        "No profile is present to be deleted",
+                        Snackbar.LENGTH_LONG
+                    )
+                    .show()
+            }
+                return true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun enableSwipeToDeleteAndUndo(profileListAdapter: ProfileListAdapter) {
