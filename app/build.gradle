@@ -59,6 +59,10 @@ dependencies {
     implementation 'com.github.abdularis:CircularImageView:v1.2'
     implementation 'androidx.cardview:cardview:1.0.0'
 
+    // Lottie Animation Library
+    def lottieVersion = '3.4.4'
+    implementation "com.airbnb.android:lottie:$lottieVersion"
+
     // material design library
     implementation 'com.google.android.material:material:1.1.0-beta01'
 
