@@ -17,13 +17,12 @@ import androidx.work.workDataOf
 import ca.antonious.materialdaypicker.MaterialDayPicker
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.rob729.quiethours.Database.Profile
 import com.rob729.quiethours.Database.ProfileViewModel
 import com.rob729.quiethours.R
 import com.rob729.quiethours.databinding.FragmentNewProfileBinding
-import com.rob729.quiethours.util.EndAlarm
-import com.rob729.quiethours.util.StartAlarm
-import kotlinx.android.synthetic.main.fragment_new_profile.*
+import com.rob729.quiethours.util.*
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -35,7 +34,6 @@ import kotlin.random.Random
  *
  */
 class NewProfileFragment : Fragment() {
-
     private lateinit var sTimePicker: TimePickerDialog
     private lateinit var eTimePicker: TimePickerDialog
     private var shr = 0
@@ -52,7 +50,9 @@ class NewProfileFragment : Fragment() {
     val mcurrentTime = Calendar.getInstance()
     val hour = mcurrentTime.get(Calendar.HOUR_OF_DAY)
     val minute = mcurrentTime.get(Calendar.MINUTE)
-
+    val selectedDays by lazy { Gson() }
+    val type by lazy { object : TypeToken<List<Boolean>>() {}.type }
+    val id = StoreSession.readLong(AppConstants.PROFILE_ID)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -146,10 +146,16 @@ class NewProfileFragment : Fragment() {
                     vibSwitch = binding.vibSwitch.isChecked,
                     timeInstance = currentTime
                 )
-                profile.profileId = System.currentTimeMillis()
-                profileViewModel.insert(profile)
-                Navigation.findNavController(it)
-                    .navigate(NewProfileFragmentDirections.actionNewProfileFragmentToMainFragment())
+                if (binding.makeProfileFab.text == "Submit") {
+                    profile.profileId = System.currentTimeMillis()
+                    profileViewModel.insert(profile)
+                } else {
+                    WorkManager.getInstance(profileViewModel.getApplication()).cancelAllWorkByTag(id.toString())
+                    profile.profileId = id
+                    profileViewModel.update(profile)
+                }
+                    Navigation.findNavController(it)
+                        .navigate(NewProfileFragmentDirections.actionNewProfileFragmentToMainFragment())
                 var i = 0
                 while (i < 7) {
                     if (days[i]) {
@@ -168,7 +174,20 @@ class NewProfileFragment : Fragment() {
                 }
             }
         }
-
+        val args = arguments?.getParcelable<Profile>("Profile")
+        if (args != null) {
+            days = selectedDays.fromJson(args.d, type)
+            Utils.selectedDays(days, binding.dayPicker)
+            binding.userToDoEditText.setText(args.name)
+            binding.StartTime.setText("${setTimeString(args.shr)}:${setTimeString(args.smin)}")
+            shr = args.shr
+            smin = args.smin
+            ehr = args.ehr
+            emin = args.emin
+            binding.EndTime.setText("${setTimeString(args.ehr)}:${setTimeString(args.emin)}")
+            binding.vibSwitch.isChecked = args.vibSwitch
+            binding.makeProfileFab.text = "UPDATE"
+        }
         return binding.root
     }
 
