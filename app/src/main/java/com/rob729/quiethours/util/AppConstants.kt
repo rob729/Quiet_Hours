@@ -4,4 +4,5 @@ object AppConstants {
     val END_TIME = "END_TIME_TEXT"
     val VIBRATE_STATE_ICON = "VIBRATE_STATE_ICON"
     val BEGIN_STATUS = "BEGIN_STATUS"
+    val PROFILE_ID = "PROFILE_ID"
 }

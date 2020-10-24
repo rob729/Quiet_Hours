@@ -7,7 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import ca.antonious.materialdaypicker.MaterialDayPicker
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.gson.Gson
@@ -15,6 +16,9 @@ import com.google.gson.reflect.TypeToken
 import com.rob729.quiethours.Database.Profile
 import com.rob729.quiethours.R
 import com.rob729.quiethours.databinding.FragmentDetailsBinding
+import com.rob729.quiethours.util.AppConstants
+import com.rob729.quiethours.util.Utils
+import com.rob729.quiethours.util.StoreSession
 import java.util.*
 
 /**
@@ -49,7 +53,7 @@ class DetailsFragment : BottomSheetDialogFragment() {
 
         if (args != null) {
             days = daysSelected.fromJson(args.d, type)
-            dayPicker(days, binding.dayPicker)
+            Utils.selectedDays(days, binding.dayPicker)
             binding.txt1.text = args.name
             binding.str.text = "${setTimeString(args.shr)}:${setTimeString(args.smin)}"
             binding.end.text = "${setTimeString(args.ehr)}:${setTimeString(args.emin)}"
@@ -57,9 +61,22 @@ class DetailsFragment : BottomSheetDialogFragment() {
             else binding.audioMode.setImageResource(R.drawable.mute)
         }
 
+        binding.editFab.setOnClickListener {
+            val item: Profile = args!!
+            val bundle = Bundle()
+            bundle.putParcelable("Profile", item)
+            StoreSession.writeLong(AppConstants.PROFILE_ID, item.profileId)
+            val navOptions =
+                NavOptions.Builder().setEnterAnim(R.anim.nav_default_enter_anim).setExitAnim(
+                    R.anim.nav_default_exit_anim
+                ).setPopEnterAnim(R.anim.nav_default_pop_enter_anim)
+                    .setPopExitAnim(R.anim.nav_default_pop_exit_anim)
+                    .build()
+            findNavController(this).navigate(R.id.newProfileFragment, bundle, navOptions)
+            dismiss()
+        }
         return binding.root
     }
-
     private fun setTimeString(i: Int): String {
         return if (i < 10) {
             "0$i"
@@ -68,22 +85,6 @@ class DetailsFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private fun dayPicker(d: List<Boolean>, materialDayPicker: MaterialDayPicker) {
-        if (d[0])
-            materialDayPicker.selectDay(MaterialDayPicker.Weekday.SUNDAY)
-        if (d[1])
-            materialDayPicker.selectDay(MaterialDayPicker.Weekday.MONDAY)
-        if (d[2])
-            materialDayPicker.selectDay(MaterialDayPicker.Weekday.TUESDAY)
-        if (d[3])
-            materialDayPicker.selectDay(MaterialDayPicker.Weekday.WEDNESDAY)
-        if (d[4])
-            materialDayPicker.selectDay(MaterialDayPicker.Weekday.THURSDAY)
-        if (d[5])
-            materialDayPicker.selectDay(MaterialDayPicker.Weekday.FRIDAY)
-        if (d[6])
-            materialDayPicker.selectDay(MaterialDayPicker.Weekday.SATURDAY)
-    }
     override fun onStart() {
         super.onStart()
         // this forces the sheet to appear at max height even on landscape

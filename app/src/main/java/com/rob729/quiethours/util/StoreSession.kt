@@ -29,4 +29,14 @@ object StoreSession {
     fun readInt(key: String): Int {
         return sharedPreferences.getInt(key, 0)
     }
+
+    fun writeLong(key: String, value: Long) {
+        val editor = sharedPreferences.edit()
+        editor?.putLong(key, value)
+        editor?.apply()
+    }
+
+    fun readLong(key: String): Long {
+        return sharedPreferences.getLong(key, 0)
+    }
 }

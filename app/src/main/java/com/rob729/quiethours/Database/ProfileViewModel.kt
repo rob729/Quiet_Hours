@@ -30,6 +30,10 @@ class ProfileViewModel(application: Application) : AndroidViewModel(Application(
         repository.delete(profile)
     }
 
+    fun update(profile: Profile) = scope.launch(Dispatchers.IO) {
+        repository.update(profile)
+    }
+
     override fun onCleared() {
         super.onCleared()
         parentJob.cancel()

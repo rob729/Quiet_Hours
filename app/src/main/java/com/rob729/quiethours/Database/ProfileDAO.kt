@@ -1,10 +1,7 @@
 package com.rob729.quiethours.Database
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface ProfileDAO {
@@ -16,4 +13,7 @@ interface ProfileDAO {
 
     @Delete
     fun deleteProfile(vararg profiles: Profile)
+
+    @Update
+    fun updateProfile(vararg profiles: Profile)
 }
