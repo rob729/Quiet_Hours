@@ -122,6 +122,7 @@ class MainFragment : Fragment() {
             }
         } else {
             binding.activeProfile.visibility = View.GONE
+            StoreSession.writeLong(AppConstants.ACTIVE_PROFILE_ID, 0)
         }
     }
     override fun onResume() {
@@ -173,6 +174,7 @@ class MainFragment : Fragment() {
                     .setMessage("Are you sure you want to delete all the profiles?")
                     .setPositiveButton("Yes") { _, dialogInterface ->
                         profileListAdapter.deleteAll()
+                        binding.activeProfile.visibility = View.GONE
                     }
                     .setNegativeButton("No") { _, dialogInterface ->
                     }
@@ -199,11 +201,14 @@ class MainFragment : Fragment() {
                 val position = viewHolder.adapterPosition
                 profileListAdapter.removeitem(position)
                 val item = profileListAdapter.getList()[position]
-
                 AlertDialog.Builder(requireContext())
                     .setTitle("Delete Profile")
                     .setMessage("Are you sure you want to delete this profile?")
                     .setPositiveButton("Yes") { _, dialogInterface ->
+                        if (item.profileId == StoreSession.readLong(AppConstants.ACTIVE_PROFILE_ID)) {
+                            StoreSession.writeInt(AppConstants.BEGIN_STATUS, 0)
+                            binding.activeProfile.visibility = View.GONE
+                        }
                         profileListAdapter.removeWork(item.profileId.toString())
                         Snackbar
                             .make(

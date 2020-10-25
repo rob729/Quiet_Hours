@@ -18,6 +18,8 @@ import com.rob729.quiethours.Database.Profile
 import com.rob729.quiethours.Database.ProfileViewModel
 import com.rob729.quiethours.Fragments.DetailsFragment
 import com.rob729.quiethours.databinding.ItemRowBinding
+import com.rob729.quiethours.util.AppConstants
+import com.rob729.quiethours.util.StoreSession
 
 class ProfileListAdapter(
     val profileViewModel: ProfileViewModel,
@@ -142,5 +144,6 @@ class ProfileListAdapter(
                 removeitem(i)
                 removeWork(profiles[i].profileId.toString())
             }
+        StoreSession.writeInt(AppConstants.BEGIN_STATUS, 0)
     }
 }

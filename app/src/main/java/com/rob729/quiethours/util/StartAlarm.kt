@@ -29,7 +29,7 @@ class StartAlarm(appContext: Context, workerParams: WorkerParameters) :
         val profileName = "Currently Active Profile: ${inputData.getString("Profile_Name")}"
         val vibrate = inputData.getBoolean("VibrateKey", true)
         val profileEndTime = inputData.getString("EndTimeKey")
-
+        val activeProfileId = inputData.getLong("ActiveProfileId", 0)
         val audioManager =
             applicationContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
@@ -51,6 +51,8 @@ class StartAlarm(appContext: Context, workerParams: WorkerParameters) :
         notificationManager.notify(1112, notification)
         StoreSession.writeInt(AppConstants.BEGIN_STATUS, StoreSession.readInt(AppConstants.BEGIN_STATUS) + 1)
         StoreSession.writeString(AppConstants.ACTIVE_PROFILE_NAME, profileName)
+        StoreSession.writeLong(AppConstants.ACTIVE_PROFILE_ID, activeProfileId)
+
         if (vibrate) {
             StoreSession.writeInt(AppConstants.VIBRATE_STATE_ICON, 1)
         } else {
