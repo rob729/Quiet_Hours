@@ -241,7 +241,7 @@ class NewProfileFragment : Fragment() {
         }
 
         var etime = "End Time: ${profile.ehr}:${profile.emin}"
-        val profileData = workDataOf(Pair("Profile_Name", profile.name), (Pair("VibrateKey", profile.vibSwitch)), (Pair("EndTimeKey", etime)))
+        val profileData = workDataOf(Pair("ActiveProfileId", profile.profileId), Pair("Profile_Name", profile.name), (Pair("VibrateKey", profile.vibSwitch)), (Pair("EndTimeKey", etime)))
 
         val startAlarmRequest = OneTimeWorkRequest.Builder(StartAlarm::class.java)
             .addTag(profile.profileId.toString())
