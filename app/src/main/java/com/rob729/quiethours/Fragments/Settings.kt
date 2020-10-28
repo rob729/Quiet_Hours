@@ -17,6 +17,7 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import com.rob729.quiethours.Activity.MainActivity
 import com.rob729.quiethours.R
+import com.rob729.quiethours.util.AppConstants
 
 class Settings : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -27,7 +28,7 @@ class Settings : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenc
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.pref_quiet_hours)
-        pref = findPreference("nightMode")
+        pref = findPreference(AppConstants.NIGHT_MODE)
         rate = findPreference("rate")!!
         share = findPreference("share")!!
         format = findPreference("time format")!!
