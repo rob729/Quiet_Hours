@@ -8,13 +8,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.Navigation
-import androidx.preference.PreferenceManager
 import com.rob729.quiethours.R
 import com.rob729.quiethours.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
+import com.rob729.quiethours.util.StoreSession
 
 class MainActivity : AppCompatActivity() {
-
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,8 +22,7 @@ class MainActivity : AppCompatActivity() {
             R.layout.activity_main
         )
         supportActionBar?.elevation = 0F
-        val appSharedPrefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        if (appSharedPrefs.getBoolean("nightMode", false)) {
+        if (StoreSession.getNightMode()) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
