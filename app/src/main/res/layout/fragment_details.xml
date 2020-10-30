@@ -11,22 +11,43 @@
             android:gravity="center"
             android:padding="30dp">
 
-        <TextView
-                android:id="@+id/txt1"
+        <LinearLayout
+                android:id="@+id/linearLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:hint="@string/name"
-                android:textColor="@color/textColor"
-                android:textSize="24sp"
-                android:transitionName="profileName" />
+                android:orientation="horizontal">
+
+            <TextView
+                    android:id="@+id/txt1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/name"
+                    android:textColor="@color/textColor"
+                    android:textSize="24sp"
+                    android:transitionName="profileName" />
+
+            <ImageView
+                    android:id="@+id/audioMode"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="30dp"
+                    android:src="@drawable/mute" />
+
+            <ImageView
+                    android:id="@+id/repeatWeeklyIcon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="30dp"
+                    android:src="@drawable/ic_repeat" />
+        </LinearLayout>
 
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/txt1"
+                android:layout_below="@id/linearLayout"
                 android:layout_alignStart="@id/end_txt"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="38dp"
                 android:layout_marginEnd="50dp"
                 android:text="Start Time"
                 android:textColor="@color/textColor"
@@ -36,9 +57,9 @@
                 android:id="@+id/col1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/txt1"
+                android:layout_below="@id/linearLayout"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="38dp"
                 android:text=":"
                 android:textColor="@color/textColor"
                 android:textSize="18sp" />
@@ -47,9 +68,9 @@
                 android:id="@+id/str"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/txt1"
+                android:layout_below="@id/linearLayout"
                 android:layout_marginStart="50dp"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="38dp"
                 android:layout_toEndOf="@id/col1"
                 android:hint="TIME"
                 android:textColor="@color/textColor"
@@ -90,14 +111,6 @@
                 android:textColor="@color/textColor"
                 android:textSize="18sp" />
 
-        <ImageView
-                android:id="@+id/audioMode"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="30dp"
-                android:layout_toRightOf="@id/txt1"
-                android:src="@drawable/mute" />
-
         <ca.antonious.materialdaypicker.MaterialDayPicker
                 android:id="@+id/day_picker"
                 android:layout_width="match_parent"
@@ -114,12 +127,12 @@
                 android:id="@+id/editFab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/day_picker"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="25dp"
                 android:background="@drawable/button"
                 android:text="Edit"
                 android:textColor="#ffffff"
-                android:layout_below="@id/day_picker"
-                android:layout_marginTop="25dp"
-                android:layout_centerHorizontal="true"
                 app:fabSize="normal" />
     </RelativeLayout>
 </layout>
