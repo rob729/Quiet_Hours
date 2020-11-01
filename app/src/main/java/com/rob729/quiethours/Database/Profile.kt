@@ -19,6 +19,7 @@ data class Profile(
     var colorIndex: Int,
     var vibSwitch: Boolean,
     // Adding parameter for timestamp
-    var timeInstance: String
+    var timeInstance: String,
+    var repeatWeekly: Boolean
 ) :
     Parcelable

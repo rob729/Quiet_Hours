@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -59,6 +61,8 @@ class DetailsFragment : BottomSheetDialogFragment() {
             binding.end.text = "${setTimeString(args.ehr)}:${setTimeString(args.emin)}"
             if (args.vibSwitch) binding.audioMode.setImageResource(R.drawable.vibration)
             else binding.audioMode.setImageResource(R.drawable.mute)
+            binding.repeatWeeklyIcon.visibility = if (args.repeatWeekly) VISIBLE
+            else GONE
         }
 
         binding.editFab.setOnClickListener {

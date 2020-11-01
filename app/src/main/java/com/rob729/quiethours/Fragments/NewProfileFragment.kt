@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.preference.PreferenceManager
 import androidx.work.OneTimeWorkRequest
+import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import androidx.work.workDataOf
 import ca.antonious.materialdaypicker.MaterialDayPicker
@@ -23,6 +24,7 @@ import com.rob729.quiethours.Database.ProfileViewModel
 import com.rob729.quiethours.R
 import com.rob729.quiethours.databinding.FragmentNewProfileBinding
 import com.rob729.quiethours.util.*
+import kotlinx.android.synthetic.main.fragment_new_profile.*
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -144,7 +146,8 @@ class NewProfileFragment : Fragment() {
                     d = daySelected.toJson(days),
                     colorIndex = Random.nextInt(0, 8),
                     vibSwitch = binding.vibSwitch.isChecked,
-                    timeInstance = currentTime
+                    timeInstance = currentTime,
+                    repeatWeekly = binding.repeatWeeklySwitch.isChecked
                 )
                 if (binding.makeProfileFab.text == "Submit") {
                     profile.profileId = System.currentTimeMillis()
@@ -154,8 +157,8 @@ class NewProfileFragment : Fragment() {
                     profile.profileId = id
                     profileViewModel.update(profile)
                 }
-                    Navigation.findNavController(it)
-                        .navigate(NewProfileFragmentDirections.actionNewProfileFragmentToMainFragment())
+                Navigation.findNavController(it)
+                    .navigate(NewProfileFragmentDirections.actionNewProfileFragmentToMainFragment())
                 var i = 0
                 while (i < 7) {
                     if (days[i]) {
@@ -186,6 +189,7 @@ class NewProfileFragment : Fragment() {
             emin = args.emin
             binding.EndTime.setText("${setTimeString(args.ehr)}:${setTimeString(args.emin)}")
             binding.vibSwitch.isChecked = args.vibSwitch
+            binding.repeatWeeklySwitch.isChecked = args.repeatWeekly
             binding.makeProfileFab.text = "UPDATE"
         }
         return binding.root
@@ -243,11 +247,19 @@ class NewProfileFragment : Fragment() {
         var etime = "End Time: ${profile.ehr}:${profile.emin}"
         val profileData = workDataOf(Pair("ActiveProfileId", profile.profileId), Pair("Profile_Name", profile.name), (Pair("VibrateKey", profile.vibSwitch)), (Pair("EndTimeKey", etime)))
 
-        val startAlarmRequest = OneTimeWorkRequest.Builder(StartAlarm::class.java)
+        val startAlarmRequest = if (repeatWeeklySwitch.isChecked) {
+                PeriodicWorkRequest.Builder(StartAlarm::class.java, 7, TimeUnit.DAYS)
+                .addTag(profile.profileId.toString())
+                .setInputData(profileData)
+                .setInitialDelay(c.timeInMillis - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                .build()
+            } else {
+            OneTimeWorkRequest.Builder(StartAlarm::class.java)
             .addTag(profile.profileId.toString())
             .setInputData(profileData)
             .setInitialDelay(c.timeInMillis - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
             .build()
+        }
         context?.let { WorkManager.getInstance(it).enqueue(startAlarmRequest) }
     }
 
@@ -262,14 +274,20 @@ class NewProfileFragment : Fragment() {
 
         timeCheck(c)
         val profileData = workDataOf(Pair("Profile_Name", profile.name))
-
-        val endAlarmRequest = OneTimeWorkRequest.Builder(EndAlarm::class.java)
-            .addTag(profile.profileId.toString())
-            .setInputData(profileData)
-            .setInitialDelay(c.timeInMillis - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-            .build()
-
-        context?.let { WorkManager.getInstance(it).enqueue(endAlarmRequest) }
+        val endAlarmRequest = if (repeatWeeklySwitch.isChecked) {
+                PeriodicWorkRequest.Builder(EndAlarm::class.java, 7, TimeUnit.DAYS)
+                .addTag(profile.profileId.toString())
+                .setInputData(profileData)
+                .setInitialDelay(c.timeInMillis - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                .build()
+        } else {
+                OneTimeWorkRequest.Builder(EndAlarm::class.java)
+                .addTag(profile.profileId.toString())
+                .setInputData(profileData)
+                .setInitialDelay(c.timeInMillis - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                .build()
+        }
+            context?.let { WorkManager.getInstance(it).enqueue(endAlarmRequest) }
     }
 
     private fun timeCheck(c: Calendar) {
