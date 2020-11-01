@@ -2,9 +2,11 @@ package com.rob729.quiethours.Fragments
 
 import android.app.Activity.RESULT_OK
 import android.app.NotificationManager
+import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.content.IntentSender
+import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
 import android.view.*
@@ -50,7 +52,7 @@ class MainFragment : Fragment() {
     private val MY_REQUEST_CODE = 111
     val notificationManager =
         context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
-
+    val audioManager by lazy { requireActivity().getSystemService(Context.AUDIO_SERVICE) as AudioManager }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -62,8 +64,7 @@ class MainFragment : Fragment() {
             R.layout.fragment_main, container, false
         )
         (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
-
-        checkForUpdates()
+    checkForUpdates()
 
         introFab()
 
@@ -173,9 +174,11 @@ class MainFragment : Fragment() {
                     .setTitle("Delete All Profiles")
                     .setMessage("Are you sure you want to delete all the profiles?")
                     .setPositiveButton("Yes") { _, dialogInterface ->
+                        if (StoreSession.readInt(AppConstants.BEGIN_STATUS) != 0)
+                            audioManager.ringerMode = StoreSession.readInt(AppConstants.RINGTONE_MODE)
                         profileListAdapter.deleteAll()
                         binding.activeProfile.visibility = View.GONE
-                    }
+                        }
                     .setNegativeButton("No") { _, dialogInterface ->
                     }
                     .setCancelable(true)
@@ -208,6 +211,7 @@ class MainFragment : Fragment() {
                         if (item.profileId == StoreSession.readLong(AppConstants.ACTIVE_PROFILE_ID)) {
                             StoreSession.writeInt(AppConstants.BEGIN_STATUS, 0)
                             binding.activeProfile.visibility = View.GONE
+                            audioManager.ringerMode = StoreSession.readInt(AppConstants.RINGTONE_MODE)
                         }
                         profileListAdapter.removeWork(item.profileId.toString())
                         Snackbar

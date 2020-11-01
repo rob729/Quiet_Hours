@@ -8,4 +8,5 @@ object AppConstants {
     val PROFILE_ID = "PROFILE_ID"
     val FIRST_BOOT = "FIRST_BOOT"
     val NIGHT_MODE = "nightMode"
+    val RINGTONE_MODE = "RINGTONE_MODE"
 }
