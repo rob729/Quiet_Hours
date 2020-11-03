@@ -25,7 +25,6 @@ class StartAlarm(appContext: Context, workerParams: WorkerParameters) :
                 NotificationChannel(b, "Default Channel", NotificationManager.IMPORTANCE_DEFAULT)
             notificationManager.createNotificationChannel(notificationChannel)
         }
-
         val profileName = "Currently Active Profile: ${inputData.getString("Profile_Name")}"
         val vibrate = inputData.getBoolean("VibrateKey", true)
         val profileEndTime = inputData.getString("EndTimeKey")
@@ -40,6 +39,8 @@ class StartAlarm(appContext: Context, workerParams: WorkerParameters) :
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
+        if (StoreSession.readInt(AppConstants.BEGIN_STATUS) == 0)
+        StoreSession.writeInt(AppConstants.RINGTONE_MODE, audioManager.ringerMode)
         val notification = NotificationCompat.Builder(applicationContext, b)
             .setSmallIcon(R.drawable.ic_notifications_off)
             .setColor(Color.rgb(30, 136, 229))
