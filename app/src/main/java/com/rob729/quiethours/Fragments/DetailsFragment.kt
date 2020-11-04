@@ -56,7 +56,7 @@ class DetailsFragment : BottomSheetDialogFragment() {
         if (args != null) {
             days = daysSelected.fromJson(args.d, type)
             Utils.selectedDays(days, binding.dayPicker)
-            binding.txt1.text = args.name
+            binding.profileTxt.text = args.name
             binding.str.text = "${setTimeString(args.shr)}:${setTimeString(args.smin)}"
             binding.end.text = "${setTimeString(args.ehr)}:${setTimeString(args.emin)}"
             if (args.vibSwitch) binding.audioMode.setImageResource(R.drawable.vibration)
@@ -65,7 +65,7 @@ class DetailsFragment : BottomSheetDialogFragment() {
             else GONE
         }
 
-        binding.editFab.setOnClickListener {
+        binding.editButton.setOnClickListener {
             val item: Profile = args!!
             val bundle = Bundle()
             bundle.putParcelable("Profile", item)
