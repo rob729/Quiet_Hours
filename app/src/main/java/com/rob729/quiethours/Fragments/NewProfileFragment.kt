@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
@@ -55,6 +54,9 @@ class NewProfileFragment : Fragment() {
     val selectedDays by lazy { Gson() }
     val type by lazy { object : TypeToken<List<Boolean>>() {}.type }
     val id = StoreSession.readLong(AppConstants.PROFILE_ID)
+    private var _binding: FragmentNewProfileBinding? = null
+    private val binding
+    get() = _binding!!
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -62,10 +64,7 @@ class NewProfileFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 
-        val binding = DataBindingUtil.inflate<FragmentNewProfileBinding>(
-            inflater,
-            R.layout.fragment_new_profile, container, false
-        )
+        _binding = FragmentNewProfileBinding.inflate(inflater, container, false)
         binding.toolBar.setNavigationOnClickListener { activity!!.onBackPressed() }
         binding.vibSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
@@ -294,5 +293,9 @@ class NewProfileFragment : Fragment() {
         if (c.timeInMillis < System.currentTimeMillis()) {
             c.add(Calendar.DAY_OF_YEAR, 7)
         }
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

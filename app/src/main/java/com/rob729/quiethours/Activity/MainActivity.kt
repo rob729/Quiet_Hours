@@ -6,21 +6,18 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.databinding.DataBindingUtil
 import androidx.navigation.Navigation
-import com.rob729.quiethours.R
 import com.rob729.quiethours.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
 import com.rob729.quiethours.util.StoreSession
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = DataBindingUtil.setContentView<ActivityMainBinding>(
-            this,
-            R.layout.activity_main
-        )
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         supportActionBar?.elevation = 0F
         if (StoreSession.getNightMode()) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)

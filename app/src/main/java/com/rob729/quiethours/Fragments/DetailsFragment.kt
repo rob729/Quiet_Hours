@@ -7,7 +7,6 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment.findNavController
@@ -36,6 +35,9 @@ class DetailsFragment : BottomSheetDialogFragment() {
         }
     }
     private var days: List<Boolean> = ArrayList()
+    private var _binding: FragmentDetailsBinding? = null
+    private val binding
+    get() = _binding!!
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -44,10 +46,7 @@ class DetailsFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val binding = DataBindingUtil.inflate<FragmentDetailsBinding>(
-            inflater,
-            R.layout.fragment_details, container, false
-        )
+        _binding = FragmentDetailsBinding.inflate(inflater, container, false)
 
         val args = arguments?.getParcelable<Profile>("Profile")
         val daysSelected = Gson()
@@ -94,5 +93,9 @@ class DetailsFragment : BottomSheetDialogFragment() {
         // this forces the sheet to appear at max height even on landscape
         val behavior = BottomSheetBehavior.from(requireView().parent as View)
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
