@@ -12,7 +12,6 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -45,7 +44,6 @@ import com.rob729.quiethours.util.*
  */
 class MainFragment : Fragment() {
     private lateinit var profileViewModel: ProfileViewModel
-    private lateinit var binding: FragmentMainBinding
     lateinit var profileListAdapter: ProfileListAdapter
     private val appUpdateManager: AppUpdateManager by lazy { AppUpdateManagerFactory.create(context) }
     private val appUpdateInfoTask: Task<AppUpdateInfo> by lazy { appUpdateManager.appUpdateInfo }
@@ -53,16 +51,16 @@ class MainFragment : Fragment() {
     val notificationManager =
         context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
     val audioManager by lazy { requireActivity().getSystemService(Context.AUDIO_SERVICE) as AudioManager }
+    private var _binding: FragmentMainBinding? = null
+    private val binding
+    get() = _binding!!
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_main, container, false
-        )
+        _binding = FragmentMainBinding.inflate(inflater, container, false)
         (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
     checkForUpdates()
 
@@ -75,8 +73,6 @@ class MainFragment : Fragment() {
 
         binding.rv.adapter = profileListAdapter
         binding.rv.layoutManager = LinearLayoutManager(context)
-
-        binding.lifecycleOwner = this
 
         enableSwipeToDeleteAndUndo(profileListAdapter)
 
@@ -296,5 +292,9 @@ class MainFragment : Fragment() {
                 }
             }
         }
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
