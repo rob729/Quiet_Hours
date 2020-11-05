@@ -28,7 +28,8 @@
                     app:strokeColor="@android:color/white"
                     app:strokeWidth="1dp"
                     app:text="A"
-                    app:textSize="22sp" />
+                    app:textSize="22sp"
+                    android:layout_centerVertical="true"/>
 
             <TextView
                     android:id="@+id/ProfileName"
