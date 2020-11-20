@@ -83,8 +83,8 @@ class NewProfileFragment : Fragment() {
             sTimePicker = TimePickerDialog(
                 context,
                 TimePickerDialog.OnTimeSetListener { _, i, i1 ->
-                    hourText = setTimeString(i)
-                    minText = setTimeString(i1)
+                    hourText = Utils.setTimeString(i)
+                    minText = Utils.setTimeString(i1)
                     Log.e("TAG", "$hourText : $minText")
                     binding.StartTime.setText(
                         String.format(
@@ -93,8 +93,8 @@ class NewProfileFragment : Fragment() {
                             minText
                         )
                     )
-                    shr = setTimeString(i).toInt()
-                    smin = setTimeString(i1).toInt()
+                    shr = Utils.setTimeString(i).toInt()
+                    smin = Utils.setTimeString(i1).toInt()
                 }, hour, minute, appSharedPrefs.getBoolean("time format", false)
             )
             sTimePicker.show()
@@ -104,8 +104,8 @@ class NewProfileFragment : Fragment() {
             eTimePicker = TimePickerDialog(
                 context,
                 TimePickerDialog.OnTimeSetListener { _, i, i1 ->
-                    hourText = setTimeString(i)
-                    minText = setTimeString(i1)
+                    hourText = Utils.setTimeString(i)
+                    minText = Utils.setTimeString(i1)
                     binding.EndTime.setText(
                         String.format(
                             resources.getString(R.string.Time),
@@ -113,8 +113,8 @@ class NewProfileFragment : Fragment() {
                             minText
                         )
                     )
-                    ehr = setTimeString(i).toInt()
-                    emin = setTimeString(i1).toInt()
+                    ehr = Utils.setTimeString(i).toInt()
+                    emin = Utils.setTimeString(i1).toInt()
                 }, hour, minute, appSharedPrefs.getBoolean("time format", false)
             )
             eTimePicker.show()
@@ -181,12 +181,12 @@ class NewProfileFragment : Fragment() {
             days = selectedDays.fromJson(args.d, type)
             Utils.selectedDays(days, binding.dayPicker)
             binding.userToDoEditText.setText(args.name)
-            binding.StartTime.setText("${setTimeString(args.shr)}:${setTimeString(args.smin)}")
+            binding.StartTime.setText("${Utils.setTimeString(args.shr)}:${Utils.setTimeString(args.smin)}")
             shr = args.shr
             smin = args.smin
             ehr = args.ehr
             emin = args.emin
-            binding.EndTime.setText("${setTimeString(args.ehr)}:${setTimeString(args.emin)}")
+            binding.EndTime.setText("${Utils.setTimeString(args.ehr)}:${Utils.setTimeString(args.emin)}")
             binding.vibSwitch.isChecked = args.vibSwitch
             binding.repeatWeeklySwitch.isChecked = args.repeatWeekly
             binding.makeProfileFab.text = "UPDATE"
@@ -200,14 +200,6 @@ class NewProfileFragment : Fragment() {
             Snackbar.LENGTH_LONG
         ).setAction("Action", null)
         snackbar.show()
-    }
-
-    private fun setTimeString(i: Int): String {
-        return if (i < 10) {
-            "0$i"
-        } else {
-            "$i"
-        }
     }
 
     private fun Days(daysSelected: List<MaterialDayPicker.Weekday>) {
@@ -243,7 +235,7 @@ class NewProfileFragment : Fragment() {
             c.add(Calendar.DAY_OF_YEAR, 7)
         }
 
-        var etime = "End Time: ${profile.ehr}:${profile.emin}"
+        var etime = "End Time: ${Utils.setTimeString(profile.ehr)}:${Utils.setTimeString(profile.emin)}"
         val profileData = workDataOf(Pair("ActiveProfileId", profile.profileId), Pair("Profile_Name", profile.name), (Pair("VibrateKey", profile.vibSwitch)), (Pair("EndTimeKey", etime)))
 
         val startAlarmRequest = if (repeatWeeklySwitch.isChecked) {
