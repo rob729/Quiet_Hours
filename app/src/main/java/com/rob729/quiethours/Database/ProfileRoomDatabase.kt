@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-@Database(entities = [Profile::class], version = 6)
+@Database(entities = [Profile::class], version = 7)
 abstract class ProfileRoomDatabase : RoomDatabase() {
 
     abstract fun profileDao(): ProfileDAO
@@ -26,7 +26,7 @@ abstract class ProfileRoomDatabase : RoomDatabase() {
                     context.applicationContext,
                     ProfileRoomDatabase::class.java,
                     "Profile_Database"
-                ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
+                ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
                     .build()
                 INSTANCE = instance
                 return instance
@@ -61,6 +61,12 @@ abstract class ProfileRoomDatabase : RoomDatabase() {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("ALTER TABLE profile_table " +
                         " ADD COLUMN pauseSwitch INTEGER NOT NULL DEFAULT 1")
+            }
+        }
+        val MIGRATION_6_7: Migration = object : Migration(6, 7) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE profile_table " +
+                        " ADD COLUMN notes TEXT NOT NULL DEFAULT ''")
             }
         }
     }

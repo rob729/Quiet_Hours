@@ -22,6 +22,19 @@
                 android:layout_centerHorizontal="true"
                 android:textSize="24sp"
                 android:transitionName="profileName" />
+
+        <TextView
+                android:id="@+id/profileNote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="ADD A NOTE"
+                android:textColor="@color/textColor"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_centerHorizontal="true"
+                android:textSize="18sp"
+                android:layout_below="@id/profileTxt"
+                android:transitionName="profileNote" />
         <LinearLayout
                 android:id="@+id/linearLayout"
                 android:layout_width="wrap_content"
@@ -29,7 +42,7 @@
                 android:layout_marginTop="15dp"
                 android:layout_centerHorizontal="true"
                 android:orientation="horizontal"
-                android:layout_below="@id/profileTxt">
+                android:layout_below="@id/profileNote">
 
             <ImageView
                     android:id="@+id/audioMode"
