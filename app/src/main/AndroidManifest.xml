@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.rob729.quiethours">
+        xmlns:tools="http://schemas.android.com/tools"
+        package="com.rob729.quiethours">
 
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
@@ -13,11 +14,15 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:name=".QuietHoursApp">
+        <provider
+                android:name="androidx.work.impl.WorkManagerInitializer"
+                android:authorities="${applicationId}.workmanager-init"
+                tools:node="remove" />
         <activity android:name="com.rob729.quiethours.Activity.MainActivity"
-                  android:windowSoftInputMode="adjustPan">
+                android:windowSoftInputMode="adjustPan">
         </activity>
         <activity android:name="com.rob729.quiethours.Activity.SplashScreen"
-                  android:theme="@style/SplashTheme">
+                android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <action android:name="android.intent.action.VIEW"/>

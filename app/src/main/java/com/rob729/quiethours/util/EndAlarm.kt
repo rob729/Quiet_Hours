@@ -24,7 +24,8 @@ class EndAlarm(appContext: Context, workerParams: WorkerParameters) :
 
         val audioManager =
             applicationContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        StoreSession.writeInt(AppConstants.BEGIN_STATUS, StoreSession.readInt(AppConstants.BEGIN_STATUS) - 1)
+        if (StoreSession.readInt(AppConstants.BEGIN_STATUS) > 0)
+            StoreSession.writeInt(AppConstants.BEGIN_STATUS, StoreSession.readInt(AppConstants.BEGIN_STATUS) - 1)
         audioManager.ringerMode = if (StoreSession.readInt(AppConstants.BEGIN_STATUS)> 0) {
             if (StoreSession.readInt(AppConstants.VIBRATE_STATE_ICON) == 1)
                 AudioManager.RINGER_MODE_VIBRATE

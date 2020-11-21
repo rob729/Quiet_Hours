@@ -1,57 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
- <androidx.cardview.widget.CardView
+<androidx.cardview.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:elevation="16dp"
+        android:padding="5dp"
+        app:cardCornerRadius="8dp">
+
+    <RelativeLayout
+            android:id="@+id/profile_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:elevation="16dp"
-            android:padding="5dp"
-            app:cardCornerRadius="8dp">
+            android:padding="5dp">
 
-        <RelativeLayout
-                android:id="@+id/profile_card"
-                android:layout_width="match_parent"
+        <com.github.abdularis.civ.AvatarImageView
+                android:id="@+id/TxtImg"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:padding="3dp"
+                app:avatarBackgroundColor="@color/colorAccent"
+                app:strokeColor="@android:color/white"
+                app:strokeWidth="1dp"
+                app:text="A"
+                app:textSize="22sp"
+                android:layout_centerVertical="true"/>
+
+        <TextView
+                android:id="@+id/ProfileName"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="5dp">
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="6dp"
+                android:layout_toEndOf="@id/TxtImg"
+                android:text="@string/profile_name"
+                android:textColor="@color/textColor"
+                android:textSize="24sp"
+                android:transitionName="profileName" />
 
-            <com.github.abdularis.civ.AvatarImageView
-                    android:id="@+id/TxtImg"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:padding="3dp"
-                    app:avatarBackgroundColor="@color/colorAccent"
-                    app:strokeColor="@android:color/white"
-                    app:strokeWidth="1dp"
-                    app:text="A"
-                    app:textSize="22sp"
-                    android:layout_centerVertical="true"/>
+        <TextView
+                android:id="@+id/timeStamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ProfileName"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="2dp"
+                android:layout_toEndOf="@id/TxtImg"
+                android:textSize="12sp" />
 
-            <TextView
-                    android:id="@+id/ProfileName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="18dp"
-                    android:layout_marginTop="6dp"
-                    android:layout_toEndOf="@id/TxtImg"
-                    android:text="@string/profile_name"
-                    android:textColor="@color/textColor"
-                    android:textSize="24sp"
-                    android:transitionName="profileName" />
+        <Switch
+                android:id="@+id/pauseSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"/>
 
-            <TextView
-                    android:id="@+id/timeStamp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/ProfileName"
-                    android:layout_marginStart="18dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_toEndOf="@id/TxtImg"
-                    android:textSize="12sp" />
+    </RelativeLayout>
 
-        </RelativeLayout>
-
-    </androidx.cardview.widget.CardView>
+</androidx.cardview.widget.CardView>

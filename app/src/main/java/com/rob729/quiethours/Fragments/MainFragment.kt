@@ -53,7 +53,7 @@ class MainFragment : Fragment() {
     val audioManager by lazy { requireActivity().getSystemService(Context.AUDIO_SERVICE) as AudioManager }
     private var _binding: FragmentMainBinding? = null
     private val binding
-    get() = _binding!!
+        get() = _binding!!
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -62,7 +62,7 @@ class MainFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
-    checkForUpdates()
+        checkForUpdates()
 
         introFab()
 
@@ -76,15 +76,22 @@ class MainFragment : Fragment() {
 
         enableSwipeToDeleteAndUndo(profileListAdapter)
 
-        profileViewModel.allProfiles.observe(this, Observer {
-            if (it.isEmpty()) {
+        profileViewModel.allProfiles.observe(this, Observer { profilesList ->
+            if (profilesList.isEmpty()) {
                 binding.emrl.visibility = View.VISIBLE
             } else {
                 binding.emrl.visibility = View.GONE
             }
-
-            profileListAdapter.submitList(it)
-            profileListAdapter.profiles = it as ArrayList<Profile>
+            for (i in profilesList.indices) {
+                if (StoreSession.readLong(AppConstants.ACTIVE_PROFILE_ID) == profilesList[i].profileId) {
+                    if (!profilesList[i].pauseSwitch)
+                        binding.activeCard.visibility = View.GONE
+                    else
+                        binding.activeCard.visibility = View.VISIBLE
+                }
+            }
+            profileListAdapter.submitList(profilesList)
+            profileListAdapter.profiles = profilesList as ArrayList<Profile>
         })
 
         val notificationManager =
@@ -166,28 +173,28 @@ class MainFragment : Fragment() {
             }
             R.id.action_delete -> {
                 if (binding.emrl.visibility == View.GONE) {
-                AlertDialog.Builder(requireContext())
-                    .setTitle("Delete All Profiles")
-                    .setMessage("Are you sure you want to delete all the profiles?")
-                    .setPositiveButton("Yes") { _, dialogInterface ->
-                        if (StoreSession.readInt(AppConstants.BEGIN_STATUS) != 0)
-                            audioManager.ringerMode = StoreSession.readInt(AppConstants.RINGTONE_MODE)
-                        profileListAdapter.deleteAll()
-                        binding.activeProfile.visibility = View.GONE
+                    AlertDialog.Builder(requireContext())
+                        .setTitle("Delete All Profiles")
+                        .setMessage("Are you sure you want to delete all the profiles?")
+                        .setPositiveButton("Yes") { _, dialogInterface ->
+                            if (StoreSession.readInt(AppConstants.BEGIN_STATUS) != 0)
+                                audioManager.ringerMode = StoreSession.readInt(AppConstants.RINGTONE_MODE)
+                            profileListAdapter.deleteAll()
+                            binding.activeProfile.visibility = View.GONE
                         }
-                    .setNegativeButton("No") { _, dialogInterface ->
-                    }
-                    .setCancelable(true)
-                    .show()
-            } else {
-                Snackbar
-                    .make(
-                        binding.coordLayout,
-                        "No profile is present to be deleted",
-                        Snackbar.LENGTH_LONG
-                    )
-                    .show()
-            }
+                        .setNegativeButton("No") { _, dialogInterface ->
+                        }
+                        .setCancelable(true)
+                        .show()
+                } else {
+                    Snackbar
+                        .make(
+                            binding.coordLayout,
+                            "No profile is present to be deleted",
+                            Snackbar.LENGTH_LONG
+                        )
+                        .show()
+                }
                 return true
             }
             else -> super.onOptionsItemSelected(item)
@@ -209,7 +216,7 @@ class MainFragment : Fragment() {
                             binding.activeProfile.visibility = View.GONE
                             audioManager.ringerMode = StoreSession.readInt(AppConstants.RINGTONE_MODE)
                         }
-                        profileListAdapter.removeWork(item.profileId.toString())
+                        WorkManagerHelper.cancelWork(item.profileId.toString())
                         Snackbar
                             .make(
                                 binding.coordLayout,
