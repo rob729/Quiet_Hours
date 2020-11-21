@@ -10,10 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.preference.PreferenceManager
-import androidx.work.OneTimeWorkRequest
-import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
-import androidx.work.workDataOf
 import ca.antonious.materialdaypicker.MaterialDayPicker
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
@@ -26,7 +23,6 @@ import com.rob729.quiethours.util.*
 import kotlinx.android.synthetic.main.fragment_new_profile.*
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import kotlin.random.Random
 
@@ -56,7 +52,7 @@ class NewProfileFragment : Fragment() {
     val id = StoreSession.readLong(AppConstants.PROFILE_ID)
     private var _binding: FragmentNewProfileBinding? = null
     private val binding
-    get() = _binding!!
+        get() = _binding!!
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -146,7 +142,8 @@ class NewProfileFragment : Fragment() {
                     colorIndex = Random.nextInt(0, 8),
                     vibSwitch = binding.vibSwitch.isChecked,
                     timeInstance = currentTime,
-                    repeatWeekly = binding.repeatWeeklySwitch.isChecked
+                    repeatWeekly = binding.repeatWeeklySwitch.isChecked,
+                    pauseSwitch = true
                 )
                 if (binding.makeProfileFab.text == "Submit") {
                     profile.profileId = System.currentTimeMillis()
@@ -158,22 +155,7 @@ class NewProfileFragment : Fragment() {
                 }
                 Navigation.findNavController(it)
                     .navigate(NewProfileFragmentDirections.actionNewProfileFragmentToMainFragment())
-                var i = 0
-                while (i < 7) {
-                    if (days[i]) {
-                        sAlarm(i + 1, profile)
-                        if (shr > ehr) {
-                            if (i == 6) {
-                                eAlarm(1, profile)
-                            } else {
-                                eAlarm(i + 2, profile)
-                            }
-                        } else {
-                            eAlarm(i + 1, profile)
-                        }
-                    }
-                    ++i
-                }
+                WorkManagerHelper.setAlarms(profile)
             }
         }
         val args = arguments?.getParcelable<Profile>("Profile")
@@ -223,69 +205,6 @@ class NewProfileFragment : Fragment() {
             days.add(index, false)
     }
 
-    private fun sAlarm(dayOfWeek: Int, profile: Profile) {
-        val c = Calendar.getInstance()
-        c.set(Calendar.DAY_OF_WEEK, dayOfWeek)
-        c.set(Calendar.HOUR_OF_DAY, shr)
-        c.set(Calendar.MINUTE, smin)
-        c.set(Calendar.SECOND, 0)
-        c.set(Calendar.MILLISECOND, 0)
-
-        if (c.timeInMillis < System.currentTimeMillis()) {
-            c.add(Calendar.DAY_OF_YEAR, 7)
-        }
-
-        var etime = "End Time: ${Utils.setTimeString(profile.ehr)}:${Utils.setTimeString(profile.emin)}"
-        val profileData = workDataOf(Pair("ActiveProfileId", profile.profileId), Pair("Profile_Name", profile.name), (Pair("VibrateKey", profile.vibSwitch)), (Pair("EndTimeKey", etime)))
-
-        val startAlarmRequest = if (repeatWeeklySwitch.isChecked) {
-                PeriodicWorkRequest.Builder(StartAlarm::class.java, 7, TimeUnit.DAYS)
-                .addTag(profile.profileId.toString())
-                .setInputData(profileData)
-                .setInitialDelay(c.timeInMillis - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-                .build()
-            } else {
-            OneTimeWorkRequest.Builder(StartAlarm::class.java)
-            .addTag(profile.profileId.toString())
-            .setInputData(profileData)
-            .setInitialDelay(c.timeInMillis - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-            .build()
-        }
-        context?.let { WorkManager.getInstance(it).enqueue(startAlarmRequest) }
-    }
-
-    private fun eAlarm(dayOfWeek: Int, profile: Profile) {
-
-        val c = Calendar.getInstance()
-        c.set(Calendar.DAY_OF_WEEK, dayOfWeek)
-        c.set(Calendar.HOUR_OF_DAY, ehr)
-        c.set(Calendar.MINUTE, emin)
-        c.set(Calendar.SECOND, 0)
-        c.set(Calendar.MILLISECOND, 0)
-
-        timeCheck(c)
-        val profileData = workDataOf(Pair("Profile_Name", profile.name))
-        val endAlarmRequest = if (repeatWeeklySwitch.isChecked) {
-                PeriodicWorkRequest.Builder(EndAlarm::class.java, 7, TimeUnit.DAYS)
-                .addTag(profile.profileId.toString())
-                .setInputData(profileData)
-                .setInitialDelay(c.timeInMillis - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-                .build()
-        } else {
-                OneTimeWorkRequest.Builder(EndAlarm::class.java)
-                .addTag(profile.profileId.toString())
-                .setInputData(profileData)
-                .setInitialDelay(c.timeInMillis - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-                .build()
-        }
-            context?.let { WorkManager.getInstance(it).enqueue(endAlarmRequest) }
-    }
-
-    private fun timeCheck(c: Calendar) {
-        if (c.timeInMillis < System.currentTimeMillis()) {
-            c.add(Calendar.DAY_OF_YEAR, 7)
-        }
-    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
