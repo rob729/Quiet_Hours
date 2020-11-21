@@ -19,4 +19,11 @@ object Utils {
         if (d[6])
             materialDayPicker.selectDay(MaterialDayPicker.Weekday.SATURDAY)
     }
+    fun setTimeString(i: Int): String {
+        return if (i < 10) {
+            "0$i"
+        } else {
+            "$i"
+        }
+    }
 }
