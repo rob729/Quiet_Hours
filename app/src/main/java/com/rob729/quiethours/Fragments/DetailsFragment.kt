@@ -58,6 +58,12 @@ class DetailsFragment : BottomSheetDialogFragment() {
             binding.profileTxt.text = args.name
             binding.str.text = "${setTimeString(args.shr)}:${setTimeString(args.smin)}"
             binding.end.text = "${setTimeString(args.ehr)}:${setTimeString(args.emin)}"
+            binding.profileNote.text = args.notes
+            binding.profileNote.visibility = if (!binding.profileNote.text.isBlank()) {
+                VISIBLE
+            } else {
+                GONE
+            }
             if (args.vibSwitch) binding.audioMode.setImageResource(R.drawable.vibration)
             else binding.audioMode.setImageResource(R.drawable.mute)
             binding.repeatWeeklyIcon.visibility = if (args.repeatWeekly) VISIBLE

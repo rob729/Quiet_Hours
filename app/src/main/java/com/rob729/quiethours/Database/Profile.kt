@@ -21,6 +21,7 @@ data class Profile(
     // Adding parameter for timestamp
     var timeInstance: String,
     var repeatWeekly: Boolean,
-    var pauseSwitch: Boolean
+    var pauseSwitch: Boolean,
+    var notes: String
 ) :
     Parcelable

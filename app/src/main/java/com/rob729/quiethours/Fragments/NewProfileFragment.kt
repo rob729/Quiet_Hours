@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -14,7 +16,6 @@ import androidx.work.WorkManager
 import ca.antonious.materialdaypicker.MaterialDayPicker
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.rob729.quiethours.Database.Profile
 import com.rob729.quiethours.Database.ProfileViewModel
 import com.rob729.quiethours.R
@@ -47,8 +48,6 @@ class NewProfileFragment : Fragment() {
     val mcurrentTime = Calendar.getInstance()
     val hour = mcurrentTime.get(Calendar.HOUR_OF_DAY)
     val minute = mcurrentTime.get(Calendar.MINUTE)
-    val selectedDays by lazy { Gson() }
-    val type by lazy { object : TypeToken<List<Boolean>>() {}.type }
     val id = StoreSession.readLong(AppConstants.PROFILE_ID)
     private var _binding: FragmentNewProfileBinding? = null
     private val binding
@@ -69,6 +68,15 @@ class NewProfileFragment : Fragment() {
                 binding.vibSwitch.text = "Silent"
             }
         }
+        binding.noteCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                binding.noteTextInput.visibility = VISIBLE
+            } else {
+                binding.noteEditText.setText("")
+                binding.noteTextInput.visibility = GONE
+            }
+        }
+
         profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
         binding.dayPicker.clearSelection()
         val appSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
@@ -143,7 +151,8 @@ class NewProfileFragment : Fragment() {
                     vibSwitch = binding.vibSwitch.isChecked,
                     timeInstance = currentTime,
                     repeatWeekly = binding.repeatWeeklySwitch.isChecked,
-                    pauseSwitch = true
+                    pauseSwitch = true,
+                    notes = binding.noteEditText.text.toString()
                 )
                 if (binding.makeProfileFab.text == "Submit") {
                     profile.profileId = System.currentTimeMillis()
@@ -160,9 +169,14 @@ class NewProfileFragment : Fragment() {
         }
         val args = arguments?.getParcelable<Profile>("Profile")
         if (args != null) {
-            days = selectedDays.fromJson(args.d, type)
+            days = Utils.daysList(args.d)
             Utils.selectedDays(days, binding.dayPicker)
             binding.userToDoEditText.setText(args.name)
+            if (!args.notes.isBlank()) {
+                binding.noteEditText.setText(args.notes)
+                binding.noteTextInput.visibility = VISIBLE
+                binding.noteCheckBox.isChecked = true
+            }
             binding.StartTime.setText("${Utils.setTimeString(args.shr)}:${Utils.setTimeString(args.smin)}")
             shr = args.shr
             smin = args.smin

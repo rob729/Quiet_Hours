@@ -73,6 +73,8 @@ class ProfileListAdapter(
             val current: Calendar = Calendar.getInstance()
             val currentHour = current.get(Calendar.HOUR_OF_DAY)
             val currentMinute = current.get(Calendar.MINUTE)
+            val currentDay = current.get(Calendar.DAY_OF_WEEK)
+            val days: MutableList<Boolean> = Utils.daysList(item.d)
 
             binding.profileCard.setOnClickListener {
                 val args = Bundle()
@@ -88,7 +90,7 @@ class ProfileListAdapter(
                 StoreSession.writeInt(AppConstants.BEGIN_STATUS, 0)
                 StoreSession.writeLong(AppConstants.ACTIVE_PROFILE_ID, 0)
             }
-            if (item.shr == currentHour && item.smin == currentMinute
+            if (days[currentDay - 1] && item.shr == currentHour && item.smin == currentMinute
             ) {
                 StoreSession.writeLong(AppConstants.ACTIVE_PROFILE_ID, item.profileId)
             }
@@ -121,7 +123,7 @@ class ProfileListAdapter(
                                 shr = currentHour
                             }
                             if (shr != item.ehr && smin != item.emin)
-                            WorkManagerHelper.setAlarms(item, shr, smin)
+                                WorkManagerHelper.setAlarms(item, shr, smin)
                         } else {
                             WorkManagerHelper.setAlarms(item)
                         }
