@@ -27,7 +27,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="32dp"
-                    android:layout_marginTop="60dp"
+                    android:layout_marginTop="40dp"
                     android:layout_below="@+id/toolBar"
                     android:layout_marginRight="32dp"
                     android:hint="@string/profile_name">
@@ -44,12 +44,47 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <CheckBox
+                    android:id="@+id/noteCheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/toDoCustomTextInput"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="20dp"
+                    android:text="Would you like to add a note?"
+                    android:textSize="18sp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/noteTextInput"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@+id/noteCheckBox"
+                    android:visibility="gone"
+                    android:layout_marginRight="32dp"
+                    android:hint="Write a Note">
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/noteEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textAutoCorrect|textCapSentences"
+                        android:lines="2"
+                        android:maxLines="3"
+                        android:textColor="@color/textColor"
+                        android:textColorHint="@color/textColor" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/timeLayout"
-                    android:layout_below="@+id/toDoCustomTextInput"
-                    android:layout_marginTop="100dp"
+                    android:layout_below="@+id/noteTextInput"
+                    android:layout_marginTop="40dp"
                     android:visibility="visible"
                     android:weightSum="1">
 
@@ -100,7 +135,7 @@
                     android:layout_below="@id/timeLayout"
                     android:id="@+id/dayLayout"
                     android:layout_marginStart="35dp"
-                    android:layout_marginTop="50dp"
+                    android:layout_marginTop="40dp"
                     android:layout_marginEnd="35dp"
                     android:visibility="visible">
 
