@@ -1,6 +1,8 @@
 package com.rob729.quiethours.util
 
 import ca.antonious.materialdaypicker.MaterialDayPicker
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 object Utils {
     fun selectedDays(d: List<Boolean>, materialDayPicker: MaterialDayPicker) {
@@ -25,5 +27,10 @@ object Utils {
         } else {
             "$i"
         }
+    }
+    fun daysList(profileDays: String): MutableList<Boolean> {
+        val type by lazy { object : TypeToken<List<Boolean>>() {}.type }
+        val selectedDays by lazy { Gson() }
+        return selectedDays.fromJson(profileDays, type)
     }
 }

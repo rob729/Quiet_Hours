@@ -16,7 +16,6 @@ import androidx.work.WorkManager
 import ca.antonious.materialdaypicker.MaterialDayPicker
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.rob729.quiethours.Database.Profile
 import com.rob729.quiethours.Database.ProfileViewModel
 import com.rob729.quiethours.R
@@ -49,8 +48,6 @@ class NewProfileFragment : Fragment() {
     val mcurrentTime = Calendar.getInstance()
     val hour = mcurrentTime.get(Calendar.HOUR_OF_DAY)
     val minute = mcurrentTime.get(Calendar.MINUTE)
-    val selectedDays by lazy { Gson() }
-    val type by lazy { object : TypeToken<List<Boolean>>() {}.type }
     val id = StoreSession.readLong(AppConstants.PROFILE_ID)
     private var _binding: FragmentNewProfileBinding? = null
     private val binding
@@ -172,7 +169,7 @@ class NewProfileFragment : Fragment() {
         }
         val args = arguments?.getParcelable<Profile>("Profile")
         if (args != null) {
-            days = selectedDays.fromJson(args.d, type)
+            days = Utils.daysList(args.d)
             Utils.selectedDays(days, binding.dayPicker)
             binding.userToDoEditText.setText(args.name)
             if (!args.notes.isBlank()) {
