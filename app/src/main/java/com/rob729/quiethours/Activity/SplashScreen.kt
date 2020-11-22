@@ -12,10 +12,9 @@ class SplashScreen : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
         checkFirstRun()
+        checkAppIntro()
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
         finish()
     }
     fun checkFirstRun() {
@@ -23,5 +22,12 @@ class SplashScreen : AppCompatActivity() {
             StoreSession.setNightMode(resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES)
         }
         StoreSession.writeBoolean(AppConstants.FIRST_BOOT, true)
+    }
+
+    fun checkAppIntro() {
+        if (StoreSession.readBoolean(AppConstants.APP_INTRO_CHECK))
+            startActivity(Intent(this, MainActivity::class.java))
+        else
+            startActivity(Intent(this, IntroScreen::class.java))
     }
 }

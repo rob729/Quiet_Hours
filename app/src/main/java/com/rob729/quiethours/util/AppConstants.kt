@@ -9,4 +9,5 @@ object AppConstants {
     val FIRST_BOOT = "FIRST_BOOT"
     val NIGHT_MODE = "nightMode"
     val RINGTONE_MODE = "RINGTONE_MODE"
+    val APP_INTRO_CHECK = "APP_INTRO_CHECK"
 }
