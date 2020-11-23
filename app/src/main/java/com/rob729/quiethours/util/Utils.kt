@@ -1,6 +1,8 @@
 package com.rob729.quiethours.util
 
+import android.view.View
 import ca.antonious.materialdaypicker.MaterialDayPicker
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -32,5 +34,13 @@ object Utils {
         val type by lazy { object : TypeToken<List<Boolean>>() {}.type }
         val selectedDays by lazy { Gson() }
         return selectedDays.fromJson(profileDays, type)
+    }
+    fun showSnackBar(it: View, message: String, length: Int = Snackbar.LENGTH_SHORT) {
+        Snackbar
+            .make(it,
+                message,
+                length
+            )
+            .show()
     }
 }

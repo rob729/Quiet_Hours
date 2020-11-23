@@ -50,6 +50,7 @@ class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding
         get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -123,6 +124,7 @@ class MainFragment : Fragment() {
             StoreSession.writeLong(AppConstants.ACTIVE_PROFILE_ID, 0)
         }
     }
+
     override fun onResume() {
         super.onResume()
         appUpdateManager.appUpdateInfo.addOnSuccessListener { result: AppUpdateInfo? ->
@@ -172,7 +174,8 @@ class MainFragment : Fragment() {
                         .setMessage("Are you sure you want to delete all the profiles?")
                         .setPositiveButton("Yes") { _, dialogInterface ->
                             if (StoreSession.readInt(AppConstants.BEGIN_STATUS) != 0)
-                                audioManager.ringerMode = StoreSession.readInt(AppConstants.RINGTONE_MODE)
+                                audioManager.ringerMode =
+                                    StoreSession.readInt(AppConstants.RINGTONE_MODE)
                             profileListAdapter.deleteAll()
                             binding.activeProfile.visibility = View.GONE
                         }
@@ -181,13 +184,11 @@ class MainFragment : Fragment() {
                         .setCancelable(true)
                         .show()
                 } else {
-                    Snackbar
-                        .make(
-                            binding.coordLayout,
-                            "No profile is present to be deleted",
-                            Snackbar.LENGTH_LONG
-                        )
-                        .show()
+                    Utils.showSnackBar(
+                        binding.coordLayout,
+                        "No profile is present to be deleted",
+                        Snackbar.LENGTH_LONG
+                    )
                 }
                 return true
             }
@@ -208,16 +209,15 @@ class MainFragment : Fragment() {
                         if (item.profileId == StoreSession.readLong(AppConstants.ACTIVE_PROFILE_ID)) {
                             StoreSession.writeInt(AppConstants.BEGIN_STATUS, 0)
                             binding.activeProfile.visibility = View.GONE
-                            audioManager.ringerMode = StoreSession.readInt(AppConstants.RINGTONE_MODE)
+                            audioManager.ringerMode =
+                                StoreSession.readInt(AppConstants.RINGTONE_MODE)
                         }
                         WorkManagerHelper.cancelWork(item.profileId.toString())
-                        Snackbar
-                            .make(
-                                binding.coordLayout,
-                                "Profile is removed from the list.",
-                                Snackbar.LENGTH_LONG
-                            )
-                            .show()
+                        Utils.showSnackBar(
+                            binding.coordLayout,
+                            "Profile is removed from the list.",
+                            Snackbar.LENGTH_LONG
+                        )
                     }
                     .setNegativeButton("No") { _, dialogInterface ->
                         profileListAdapter.restoreItem(item, position)
@@ -277,6 +277,7 @@ class MainFragment : Fragment() {
             }
         }
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
