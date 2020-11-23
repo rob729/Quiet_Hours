@@ -11,10 +11,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import co.mobiwise.materialintro.shape.Focus
-import co.mobiwise.materialintro.shape.FocusGravity
-import co.mobiwise.materialintro.shape.ShapeType
-import co.mobiwise.materialintro.view.MaterialIntroView
 import com.rob729.quiethours.Database.Profile
 import com.rob729.quiethours.Database.ProfileViewModel
 import com.rob729.quiethours.Fragments.DetailsFragment
@@ -45,9 +41,6 @@ class ProfileListAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item, profileViewModel, parentView)
-        if (position == 0) {
-            introDetail(holder.binding.profileCard)
-        }
     }
 
     class ViewHolder(val binding: ItemRowBinding, val audioManager: AudioManager) :
@@ -156,43 +149,6 @@ class ProfileListAdapter(
     }
 
     fun getList() = profiles
-
-    private fun introDelete(view: View) {
-        MaterialIntroView.Builder(activity)
-            .enableDotAnimation(false)
-            .enableIcon(true)
-            .setFocusGravity(FocusGravity.RIGHT)
-            .setFocusType(Focus.MINIMUM)
-            .setDelayMillis(400)
-            .enableFadeAnimation(true)
-            .performClick(false)
-            .dismissOnTouch(true)
-            .setInfoText("Slide the profile towards right to delete it")
-            .setShape(ShapeType.CIRCLE)
-            .setTarget(view)
-            .setUsageId("intro_card") // THIS SHOULD BE UNIQUE ID
-            .show()
-    }
-
-    private fun introDetail(view: View) {
-        MaterialIntroView.Builder(activity)
-            .enableDotAnimation(true)
-            .enableIcon(true)
-            .setFocusGravity(FocusGravity.CENTER)
-            .setFocusType(Focus.NORMAL)
-            .setDelayMillis(400)
-            .enableFadeAnimation(true)
-            .performClick(false)
-            .dismissOnTouch(true)
-            .setInfoText("Click on the profile to get profile details")
-            .setShape(ShapeType.CIRCLE)
-            .setTarget(view)
-            .setUsageId("intro_card_2") // THIS SHOULD BE UNIQUE ID
-            .setListener {
-                introDelete(view)
-            }
-            .show()
-    }
 
     fun deleteAll() {
         val size: Int = profiles.size

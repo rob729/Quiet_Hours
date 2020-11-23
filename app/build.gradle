@@ -64,6 +64,9 @@ dependencies {
     def lottieVersion = '3.4.4'
     implementation "com.airbnb.android:lottie:$lottieVersion"
 
+    // App Intro Library
+    implementation 'com.github.AppIntro:AppIntro:6.0.0'
+
     // material design library
     implementation 'com.google.android.material:material:1.1.0-beta01'
 
@@ -90,8 +93,6 @@ dependencies {
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
     implementation "androidx.preference:preference-ktx:1.1.0"
-
-    implementation 'com.github.iammert:MaterialIntroView:f7b36b7'
 
     implementation 'com.google.android.play:core:1.6.4'
 }

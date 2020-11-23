@@ -20,10 +20,6 @@ import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import co.mobiwise.materialintro.shape.Focus
-import co.mobiwise.materialintro.shape.FocusGravity
-import co.mobiwise.materialintro.shape.ShapeType
-import co.mobiwise.materialintro.view.MaterialIntroView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
@@ -63,8 +59,6 @@ class MainFragment : Fragment() {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
         checkForUpdates()
-
-        introFab()
 
         profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
 
@@ -255,23 +249,6 @@ class MainFragment : Fragment() {
 
                 startActivity(intent)
             }
-            .show()
-    }
-
-    private fun introFab() {
-        MaterialIntroView.Builder(activity)
-            .enableDotAnimation(false)
-            .enableIcon(true)
-            .setFocusGravity(FocusGravity.CENTER)
-            .setFocusType(Focus.ALL)
-            .setDelayMillis(500)
-            .enableFadeAnimation(true)
-            .performClick(false)
-            .dismissOnTouch(true)
-            .setInfoText("Click the + sign to add new profile")
-            .setShape(ShapeType.CIRCLE)
-            .setTarget(binding.floatingActionButton)
-            .setUsageId("intro_card_1") // THIS SHOULD BE UNIQUE ID
             .show()
     }
 
