@@ -91,9 +91,11 @@ class ProfileListAdapter(
                 item.pauseSwitch = false
                 WorkManagerHelper.cancelWork(item.profileId.toString())
                 if (!binding.pauseSwitch.isChecked) {
+                    Utils.showSnackBar(binding.card, "${item.name} is Paused")
                     if (StoreSession.readLong(AppConstants.ACTIVE_PROFILE_ID) == item.profileId)
                         audioManager.ringerMode = StoreSession.readInt(AppConstants.RINGTONE_MODE)
                 } else {
+                    Utils.showSnackBar(binding.card, "${item.name} is Resumed")
                     if ((StoreSession.readLong(AppConstants.ACTIVE_PROFILE_ID) == item.profileId) &&
                         ((item.shr == item.ehr && (currentHour == item.ehr && currentMinute > item.emin) || (currentHour > item.ehr)) ||
                                 (item.shr < item.ehr && (currentHour >= item.ehr)) || (item.shr > item.ehr && (currentHour <= item.ehr)))

@@ -21,7 +21,6 @@ import com.rob729.quiethours.Database.ProfileViewModel
 import com.rob729.quiethours.R
 import com.rob729.quiethours.databinding.FragmentNewProfileBinding
 import com.rob729.quiethours.util.*
-import kotlinx.android.synthetic.main.fragment_new_profile.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -43,7 +42,6 @@ class NewProfileFragment : Fragment() {
     private var days: MutableList<Boolean> = ArrayList<Boolean>()
     private val noDaySelected = listOf(false, false, false, false, false, false, false)
     private var daysSelected: List<MaterialDayPicker.Weekday> = ArrayList()
-    private lateinit var snackbar: Snackbar
     private lateinit var profileViewModel: ProfileViewModel
     val mcurrentTime = Calendar.getInstance()
     val hour = mcurrentTime.get(Calendar.HOUR_OF_DAY)
@@ -128,14 +126,13 @@ class NewProfileFragment : Fragment() {
             daysSelected = binding.dayPicker.selectedDays
             Days(daysSelected)
             if (binding.userToDoEditText.text.toString() == "") {
-                viewSnackBar(it, "Please enter the Profile name")
-                snackbar.show()
+                Utils.showSnackBar(it, "Please enter the Profile name", Snackbar.LENGTH_LONG)
             } else if ((shr == ehr) && (smin == emin)) {
-                viewSnackBar(it, "Please enter different start and end time")
+                Utils.showSnackBar(it, "Please enter different start and end time", Snackbar.LENGTH_LONG)
             } else if (binding.dayPicker.selectedDays.size == 0) {
-                viewSnackBar(it, "Please select the day(s)")
+                Utils.showSnackBar(it, "Please select the day(s)", Snackbar.LENGTH_LONG)
             } else if ((shr > ehr) && (shr - ehr <= 12)) {
-                viewSnackBar(it, "Please enter a valid time.(Within 12 hour limit)")
+                Utils.showSnackBar(it, "Please enter a valid time.(Within 12 hour limit)", Snackbar.LENGTH_LONG)
             } else {
                 val daySelected = Gson()
                 // Generating formated current time
@@ -188,14 +185,6 @@ class NewProfileFragment : Fragment() {
             binding.makeProfileFab.text = "UPDATE"
         }
         return binding.root
-    }
-
-    private fun viewSnackBar(it: View, message: String) {
-        snackbar = Snackbar.make(
-            it, message,
-            Snackbar.LENGTH_LONG
-        ).setAction("Action", null)
-        snackbar.show()
     }
 
     private fun Days(daysSelected: List<MaterialDayPicker.Weekday>) {
