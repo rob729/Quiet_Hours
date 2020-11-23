@@ -2,11 +2,9 @@ package com.rob729.quiethours.Fragments
 
 import android.app.Activity.RESULT_OK
 import android.app.NotificationManager
-import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.content.IntentSender
-import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
 import android.view.*
@@ -44,9 +42,6 @@ class MainFragment : Fragment() {
     private val appUpdateManager: AppUpdateManager by lazy { AppUpdateManagerFactory.create(context) }
     private val appUpdateInfoTask: Task<AppUpdateInfo> by lazy { appUpdateManager.appUpdateInfo }
     private val MY_REQUEST_CODE = 111
-    val notificationManager =
-        context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
-    val audioManager by lazy { requireActivity().getSystemService(Context.AUDIO_SERVICE) as AudioManager }
     private var _binding: FragmentMainBinding? = null
     private val binding
         get() = _binding!!
@@ -128,20 +123,7 @@ class MainFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         appUpdateManager.appUpdateInfo.addOnSuccessListener { result: AppUpdateInfo? ->
-            if (result?.updateAvailability()
-                == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
-            ) {
-                try {
-                    appUpdateManager.startUpdateFlowForResult(
-                        result,
-                        AppUpdateType.IMMEDIATE,
-                        activity,
-                        MY_REQUEST_CODE
-                    )
-                } catch (e: IntentSender.SendIntentException) {
-                    e.printStackTrace()
-                }
-            }
+            applicationUpdateManager(result)
         }
     }
 
@@ -174,7 +156,7 @@ class MainFragment : Fragment() {
                         .setMessage("Are you sure you want to delete all the profiles?")
                         .setPositiveButton("Yes") { _, dialogInterface ->
                             if (StoreSession.readInt(AppConstants.BEGIN_STATUS) != 0)
-                                audioManager.ringerMode =
+                                Utils.audioManager.ringerMode =
                                     StoreSession.readInt(AppConstants.RINGTONE_MODE)
                             profileListAdapter.deleteAll()
                             binding.activeProfile.visibility = View.GONE
@@ -209,7 +191,7 @@ class MainFragment : Fragment() {
                         if (item.profileId == StoreSession.readLong(AppConstants.ACTIVE_PROFILE_ID)) {
                             StoreSession.writeInt(AppConstants.BEGIN_STATUS, 0)
                             binding.activeProfile.visibility = View.GONE
-                            audioManager.ringerMode =
+                            Utils.audioManager.ringerMode =
                                 StoreSession.readInt(AppConstants.RINGTONE_MODE)
                         }
                         WorkManagerHelper.cancelWork(item.profileId.toString())
@@ -251,6 +233,22 @@ class MainFragment : Fragment() {
             }
             .show()
     }
+    private fun applicationUpdateManager(result: AppUpdateInfo?) {
+        if (result?.updateAvailability()
+            == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
+        ) {
+            try {
+                appUpdateManager.startUpdateFlowForResult(
+                    result,
+                    AppUpdateType.IMMEDIATE,
+                    activity,
+                    MY_REQUEST_CODE
+                )
+            } catch (e: IntentSender.SendIntentException) {
+                e.printStackTrace()
+            }
+        }
+    }
 
     private fun checkForUpdates() {
         appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
@@ -259,20 +257,7 @@ class MainFragment : Fragment() {
                 appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
             ) {
                 appUpdateInfoTask.addOnSuccessListener { result: AppUpdateInfo? ->
-                    if (result?.updateAvailability()
-                        == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
-                    ) {
-                        try {
-                            appUpdateManager.startUpdateFlowForResult(
-                                result,
-                                AppUpdateType.IMMEDIATE,
-                                activity,
-                                MY_REQUEST_CODE
-                            )
-                        } catch (e: IntentSender.SendIntentException) {
-                            e.printStackTrace()
-                        }
-                    }
+                    applicationUpdateManager(result)
                 }
             }
         }

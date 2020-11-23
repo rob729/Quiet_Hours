@@ -34,10 +34,11 @@ class DetailsFragment : BottomSheetDialogFragment() {
             return fragment
         }
     }
+
     private var days: List<Boolean> = ArrayList()
     private var _binding: FragmentDetailsBinding? = null
     private val binding
-    get() = _binding!!
+        get() = _binding!!
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -45,13 +46,10 @@ class DetailsFragment : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         _binding = FragmentDetailsBinding.inflate(inflater, container, false)
-
         val args = arguments?.getParcelable<Profile>("Profile")
         val daysSelected = Gson()
         val type = object : TypeToken<List<Boolean>>() {}.type
-
         if (args != null) {
             days = daysSelected.fromJson(args.d, type)
             Utils.selectedDays(days, binding.dayPicker)
@@ -59,33 +57,28 @@ class DetailsFragment : BottomSheetDialogFragment() {
             binding.str.text = "${setTimeString(args.shr)}:${setTimeString(args.smin)}"
             binding.end.text = "${setTimeString(args.ehr)}:${setTimeString(args.emin)}"
             binding.profileNote.text = args.notes
-            binding.profileNote.visibility = if (!binding.profileNote.text.isBlank()) {
-                VISIBLE
-            } else {
-                GONE
-            }
+            binding.profileNote.visibility = if (!binding.profileNote.text.isBlank()) VISIBLE
+            else GONE
             if (args.vibSwitch) binding.audioMode.setImageResource(R.drawable.vibration)
             else binding.audioMode.setImageResource(R.drawable.mute)
             binding.repeatWeeklyIcon.visibility = if (args.repeatWeekly) VISIBLE
             else GONE
         }
-
         binding.editButton.setOnClickListener {
             val item: Profile = args!!
             val bundle = Bundle()
             bundle.putParcelable("Profile", item)
             StoreSession.writeLong(AppConstants.PROFILE_ID, item.profileId)
-            val navOptions =
-                NavOptions.Builder().setEnterAnim(R.anim.nav_default_enter_anim).setExitAnim(
-                    R.anim.nav_default_exit_anim
-                ).setPopEnterAnim(R.anim.nav_default_pop_enter_anim)
-                    .setPopExitAnim(R.anim.nav_default_pop_exit_anim)
-                    .build()
+            val navOptions = NavOptions.Builder().setEnterAnim(R.anim.nav_default_enter_anim)
+                .setExitAnim(R.anim.nav_default_exit_anim)
+                .setPopEnterAnim(R.anim.nav_default_pop_enter_anim)
+                .setPopExitAnim(R.anim.nav_default_pop_exit_anim).build()
             findNavController(this).navigate(R.id.newProfileFragment, bundle, navOptions)
             dismiss()
         }
         return binding.root
     }
+
     private fun setTimeString(i: Int): String {
         return if (i < 10) {
             "0$i"
@@ -100,6 +93,7 @@ class DetailsFragment : BottomSheetDialogFragment() {
         val behavior = BottomSheetBehavior.from(requireView().parent as View)
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

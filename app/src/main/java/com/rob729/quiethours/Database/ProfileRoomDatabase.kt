@@ -26,48 +26,55 @@ abstract class ProfileRoomDatabase : RoomDatabase() {
                     context.applicationContext,
                     ProfileRoomDatabase::class.java,
                     "Profile_Database"
-                ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
+                ).addMigrations(
+                    MIGRATION_1_2,
+                    MIGRATION_2_3,
+                    MIGRATION_3_4,
+                    MIGRATION_4_5,
+                    MIGRATION_5_6,
+                    MIGRATION_6_7
+                )
                     .build()
                 INSTANCE = instance
                 return instance
             }
         }
 
-        val MIGRATION_1_2: Migration = object : Migration(1, 2) {
+        private fun migrate(a: Int, b: Int, sql: String) = object : Migration(a, b) {
             override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("ALTER TABLE profile_table " +
-                        " ADD COLUMN colorIndex INTEGER NOT NULL DEFAULT 3")
+                database.execSQL(sql)
             }
         }
-        val MIGRATION_2_3: Migration = object : Migration(2, 3) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("ALTER TABLE profile_table " +
-                        " ADD COLUMN vibSwitch INTEGER NOT NULL DEFAULT 1")
-            }
-        }
-        val MIGRATION_3_4: Migration = object : Migration(3, 4) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("ALTER TABLE profile_table " +
-                        " ADD COLUMN timeInstance TEXT NOT NULL DEFAULT ''")
-            }
-        }
-        val MIGRATION_4_5: Migration = object : Migration(4, 5) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("ALTER TABLE profile_table " +
-                        " ADD COLUMN repeatWeekly INTEGER NOT NULL DEFAULT 0")
-            }
-        }
-        val MIGRATION_5_6: Migration = object : Migration(5, 6) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("ALTER TABLE profile_table " +
-                        " ADD COLUMN pauseSwitch INTEGER NOT NULL DEFAULT 1")
-            }
-        }
-        val MIGRATION_6_7: Migration = object : Migration(6, 7) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("ALTER TABLE profile_table " +
-                        " ADD COLUMN notes TEXT NOT NULL DEFAULT ''")
-            }
-        }
+
+        val MIGRATION_1_2: Migration = migrate(
+            1,
+            2,
+            "ALTER TABLE profile_table " + " ADD COLUMN colorIndex INTEGER NOT NULL DEFAULT 3"
+        )
+        val MIGRATION_2_3: Migration = migrate(
+            2,
+            3,
+            "ALTER TABLE profile_table " + " ADD COLUMN vibSwitch INTEGER NOT NULL DEFAULT 1"
+        )
+        val MIGRATION_3_4: Migration = migrate(
+            3,
+            4,
+            "ALTER TABLE profile_table " + " ADD COLUMN timeInstance TEXT NOT NULL DEFAULT ''"
+        )
+        val MIGRATION_4_5: Migration = migrate(
+            4,
+            5,
+            "ALTER TABLE profile_table " + " ADD COLUMN repeatWeekly INTEGER NOT NULL DEFAULT 0"
+        )
+        val MIGRATION_5_6: Migration = migrate(
+            5,
+            6,
+            "ALTER TABLE profile_table " + " ADD COLUMN pauseSwitch INTEGER NOT NULL DEFAULT 1"
+        )
+        val MIGRATION_6_7: Migration = migrate(
+            6,
+            7,
+            "ALTER TABLE profile_table " + " ADD COLUMN notes TEXT NOT NULL DEFAULT ''"
+        )
     }
 }
