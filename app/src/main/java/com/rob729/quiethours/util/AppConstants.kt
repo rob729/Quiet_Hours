@@ -1,4 +1,5 @@
 package com.rob729.quiethours.util
+
 object AppConstants {
     val ACTIVE_PROFILE_ID = "ACTIVE_PROFILE_ID"
     val ACTIVE_PROFILE_NAME = "ACTIVE_PROFILE_NAME"
@@ -10,4 +11,5 @@ object AppConstants {
     val NIGHT_MODE = "nightMode"
     val RINGTONE_MODE = "RINGTONE_MODE"
     val APP_INTRO_CHECK = "APP_INTRO_CHECK"
+    val CHANNEL_ID = "422"
 }

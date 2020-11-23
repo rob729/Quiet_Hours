@@ -43,7 +43,8 @@ abstract class SwipeToDeleteCallback internal constructor(mContext: Context?) : 
 
     override fun onChildDraw(
         c: Canvas,
-        recyclerView: RecyclerView,
+        recyclerView:
+        RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
         dX: Float,
         dY: Float,
@@ -51,34 +52,22 @@ abstract class SwipeToDeleteCallback internal constructor(mContext: Context?) : 
         isCurrentlyActive: Boolean
     ) {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-
         val itemView = viewHolder.itemView
         val itemHeight = itemView.height
-
         val isCancelled = dX == 0f && !isCurrentlyActive
-
         if (isCancelled) {
-            clearCanvas(
-                c,
-                itemView.right + dX,
-                itemView.top.toFloat(),
-                itemView.right.toFloat(),
-                itemView.bottom.toFloat()
-            )
+            clearCanvas(c, itemView.right + dX, itemView.top.toFloat(), itemView.right.toFloat(), itemView.bottom.toFloat())
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             return
         }
-
         mBackground.color = backgroundColor
         mBackground.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
         mBackground.draw(c)
-
         val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
         val deleteIconMargin = (itemHeight - intrinsicHeight) / 2
         val deleteIconLeft = itemView.right - deleteIconMargin - intrinsicWidth
         val deleteIconRight = itemView.right - deleteIconMargin
         val deleteIconBottom = deleteIconTop + intrinsicHeight
-
         deleteDrawable!!.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
         deleteDrawable.draw(c)
         (deleteDrawable as Animatable).start()

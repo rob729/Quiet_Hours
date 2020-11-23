@@ -2,12 +2,12 @@ package com.rob729.quiethours.Fragments
 
 import android.app.TimePickerDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
@@ -37,8 +37,6 @@ class NewProfileFragment : Fragment() {
     private var smin = 0
     private var ehr = 0
     private var emin = 0
-    private var minText = ""
-    private var hourText = ""
     private var days: MutableList<Boolean> = ArrayList<Boolean>()
     private val noDaySelected = listOf(false, false, false, false, false, false, false)
     private var daysSelected: List<MaterialDayPicker.Weekday> = ArrayList()
@@ -85,16 +83,7 @@ class NewProfileFragment : Fragment() {
             sTimePicker = TimePickerDialog(
                 context,
                 TimePickerDialog.OnTimeSetListener { _, i, i1 ->
-                    hourText = Utils.setTimeString(i)
-                    minText = Utils.setTimeString(i1)
-                    Log.e("TAG", "$hourText : $minText")
-                    binding.StartTime.setText(
-                        String.format(
-                            resources.getString(R.string.Time),
-                            hourText,
-                            minText
-                        )
-                    )
+                    binding.StartTime.setStringFormat(Utils.setTimeString(i), Utils.setTimeString(i1))
                     shr = Utils.setTimeString(i).toInt()
                     smin = Utils.setTimeString(i1).toInt()
                 }, hour, minute, appSharedPrefs.getBoolean("time format", false)
@@ -106,15 +95,7 @@ class NewProfileFragment : Fragment() {
             eTimePicker = TimePickerDialog(
                 context,
                 TimePickerDialog.OnTimeSetListener { _, i, i1 ->
-                    hourText = Utils.setTimeString(i)
-                    minText = Utils.setTimeString(i1)
-                    binding.EndTime.setText(
-                        String.format(
-                            resources.getString(R.string.Time),
-                            hourText,
-                            minText
-                        )
-                    )
+                    binding.EndTime.setStringFormat(Utils.setTimeString(i), Utils.setTimeString(i1))
                     ehr = Utils.setTimeString(i).toInt()
                     emin = Utils.setTimeString(i1).toInt()
                 }, hour, minute, appSharedPrefs.getBoolean("time format", false)
@@ -174,12 +155,12 @@ class NewProfileFragment : Fragment() {
                 binding.noteTextInput.visibility = VISIBLE
                 binding.noteCheckBox.isChecked = true
             }
-            binding.StartTime.setText("${Utils.setTimeString(args.shr)}:${Utils.setTimeString(args.smin)}")
+            binding.StartTime.setStringFormat(Utils.setTimeString(args.shr), Utils.setTimeString(args.smin))
             shr = args.shr
             smin = args.smin
             ehr = args.ehr
             emin = args.emin
-            binding.EndTime.setText("${Utils.setTimeString(args.ehr)}:${Utils.setTimeString(args.emin)}")
+            binding.EndTime.setStringFormat(Utils.setTimeString(args.ehr), Utils.setTimeString(args.emin))
             binding.vibSwitch.isChecked = args.vibSwitch
             binding.repeatWeeklySwitch.isChecked = args.repeatWeekly
             binding.makeProfileFab.text = "UPDATE"
@@ -195,6 +176,15 @@ class NewProfileFragment : Fragment() {
         setDay(daysSelected, MaterialDayPicker.Weekday.THURSDAY, 4)
         setDay(daysSelected, MaterialDayPicker.Weekday.FRIDAY, 5)
         setDay(daysSelected, MaterialDayPicker.Weekday.SATURDAY, 6)
+    }
+    private fun EditText.setStringFormat(hourText: String, minText: String) {
+        setText(
+            String.format(
+                resources.getString(R.string.Time),
+                hourText,
+                minText
+            )
+        )
     }
 
     private fun setDay(
