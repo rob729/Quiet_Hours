@@ -1,4 +1,4 @@
-package com.rob729.quiethours.Fragments
+package com.rob729.quiethours.fragments
 
 import android.app.TimePickerDialog
 import android.os.Bundle
@@ -16,11 +16,14 @@ import androidx.work.WorkManager
 import ca.antonious.materialdaypicker.MaterialDayPicker
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
-import com.rob729.quiethours.Database.Profile
-import com.rob729.quiethours.Database.ProfileViewModel
 import com.rob729.quiethours.R
+import com.rob729.quiethours.database.Profile
+import com.rob729.quiethours.database.ProfileViewModel
 import com.rob729.quiethours.databinding.FragmentNewProfileBinding
-import com.rob729.quiethours.util.*
+import com.rob729.quiethours.util.AppConstants
+import com.rob729.quiethours.util.StoreSession
+import com.rob729.quiethours.util.Utils
+import com.rob729.quiethours.util.WorkManagerHelper
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -37,8 +40,7 @@ class NewProfileFragment : Fragment() {
     private var smin = 0
     private var ehr = 0
     private var emin = 0
-    private var days: MutableList<Boolean> = ArrayList<Boolean>()
-    private val noDaySelected = listOf(false, false, false, false, false, false, false)
+    private var days: MutableList<Boolean> = ArrayList()
     private var daysSelected: List<MaterialDayPicker.Weekday> = ArrayList()
     private lateinit var profileViewModel: ProfileViewModel
     val mcurrentTime = Calendar.getInstance()
@@ -48,6 +50,7 @@ class NewProfileFragment : Fragment() {
     private var _binding: FragmentNewProfileBinding? = null
     private val binding
         get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -58,10 +61,10 @@ class NewProfileFragment : Fragment() {
         _binding = FragmentNewProfileBinding.inflate(inflater, container, false)
         binding.toolBar.setNavigationOnClickListener { activity!!.onBackPressed() }
         binding.vibSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
-                binding.vibSwitch.text = "Vibrate"
+            binding.vibSwitch.text = if (isChecked) {
+                "Vibrate"
             } else {
-                binding.vibSwitch.text = "Silent"
+                "Silent"
             }
         }
         binding.noteCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -82,8 +85,11 @@ class NewProfileFragment : Fragment() {
         binding.StartTime.setOnClickListener {
             sTimePicker = TimePickerDialog(
                 context,
-                TimePickerDialog.OnTimeSetListener { _, i, i1 ->
-                    binding.StartTime.setStringFormat(Utils.setTimeString(i), Utils.setTimeString(i1))
+                { _, i, i1 ->
+                    binding.StartTime.setStringFormat(
+                        Utils.setTimeString(i),
+                        Utils.setTimeString(i1)
+                    )
                     shr = Utils.setTimeString(i).toInt()
                     smin = Utils.setTimeString(i1).toInt()
                 }, hour, minute, appSharedPrefs.getBoolean("time format", false)
@@ -94,7 +100,7 @@ class NewProfileFragment : Fragment() {
         binding.EndTime.setOnClickListener {
             eTimePicker = TimePickerDialog(
                 context,
-                TimePickerDialog.OnTimeSetListener { _, i, i1 ->
+                { _, i, i1 ->
                     binding.EndTime.setStringFormat(Utils.setTimeString(i), Utils.setTimeString(i1))
                     ehr = Utils.setTimeString(i).toInt()
                     emin = Utils.setTimeString(i1).toInt()
@@ -109,15 +115,23 @@ class NewProfileFragment : Fragment() {
             if (binding.userToDoEditText.text.toString() == "") {
                 Utils.showSnackBar(it, "Please enter the Profile name", Snackbar.LENGTH_LONG)
             } else if ((shr == ehr) && (smin == emin)) {
-                Utils.showSnackBar(it, "Please enter different start and end time", Snackbar.LENGTH_LONG)
+                Utils.showSnackBar(
+                    it,
+                    "Please enter different start and end time",
+                    Snackbar.LENGTH_LONG
+                )
             } else if (binding.dayPicker.selectedDays.size == 0) {
                 Utils.showSnackBar(it, "Please select the day(s)", Snackbar.LENGTH_LONG)
             } else if ((shr > ehr) && (shr - ehr <= 12)) {
-                Utils.showSnackBar(it, "Please enter a valid time.(Within 12 hour limit)", Snackbar.LENGTH_LONG)
+                Utils.showSnackBar(
+                    it,
+                    "Please enter a valid time.(Within 12 hour limit)",
+                    Snackbar.LENGTH_LONG
+                )
             } else {
                 val daySelected = Gson()
                 // Generating formated current time
-                var currentTime = SimpleDateFormat("EEE, d MMM yyyy hh:mm").format(Date())
+                val currentTime = SimpleDateFormat("EEE, d MMM yyyy hh:mm", Locale.getDefault()).format(Date())
                 val profile = Profile(
                     name = binding.userToDoEditText.text.toString(),
                     shr = shr,
@@ -136,7 +150,8 @@ class NewProfileFragment : Fragment() {
                     profile.profileId = System.currentTimeMillis()
                     profileViewModel.insert(profile)
                 } else {
-                    WorkManager.getInstance(profileViewModel.getApplication()).cancelAllWorkByTag(id.toString())
+                    WorkManager.getInstance(profileViewModel.getApplication())
+                        .cancelAllWorkByTag(id.toString())
                     profile.profileId = id
                     profileViewModel.update(profile)
                 }
@@ -155,12 +170,18 @@ class NewProfileFragment : Fragment() {
                 binding.noteTextInput.visibility = VISIBLE
                 binding.noteCheckBox.isChecked = true
             }
-            binding.StartTime.setStringFormat(Utils.setTimeString(args.shr), Utils.setTimeString(args.smin))
+            binding.StartTime.setStringFormat(
+                Utils.setTimeString(args.shr),
+                Utils.setTimeString(args.smin)
+            )
             shr = args.shr
             smin = args.smin
             ehr = args.ehr
             emin = args.emin
-            binding.EndTime.setStringFormat(Utils.setTimeString(args.ehr), Utils.setTimeString(args.emin))
+            binding.EndTime.setStringFormat(
+                Utils.setTimeString(args.ehr),
+                Utils.setTimeString(args.emin)
+            )
             binding.vibSwitch.isChecked = args.vibSwitch
             binding.repeatWeeklySwitch.isChecked = args.repeatWeekly
             binding.makeProfileFab.text = "UPDATE"
@@ -169,14 +190,11 @@ class NewProfileFragment : Fragment() {
     }
 
     private fun Days(daysSelected: List<MaterialDayPicker.Weekday>) {
-        setDay(daysSelected, MaterialDayPicker.Weekday.SUNDAY, 0)
-        setDay(daysSelected, MaterialDayPicker.Weekday.MONDAY, 1)
-        setDay(daysSelected, MaterialDayPicker.Weekday.TUESDAY, 2)
-        setDay(daysSelected, MaterialDayPicker.Weekday.WEDNESDAY, 3)
-        setDay(daysSelected, MaterialDayPicker.Weekday.THURSDAY, 4)
-        setDay(daysSelected, MaterialDayPicker.Weekday.FRIDAY, 5)
-        setDay(daysSelected, MaterialDayPicker.Weekday.SATURDAY, 6)
+        for (day in MaterialDayPicker.Weekday.values()) {
+            setDay(daysSelected, day, day.ordinal)
+        }
     }
+
     private fun EditText.setStringFormat(hourText: String, minText: String) {
         setText(
             String.format(
@@ -192,10 +210,7 @@ class NewProfileFragment : Fragment() {
         day: MaterialDayPicker.Weekday,
         index: Int
     ) {
-        if (daysSelected.contains(day))
-            days.add(index, true)
-        else
-            days.add(index, false)
+        days.add(index, daysSelected.contains(day))
     }
 
     override fun onDestroyView() {

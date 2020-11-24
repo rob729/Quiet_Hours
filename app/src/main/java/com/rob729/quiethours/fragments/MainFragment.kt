@@ -1,8 +1,6 @@
-package com.rob729.quiethours.Fragments
+package com.rob729.quiethours.fragments
 
 import android.app.Activity.RESULT_OK
-import android.app.NotificationManager
-import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.content.IntentSender
 import android.os.Build
@@ -25,10 +23,10 @@ import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.android.play.core.tasks.Task
-import com.rob729.quiethours.Adapter.ProfileListAdapter
-import com.rob729.quiethours.Database.Profile
-import com.rob729.quiethours.Database.ProfileViewModel
 import com.rob729.quiethours.R
+import com.rob729.quiethours.adapter.ProfileListAdapter
+import com.rob729.quiethours.database.Profile
+import com.rob729.quiethours.database.ProfileViewModel
 import com.rob729.quiethours.databinding.FragmentMainBinding
 import com.rob729.quiethours.util.*
 
@@ -36,12 +34,12 @@ import com.rob729.quiethours.util.*
  * A simple [Fragment] subclass.
  *
  */
-class MainFragment : Fragment() {
+class MainFragment : Fragment(), AdapterCallback {
+    private val profilesListData: ArrayList<Profile> = ArrayList()
     private lateinit var profileViewModel: ProfileViewModel
     lateinit var profileListAdapter: ProfileListAdapter
     private val appUpdateManager: AppUpdateManager by lazy { AppUpdateManagerFactory.create(context) }
     private val appUpdateInfoTask: Task<AppUpdateInfo> by lazy { appUpdateManager.appUpdateInfo }
-    private val MY_REQUEST_CODE = 111
     private var _binding: FragmentMainBinding? = null
     private val binding
         get() = _binding!!
@@ -59,14 +57,16 @@ class MainFragment : Fragment() {
         profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
 
         profileListAdapter =
-            ProfileListAdapter(profileViewModel, binding.rv.rootView, activity)
+            ProfileListAdapter(this, binding.rv.rootView)
 
         binding.rv.adapter = profileListAdapter
         binding.rv.layoutManager = LinearLayoutManager(context)
 
-        enableSwipeToDeleteAndUndo(profileListAdapter)
+        enableSwipeToDeleteAndUndo()
 
         profileViewModel.allProfiles.observe(this, Observer { profilesList ->
+            profilesListData.clear()
+            profilesListData.addAll(profilesList)
             if (profilesList.isEmpty()) {
                 binding.emrl.visibility = View.VISIBLE
             } else {
@@ -74,24 +74,18 @@ class MainFragment : Fragment() {
             }
             for (i in profilesList.indices) {
                 if (StoreSession.readLong(AppConstants.ACTIVE_PROFILE_ID) == profilesList[i].profileId) {
-                    if (!profilesList[i].pauseSwitch)
-                        binding.activeCard.visibility = View.GONE
+                    binding.activeCard.visibility = if (profilesList[i].pauseSwitch)
+                        View.VISIBLE
                     else
-                        binding.activeCard.visibility = View.VISIBLE
+                        View.GONE
                 }
             }
             profileListAdapter.submitList(profilesList)
             profileListAdapter.profiles = profilesList as ArrayList<Profile>
         })
 
-        val notificationManager =
-            context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !notificationManager!!.isNotificationPolicyAccessGranted) {
-            permissionDialog()
-        }
-
         binding.floatingActionButton.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !notificationManager!!.isNotificationPolicyAccessGranted) {
+            if (doNotDisturbPermissionCheck()) {
                 permissionDialog()
             } else {
                 Navigation.findNavController(it)
@@ -120,6 +114,10 @@ class MainFragment : Fragment() {
         }
     }
 
+    private fun doNotDisturbPermissionCheck(): Boolean {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Utils.notificationManager.isNotificationPolicyAccessGranted
+    }
+
     override fun onResume() {
         super.onResume()
         appUpdateManager.appUpdateInfo.addOnSuccessListener { result: AppUpdateInfo? ->
@@ -134,7 +132,7 @@ class MainFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == MY_REQUEST_CODE && resultCode != RESULT_OK) {
+        if (requestCode == AppConstants.REQUEST_CODE && resultCode != RESULT_OK) {
             checkForUpdates()
         }
     }
@@ -158,7 +156,7 @@ class MainFragment : Fragment() {
                             if (StoreSession.readInt(AppConstants.BEGIN_STATUS) != 0)
                                 Utils.audioManager.ringerMode =
                                     StoreSession.readInt(AppConstants.RINGTONE_MODE)
-                            profileListAdapter.deleteAll()
+                            deleteAllProfiles()
                             binding.activeProfile.visibility = View.GONE
                         }
                         .setNegativeButton("No") { _, dialogInterface ->
@@ -178,12 +176,12 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun enableSwipeToDeleteAndUndo(profileListAdapter: ProfileListAdapter) {
+    private fun enableSwipeToDeleteAndUndo() {
         val swipeToDeleteCallback = object : SwipeToDeleteCallback(context) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) {
                 val position = viewHolder.adapterPosition
-                profileListAdapter.removeitem(position)
-                val item = profileListAdapter.getList()[position]
+                removeItem(position)
+                val item = profilesListData[position]
                 AlertDialog.Builder(requireContext())
                     .setTitle("Delete Profile")
                     .setMessage("Are you sure you want to delete this profile?")
@@ -202,7 +200,7 @@ class MainFragment : Fragment() {
                         )
                     }
                     .setNegativeButton("No") { _, dialogInterface ->
-                        profileListAdapter.restoreItem(item, position)
+                        restoreItem(item, position)
                     }
                     .setCancelable(false)
                     .show()
@@ -233,6 +231,7 @@ class MainFragment : Fragment() {
             }
             .show()
     }
+
     private fun applicationUpdateManager(result: AppUpdateInfo?) {
         if (result?.updateAvailability()
             == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
@@ -242,7 +241,7 @@ class MainFragment : Fragment() {
                     result,
                     AppUpdateType.IMMEDIATE,
                     activity,
-                    MY_REQUEST_CODE
+                    AppConstants.REQUEST_CODE
                 )
             } catch (e: IntentSender.SendIntentException) {
                 e.printStackTrace()
@@ -266,5 +265,39 @@ class MainFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun removeItem(position: Int) {
+        profileViewModel.delete(profilesListData[position])
+        profileListAdapter.notifyItemRemoved(position)
+    }
+
+    private fun restoreItem(profile: Profile, position: Int) {
+        profilesListData.add(position, profile)
+        profileListAdapter.notifyItemChanged(position)
+        profileViewModel.insert(profile)
+    }
+
+    override fun updateItem(profile: Profile) {
+        profileViewModel.update(profile)
+    }
+
+    override fun openProfileDetails(profile: Profile) {
+        val args = Bundle()
+        args.putParcelable("Profile", profile)
+        val dialog = DetailsFragment.newInstance(args)
+        dialog.show(
+            activity?.supportFragmentManager!!,
+            "DialogFragment"
+        )
+    }
+
+    private fun deleteAllProfiles() {
+        val size: Int = profilesListData.size
+        for (i in 0 until size) {
+            removeItem(i)
+            WorkManagerHelper.cancelWork(profilesListData[i].profileId.toString())
+        }
+        StoreSession.writeInt(AppConstants.BEGIN_STATUS, 0)
     }
 }

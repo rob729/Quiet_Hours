@@ -1,4 +1,4 @@
-package com.rob729.quiethours.Fragments
+package com.rob729.quiethours.fragments
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -15,7 +15,7 @@ import androidx.annotation.RequiresApi
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
-import com.rob729.quiethours.Activity.MainActivity
+import com.rob729.quiethours.activity.MainActivity
 import com.rob729.quiethours.R
 import com.rob729.quiethours.util.AppConstants
 

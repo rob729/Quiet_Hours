@@ -1,4 +1,4 @@
-package com.rob729.quiethours.Database
+package com.rob729.quiethours.database
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

@@ -1,4 +1,4 @@
-package com.rob729.quiethours.Database
+package com.rob729.quiethours.database
 
 import android.os.Parcelable
 import androidx.room.Entity

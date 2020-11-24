@@ -14,14 +14,10 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:name=".QuietHoursApp">
-        <provider
-                android:name="androidx.work.impl.WorkManagerInitializer"
-                android:authorities="${applicationId}.workmanager-init"
-                tools:node="remove" />
-        <activity android:name="com.rob729.quiethours.Activity.MainActivity"
+        <activity android:name="com.rob729.quiethours.activity.MainActivity"
                 android:windowSoftInputMode="adjustPan">
         </activity>
-        <activity android:name="com.rob729.quiethours.Activity.SplashScreen"
+        <activity android:name="com.rob729.quiethours.activity.SplashScreen"
                 android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -30,7 +26,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.IntroScreen"
+        <activity android:name=".activity.IntroScreen"
                 android:theme="@style/Theme.Design.NoActionBar"/>
 
         <meta-data

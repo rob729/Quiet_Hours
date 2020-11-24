@@ -1,4 +1,4 @@
-package com.rob729.quiethours.Activity
+package com.rob729.quiethours.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -18,13 +18,13 @@ class IntroScreen : AppIntro() {
 
         setColorDoneText(ContextCompat.getColor(this, R.color.textColor))
         setColorSkipButton(ContextCompat.getColor(this, R.color.textColor))
-        setNextArrowColor(R.color.textColor)
+        setNextArrowColor(ContextCompat.getColor(this, R.color.textColor))
         setIndicatorColor(
             selectedIndicatorColor = ContextCompat.getColor(this, R.color.textColor),
             unselectedIndicatorColor = ContextCompat.getColor(this, R.color.unSelected)
         )
-        setTransformer(AppIntroPageTransformerType.SlideOver)
-        setImmersiveMode()
+        setTransformer(AppIntroPageTransformerType.Fade)
+        showStatusBar(true)
 
         addSlide(AppIntroCustomLayoutFragment.newInstance(R.layout.intro_one))
         addSlide(AppIntroCustomLayoutFragment.newInstance(R.layout.intro_two))

@@ -6,7 +6,7 @@ import android.content.Intent
 import android.media.AudioManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.rob729.quiethours.Activity.SplashScreen
+import com.rob729.quiethours.activity.SplashScreen
 
 class EndAlarm(appContext: Context, workerParams: WorkerParameters) :
     Worker(appContext, workerParams) {
@@ -32,7 +32,7 @@ class EndAlarm(appContext: Context, workerParams: WorkerParameters) :
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
-        Utils.setNotification(applicationContext, profileName!!, "ended", pi)
+        Utils.sendNotification(applicationContext, profileName!!, "ended", pi)
 
         return Result.success()
     }

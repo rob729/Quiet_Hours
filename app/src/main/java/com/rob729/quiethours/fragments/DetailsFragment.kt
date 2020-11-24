@@ -1,4 +1,4 @@
-package com.rob729.quiethours.Fragments
+package com.rob729.quiethours.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -14,7 +14,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.rob729.quiethours.Database.Profile
+import com.rob729.quiethours.database.Profile
 import com.rob729.quiethours.R
 import com.rob729.quiethours.databinding.FragmentDetailsBinding
 import com.rob729.quiethours.util.AppConstants

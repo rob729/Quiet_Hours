@@ -8,7 +8,7 @@ import android.content.Intent
 import android.media.AudioManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.rob729.quiethours.Activity.SplashScreen
+import com.rob729.quiethours.activity.SplashScreen
 
 class StartAlarm(appContext: Context, workerParams: WorkerParameters) :
     Worker(appContext, workerParams) {
@@ -40,7 +40,7 @@ class StartAlarm(appContext: Context, workerParams: WorkerParameters) :
                 AppConstants.RINGTONE_MODE,
                 Utils.audioManager.ringerMode
             )
-        Utils.setNotification(applicationContext, profileName, "started", pi)
+        Utils.sendNotification(applicationContext, profileName, "started", pi)
         StoreSession.writeInt(
             AppConstants.BEGIN_STATUS,
             StoreSession.readInt(AppConstants.BEGIN_STATUS) + 1
@@ -54,10 +54,10 @@ class StartAlarm(appContext: Context, workerParams: WorkerParameters) :
             StoreSession.writeInt(AppConstants.VIBRATE_STATE_ICON, 0)
         }
         StoreSession.writeString(AppConstants.END_TIME, profileEndTime!!)
-        if (vibrate) {
-            Utils.audioManager.ringerMode = AudioManager.RINGER_MODE_VIBRATE
+        Utils.audioManager.ringerMode = if (vibrate) {
+            AudioManager.RINGER_MODE_VIBRATE
         } else {
-            Utils.audioManager.ringerMode = AudioManager.RINGER_MODE_SILENT
+            AudioManager.RINGER_MODE_SILENT
         }
 
         return Result.success()

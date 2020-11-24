@@ -64,7 +64,7 @@ object Utils {
             .show()
     }
 
-    fun setNotification(
+    fun sendNotification(
         applicationContext: Context,
         profileName: String,
         state: String,

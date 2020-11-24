@@ -1,4 +1,4 @@
-package com.rob729.quiethours.Activity
+package com.rob729.quiethours.activity
 
 import android.os.Build
 import android.os.Bundle

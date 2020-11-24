@@ -2,15 +2,18 @@ package com.rob729.quiethours.util
 
 import android.content.Context
 import androidx.work.*
-import com.rob729.quiethours.Database.Profile
+import com.rob729.quiethours.database.Profile
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 object WorkManagerHelper {
+
+    lateinit var workManager: WorkManager
+    private val calender: Calendar by lazy {
+        Calendar.getInstance()
+    }
     fun init(context: Context) {
-        val configuration = Configuration.Builder()
-            .build()
-        WorkManager.initialize(context, configuration)
+        workManager = WorkManager.getInstance(context)
     }
 
     fun setAlarms(profile: Profile, startHour: Int = profile.shr, startMinute: Int = profile.smin) {
@@ -31,13 +34,12 @@ object WorkManagerHelper {
         }
     }
 
-    fun setStartAlarm(dayOfWeek: Int, profile: Profile, startHour: Int, startMinute: Int) {
-        val c = Calendar.getInstance()
-        c.set(Calendar.DAY_OF_WEEK, dayOfWeek)
-        c.set(Calendar.HOUR_OF_DAY, startHour)
-        c.set(Calendar.MINUTE, startMinute)
-        c.set(Calendar.SECOND, 0)
-        c.set(Calendar.MILLISECOND, 0)
+    private fun setStartAlarm(dayOfWeek: Int, profile: Profile, startHour: Int, startMinute: Int) {
+        calender.set(Calendar.DAY_OF_WEEK, dayOfWeek)
+        calender.set(Calendar.HOUR_OF_DAY, startHour)
+        calender.set(Calendar.MINUTE, startMinute)
+        calender.set(Calendar.SECOND, 0)
+        calender.set(Calendar.MILLISECOND, 0)
         if (StoreSession.readLong(AppConstants.ACTIVE_PROFILE_ID) == profile.profileId && StoreSession.readInt(
                 AppConstants.BEGIN_STATUS
             ) > 0
@@ -47,8 +49,8 @@ object WorkManagerHelper {
                 StoreSession.readInt(AppConstants.BEGIN_STATUS) - 1
             )
         }
-        timeCheck(c)
-        var etime =
+        timeCheck(calender)
+        val etime =
             "End Time: ${Utils.setTimeString(profile.ehr)}:${Utils.setTimeString(profile.emin)}"
         val profileData = workDataOf(
             Pair("ActiveProfileId", profile.profileId),
@@ -56,24 +58,22 @@ object WorkManagerHelper {
             (Pair("VibrateKey", profile.vibSwitch)),
             (Pair("EndTimeKey", etime))
         )
-        setAlarmRequest(profile, profileData, c, StartAlarm::class.java)
+        setAlarmRequest(profile, profileData, calender, StartAlarm::class.java)
     }
 
-    fun setEndAlarm(dayOfWeek: Int, profile: Profile) {
+    private fun setEndAlarm(dayOfWeek: Int, profile: Profile) {
+        calender.set(Calendar.DAY_OF_WEEK, dayOfWeek)
+        calender.set(Calendar.HOUR_OF_DAY, profile.ehr)
+        calender.set(Calendar.MINUTE, profile.emin)
+        calender.set(Calendar.SECOND, 0)
+        calender.set(Calendar.MILLISECOND, 0)
 
-        val c = Calendar.getInstance()
-        c.set(Calendar.DAY_OF_WEEK, dayOfWeek)
-        c.set(Calendar.HOUR_OF_DAY, profile.ehr)
-        c.set(Calendar.MINUTE, profile.emin)
-        c.set(Calendar.SECOND, 0)
-        c.set(Calendar.MILLISECOND, 0)
-
-        timeCheck(c)
+        timeCheck(calender)
         val profileData = workDataOf(Pair("Profile_Name", profile.name))
-        setAlarmRequest(profile, profileData, c, EndAlarm::class.java)
+        setAlarmRequest(profile, profileData, calender, EndAlarm::class.java)
     }
 
-    fun setAlarmRequest(
+    private fun setAlarmRequest(
         profile: Profile,
         profileData: Data,
         c: Calendar,
@@ -98,16 +98,16 @@ object WorkManagerHelper {
                 )
                 .build()
         }
-        WorkManager.getInstance().enqueue(alarmRequest)
+        workManager.enqueue(alarmRequest)
     }
 
     fun cancelWork(tag: String) {
-        WorkManager.getInstance().cancelAllWorkByTag(tag)
+        workManager.cancelAllWorkByTag(tag)
     }
 
-    fun timeCheck(c: Calendar) {
-        if (c.timeInMillis < System.currentTimeMillis()) {
-            c.add(Calendar.DAY_OF_YEAR, 7)
+    private fun timeCheck(calender: Calendar) {
+        if (calender.timeInMillis < System.currentTimeMillis()) {
+            calender.add(Calendar.DAY_OF_YEAR, 7)
         }
     }
 }

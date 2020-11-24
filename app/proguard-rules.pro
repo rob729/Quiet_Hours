@@ -33,4 +33,4 @@
     native <methods>;
 }
 
--keep class com.rob729.quiethours.Database.Profile
+-keep class com.rob729.quiethours.database.Profile

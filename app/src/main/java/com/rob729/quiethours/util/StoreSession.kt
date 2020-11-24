@@ -14,18 +14,20 @@ object StoreSession {
     }
 
     fun writeString(key: String, value: String) {
-        val editor = sharedPreferences.edit()
-        editor?.putString(key, value)
-        editor?.apply()
+        sharedPreferences.edit().let {
+            it.putString(key, value)
+            it.apply()
+        }
     }
 
     fun readString(key: String): String {
         return sharedPreferences.getString(key, " ").toString()
     }
     fun writeInt(key: String, value: Int) {
-        val editor = sharedPreferences.edit()
-        editor?.putInt(key, value)
-        editor?.apply()
+        sharedPreferences.edit().let {
+            it.putInt(key, value)
+            it.apply()
+        }
     }
 
     fun readInt(key: String): Int {
@@ -33,9 +35,10 @@ object StoreSession {
     }
 
     fun setNightMode(value: Boolean) {
-        val editor = appSharedPrefs.edit()
-        editor?.putBoolean(AppConstants.NIGHT_MODE, value)
-        editor?.apply()
+        appSharedPrefs.edit().let {
+            it.putBoolean(AppConstants.NIGHT_MODE, value)
+            it.apply()
+        }
     }
 
     fun getNightMode(): Boolean {
@@ -43,9 +46,10 @@ object StoreSession {
     }
 
     fun writeBoolean(key: String, value: Boolean) {
-        val editor = sharedPreferences.edit()
-        editor?.putBoolean(key, value)
-        editor?.apply()
+        sharedPreferences.edit().let {
+            it.putBoolean(key, value)
+            it.apply()
+        }
     }
 
     fun readBoolean(key: String): Boolean {
@@ -53,9 +57,10 @@ object StoreSession {
     }
 
     fun writeLong(key: String, value: Long) {
-        val editor = sharedPreferences.edit()
-        editor?.putLong(key, value)
-        editor?.apply()
+        sharedPreferences.edit().let {
+            it.putLong(key, value)
+            it.apply()
+        }
     }
 
     fun readLong(key: String): Long {

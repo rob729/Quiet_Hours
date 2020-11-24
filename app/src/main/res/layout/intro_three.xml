@@ -1,32 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/bgColor">
 
     <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="66dp"
-            android:fontFamily="@font/roboto_slab"
-            android:gravity="center"
-            android:text="Click on profile to get it's details"
+            android:id="@+id/descpTxt"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/click_on_profile_to_get_it_s_details"
+            android:textAlignment="center"
             android:textColor="@color/textColor"
-            android:textSize="16sp"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.05"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+            app:layout_constraintTop_toBottomOf="@+id/introImg" />
 
     <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/introImg"
             android:layout_width="0dp"
-            android:layout_height="376dp"
-            android:layout_marginTop="62dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.25"
+            app:layout_constraintWidth_percent="0.85"
             app:srcCompat="@drawable/copped_details" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
