@@ -2,16 +2,20 @@ package com.rob729.quiethours.util
 
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.TimePickerDialog
 import android.content.Context
 import android.graphics.Color
 import android.media.AudioManager
 import android.view.View
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
 import ca.antonious.materialdaypicker.MaterialDayPicker
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.rob729.quiethours.R
+import com.rob729.quiethours.util.Utils.setStringFormat
 
 object Utils {
     lateinit var audioManager: AudioManager
@@ -82,4 +86,21 @@ object Utils {
             .build()
         notificationManager.notify(1112, notification)
     }
+
+    fun EditText.setStringFormat(hourText: String, minText: String) {
+        setText(
+            String.format(
+                resources.getString(R.string.Time),
+                hourText,
+                minText
+            )
+        )
+    }
+
+    fun Context.showTimePicker(onTimeSelected: (hour: Int, min: Int) -> Unit, hourOfDay: Int, minute: Int, is24HourViewEnabled: Boolean) = TimePickerDialog(
+        this,
+        { _, hour, min ->
+            onTimeSelected(hour, min)
+        }, hourOfDay, minute, is24HourViewEnabled
+    ).show()
 }

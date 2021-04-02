@@ -13,18 +13,19 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class ProfileListAdapter(
-    val adapterCallback: AdapterCallback,
-    val parentView: View
-) :
-    ListAdapter<Profile, ProfileListAdapter.ViewHolder>(
-        ProfileDiffCallbacks()
-    ) {
+    private val adapterCallback: AdapterCallback,
+    private val parentView: View
+) : ListAdapter<Profile, ProfileListAdapter.ViewHolder>(
+        ProfileDiffCallbacks()) {
 
     var profiles = ArrayList<Profile>()
+    private val current: Calendar = Calendar.getInstance()
+    private val currentHour = current.get(Calendar.HOUR_OF_DAY)
+    private val currentMinute = current.get(Calendar.MINUTE)
+    private val currentDay = current.get(Calendar.DAY_OF_WEEK)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
-        val binding = ItemRowBinding.inflate(layoutInflater, parent, false)
+        val binding = ItemRowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -33,7 +34,7 @@ class ProfileListAdapter(
         holder.bind(item, adapterCallback, parentView)
     }
 
-    class ViewHolder(val binding: ItemRowBinding) :
+    inner class ViewHolder(private val binding: ItemRowBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Profile, adapterCallback: AdapterCallback, parentView: View) {
@@ -42,10 +43,7 @@ class ProfileListAdapter(
             binding.TxtImg.avatarBackgroundColor = AppConstants.bgColors[item.colorIndex]
             binding.timeStamp.text = item.timeInstance
             binding.pauseSwitch.isChecked = item.pauseSwitch
-            val current: Calendar = Calendar.getInstance()
-            val currentHour = current.get(Calendar.HOUR_OF_DAY)
-            val currentMinute = current.get(Calendar.MINUTE)
-            val currentDay = current.get(Calendar.DAY_OF_WEEK)
+
             val days: MutableList<Boolean> = Utils.daysList(item.d)
 
             binding.profileCard.setOnClickListener {
@@ -81,29 +79,33 @@ class ProfileListAdapter(
                         StoreSession.writeInt(AppConstants.BEGIN_STATUS, 0)
                         StoreSession.writeLong(AppConstants.ACTIVE_PROFILE_ID, 0)
                     } else {
-                        val smin: Int
-                        val shr: Int
-                        item.pauseSwitch = true
-                        if (StoreSession.readLong(AppConstants.ACTIVE_PROFILE_ID) == item.profileId) {
-                            if (currentMinute == 59) {
-                                smin = 0
-                                shr = if (currentHour == 23)
-                                    0
-                                else
-                                    currentHour + 1
-                            } else {
-                                smin = currentMinute + 1
-                                shr = currentHour
-                            }
-                            if (shr != item.ehr && smin != item.emin)
-                                WorkManagerHelper.setAlarms(item, shr, smin)
-                        } else {
-                            WorkManagerHelper.setAlarms(item)
-                        }
+                        setNewAlarms(item)
                     }
                 }
                 adapterCallback.updateItem(item)
             }
+        }
+    }
+
+    private fun setNewAlarms(item: Profile) {
+        val smin: Int
+        val shr: Int
+        item.pauseSwitch = true
+        if (StoreSession.readLong(AppConstants.ACTIVE_PROFILE_ID) == item.profileId) {
+            if (currentMinute == 59) {
+                smin = 0
+                shr = if (currentHour == 23)
+                    0
+                else
+                    currentHour + 1
+            } else {
+                smin = currentMinute + 1
+                shr = currentHour
+            }
+            if (shr != item.ehr && smin != item.emin)
+                WorkManagerHelper.setAlarms(item, shr, smin)
+        } else {
+            WorkManagerHelper.setAlarms(item)
         }
     }
 

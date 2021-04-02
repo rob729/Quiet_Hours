@@ -14,12 +14,12 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.rob729.quiethours.database.Profile
 import com.rob729.quiethours.R
+import com.rob729.quiethours.database.Profile
 import com.rob729.quiethours.databinding.FragmentDetailsBinding
 import com.rob729.quiethours.util.AppConstants
-import com.rob729.quiethours.util.Utils
 import com.rob729.quiethours.util.StoreSession
+import com.rob729.quiethours.util.Utils
 import java.util.*
 
 /**
@@ -27,56 +27,53 @@ import java.util.*
  *
  */
 class DetailsFragment : BottomSheetDialogFragment() {
-    companion object {
-        fun newInstance(args: Bundle) = DetailsFragment().apply {
-            val fragment = DetailsFragment()
-            fragment.arguments = args
-            return fragment
-        }
-    }
 
+    private lateinit var profile: Profile
     private var days: List<Boolean> = ArrayList()
     private var _binding: FragmentDetailsBinding? = null
     private val binding
         get() = _binding!!
+    private val gson = Gson()
+    private val type = object : TypeToken<List<Boolean>>() {}.type
+    private val navOptions by lazy {
+        NavOptions.Builder().setEnterAnim(R.anim.nav_default_enter_anim)
+            .setExitAnim(R.anim.nav_default_exit_anim)
+            .setPopEnterAnim(R.anim.nav_default_pop_enter_anim)
+            .setPopExitAnim(R.anim.nav_default_pop_exit_anim).build()
+    }
+    private val bottomSheetBehavior by lazy { BottomSheetBehavior.from(requireView().parent as View) }
 
-    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentDetailsBinding.inflate(inflater, container, false)
-        val args = arguments?.getParcelable<Profile>("Profile")
-        val daysSelected = Gson()
-        val type = object : TypeToken<List<Boolean>>() {}.type
-        if (args != null) {
-            days = daysSelected.fromJson(args.d, type)
-            Utils.selectedDays(days, binding.dayPicker)
-            binding.profileTxt.text = args.name
-            binding.str.text = "${setTimeString(args.shr)}:${setTimeString(args.smin)}"
-            binding.end.text = "${setTimeString(args.ehr)}:${setTimeString(args.emin)}"
-            binding.profileNote.text = args.notes
-            binding.profileNote.visibility = if (!binding.profileNote.text.isBlank()) VISIBLE
-            else GONE
-            if (args.vibSwitch) binding.audioMode.setImageResource(R.drawable.vibration)
-            else binding.audioMode.setImageResource(R.drawable.mute)
-            binding.repeatWeeklyIcon.visibility = if (args.repeatWeekly) VISIBLE
-            else GONE
-        }
+        profile = requireArguments().getParcelable("Profile")!!
+        setupUI(profile)
         binding.editButton.setOnClickListener {
-            val item: Profile = args!!
-            val bundle = Bundle()
-            bundle.putParcelable("Profile", item)
-            StoreSession.writeLong(AppConstants.PROFILE_ID, item.profileId)
-            val navOptions = NavOptions.Builder().setEnterAnim(R.anim.nav_default_enter_anim)
-                .setExitAnim(R.anim.nav_default_exit_anim)
-                .setPopEnterAnim(R.anim.nav_default_pop_enter_anim)
-                .setPopExitAnim(R.anim.nav_default_pop_exit_anim).build()
-            findNavController(this).navigate(R.id.newProfileFragment, bundle, navOptions)
-            dismiss()
+            editProfile()
         }
         return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        // this forces the sheet to appear at max height even on landscape
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
+    private fun setupUI(profile: Profile) {
+        days = gson.fromJson(profile.d, type)
+        Utils.selectedDays(days, binding.dayPicker)
+        binding.profileTxt.text = profile.name
+        binding.str.text = "${setTimeString(profile.shr)}:${setTimeString(profile.smin)}"
+        binding.end.text = "${setTimeString(profile.ehr)}:${setTimeString(profile.emin)}"
+        binding.profileNote.text = profile.notes
+        binding.profileNote.visibility = if (binding.profileNote.text.isNotBlank()) VISIBLE else GONE
+        if (profile.vibSwitch) binding.audioMode.setImageResource(R.drawable.vibration)
+        else binding.audioMode.setImageResource(R.drawable.mute)
+        binding.repeatWeeklyIcon.visibility = if (profile.repeatWeekly) VISIBLE else GONE
     }
 
     private fun setTimeString(i: Int): String {
@@ -87,15 +84,21 @@ class DetailsFragment : BottomSheetDialogFragment() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        // this forces the sheet to appear at max height even on landscape
-        val behavior = BottomSheetBehavior.from(requireView().parent as View)
-        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+    private fun editProfile() {
+        val bundle = Bundle().apply { putParcelable("Profile", profile) }
+        StoreSession.writeLong(AppConstants.PROFILE_ID, profile.profileId)
+        findNavController(this).navigate(R.id.newProfileFragment, bundle, navOptions)
+        dismiss()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        fun newInstance(args: Bundle) = DetailsFragment().apply {
+            arguments = args
+        }
     }
 }

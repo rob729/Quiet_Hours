@@ -17,14 +17,14 @@ class SplashScreen : AppCompatActivity() {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
         finish()
     }
-    fun checkFirstRun() {
+    private fun checkFirstRun() {
         if (!StoreSession.readBoolean(AppConstants.FIRST_BOOT)) {
             StoreSession.setNightMode(resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES)
         }
         StoreSession.writeBoolean(AppConstants.FIRST_BOOT, true)
     }
 
-    fun checkAppIntro() {
+    private fun checkAppIntro() {
         if (StoreSession.readBoolean(AppConstants.APP_INTRO_CHECK))
             startActivity(Intent(this, MainActivity::class.java))
         else

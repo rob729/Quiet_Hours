@@ -10,7 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -34,37 +34,79 @@ import com.rob729.quiethours.util.*
  * A simple [Fragment] subclass.
  *
  */
-class MainFragment : Fragment(), AdapterCallback {
+class MainFragment : Fragment() {
+
     private val profilesListData: ArrayList<Profile> = ArrayList()
     private lateinit var profileViewModel: ProfileViewModel
-    lateinit var profileListAdapter: ProfileListAdapter
-    private val appUpdateManager: AppUpdateManager by lazy { AppUpdateManagerFactory.create(context) }
+    private lateinit var profileListAdapter: ProfileListAdapter
+    private val appUpdateManager: AppUpdateManager by lazy {
+        AppUpdateManagerFactory.create(
+            requireContext()
+        )
+    }
     private val appUpdateInfoTask: Task<AppUpdateInfo> by lazy { appUpdateManager.appUpdateInfo }
     private var _binding: FragmentMainBinding? = null
     private val binding
         get() = _binding!!
+    private val swipeToDeleteCallback by lazy {
+        object : SwipeToDeleteCallback(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) {
+                val position = viewHolder.adapterPosition
+                removeItem(position)
+                val item = profilesListData[position]
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Delete Profile")
+                    .setMessage("Are you sure you want to delete this profile?")
+                    .setPositiveButton("Yes") { _, dialogInterface ->
+                        deleteItem(item)
+                    }
+                    .setNegativeButton("No") { _, dialogInterface ->
+                        restoreItem(item, position)
+                    }
+                    .setCancelable(false)
+                    .show()
+            }
+        }
+    }
+
+    private val adapterCallback = object : AdapterCallback {
+        override fun updateItem(profile: Profile) {
+            profileViewModel.update(profile)
+        }
+
+        override fun openProfileDetails(profile: Profile) {
+            val args = Bundle()
+            args.putParcelable("Profile", profile)
+            val dialog = DetailsFragment.newInstance(args)
+            dialog.show(
+                requireActivity().supportFragmentManager,
+                "DialogFragment"
+            )
+        }
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
         checkForUpdates()
 
-        profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
+        profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
 
         profileListAdapter =
-            ProfileListAdapter(this, binding.rv.rootView)
+            ProfileListAdapter(adapterCallback, binding.rv.rootView)
 
         binding.rv.adapter = profileListAdapter
         binding.rv.layoutManager = LinearLayoutManager(context)
 
         enableSwipeToDeleteAndUndo()
 
-        profileViewModel.allProfiles.observe(this, Observer { profilesList ->
+        profileViewModel.allProfiles.observe(viewLifecycleOwner, Observer { profilesList ->
             profilesListData.clear()
             profilesListData.addAll(profilesList)
             if (profilesList.isEmpty()) {
@@ -166,7 +208,7 @@ class MainFragment : Fragment(), AdapterCallback {
                 } else {
                     Utils.showSnackBar(
                         binding.coordLayout,
-                        "No profile is present to be deleted",
+                        "No profile is present to delete",
                         Snackbar.LENGTH_LONG
                     )
                 }
@@ -177,42 +219,12 @@ class MainFragment : Fragment(), AdapterCallback {
     }
 
     private fun enableSwipeToDeleteAndUndo() {
-        val swipeToDeleteCallback = object : SwipeToDeleteCallback(context) {
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) {
-                val position = viewHolder.adapterPosition
-                removeItem(position)
-                val item = profilesListData[position]
-                AlertDialog.Builder(requireContext())
-                    .setTitle("Delete Profile")
-                    .setMessage("Are you sure you want to delete this profile?")
-                    .setPositiveButton("Yes") { _, dialogInterface ->
-                        if (item.profileId == StoreSession.readLong(AppConstants.ACTIVE_PROFILE_ID)) {
-                            StoreSession.writeInt(AppConstants.BEGIN_STATUS, 0)
-                            binding.activeProfile.visibility = View.GONE
-                            Utils.audioManager.ringerMode =
-                                StoreSession.readInt(AppConstants.RINGTONE_MODE)
-                        }
-                        WorkManagerHelper.cancelWork(item.profileId.toString())
-                        Utils.showSnackBar(
-                            binding.coordLayout,
-                            "Profile is removed from the list.",
-                            Snackbar.LENGTH_LONG
-                        )
-                    }
-                    .setNegativeButton("No") { _, dialogInterface ->
-                        restoreItem(item, position)
-                    }
-                    .setCancelable(false)
-                    .show()
-            }
-        }
 
         val itemTouchhelper = ItemTouchHelper(swipeToDeleteCallback)
         itemTouchhelper.attachToRecyclerView(binding.rv)
     }
 
     private fun permissionDialog() {
-
         AlertDialog.Builder(requireContext())
             .setTitle("Permission Required")
             .setMessage("Please give the Do Not Disturb access permission for the app to work properly. Click OK to continue.")
@@ -240,7 +252,7 @@ class MainFragment : Fragment(), AdapterCallback {
                 appUpdateManager.startUpdateFlowForResult(
                     result,
                     AppUpdateType.IMMEDIATE,
-                    activity,
+                    requireActivity(),
                     AppConstants.REQUEST_CODE
                 )
             } catch (e: IntentSender.SendIntentException) {
@@ -278,17 +290,18 @@ class MainFragment : Fragment(), AdapterCallback {
         profileViewModel.insert(profile)
     }
 
-    override fun updateItem(profile: Profile) {
-        profileViewModel.update(profile)
-    }
-
-    override fun openProfileDetails(profile: Profile) {
-        val args = Bundle()
-        args.putParcelable("Profile", profile)
-        val dialog = DetailsFragment.newInstance(args)
-        dialog.show(
-            activity?.supportFragmentManager!!,
-            "DialogFragment"
+    private fun deleteItem(profile: Profile) {
+        if (profile.profileId == StoreSession.readLong(AppConstants.ACTIVE_PROFILE_ID)) {
+            StoreSession.writeInt(AppConstants.BEGIN_STATUS, 0)
+            binding.activeProfile.visibility = View.GONE
+            Utils.audioManager.ringerMode =
+                StoreSession.readInt(AppConstants.RINGTONE_MODE)
+        }
+        WorkManagerHelper.cancelWork(profile.profileId.toString())
+        Utils.showSnackBar(
+            binding.coordLayout,
+            "Profile is removed from the list.",
+            Snackbar.LENGTH_LONG
         )
     }
 

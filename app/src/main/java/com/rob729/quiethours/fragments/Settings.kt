@@ -59,7 +59,7 @@ class Settings : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenc
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val view = super.onCreateView(inflater, container, savedInstanceState)!!
         (view.rootView as LinearLayout).addView(createToolbar(), 0)
         return view
@@ -71,14 +71,14 @@ class Settings : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenc
         settingsToolBar.title = "Settings"
         settingsToolBar.setTitleTextAppearance(context, R.style.TextAppearance_MaterialComponents_Headline6)
         settingsToolBar.setNavigationIcon(R.drawable.arrow)
-        settingsToolBar.setNavigationOnClickListener { activity!!.onBackPressed() }
+        settingsToolBar.setNavigationOnClickListener { requireActivity().onBackPressed() }
         return settingsToolBar
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         val intent = Intent(context, MainActivity::class.java)
         startActivity(intent)
-        activity?.finish()
+        requireActivity().finish()
     }
 
     override fun onStop() {
