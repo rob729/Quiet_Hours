@@ -14,8 +14,8 @@ android {
         applicationId "com.rob729.quiethours"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 8
-        versionName "2.1.0"
+        versionCode 9
+        versionName "2.2.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
