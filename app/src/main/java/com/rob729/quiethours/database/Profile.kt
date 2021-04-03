@@ -3,7 +3,7 @@ package com.rob729.quiethours.database
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @Entity(tableName = "profile_table")
@@ -23,5 +23,4 @@ data class Profile(
     var repeatWeekly: Boolean,
     var pauseSwitch: Boolean,
     var notes: String
-) :
-    Parcelable
+) : Parcelable

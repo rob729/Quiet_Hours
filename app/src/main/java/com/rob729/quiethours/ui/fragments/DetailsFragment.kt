@@ -1,6 +1,5 @@
-package com.rob729.quiethours.fragments
+package com.rob729.quiethours.ui.fragments
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,20 +19,24 @@ import com.rob729.quiethours.databinding.FragmentDetailsBinding
 import com.rob729.quiethours.util.AppConstants
 import com.rob729.quiethours.util.StoreSession
 import com.rob729.quiethours.util.Utils
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
+import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  *
  */
+@AndroidEntryPoint
 class DetailsFragment : BottomSheetDialogFragment() {
+
+    @Inject lateinit var gson: Gson
 
     private lateinit var profile: Profile
     private var days: List<Boolean> = ArrayList()
     private var _binding: FragmentDetailsBinding? = null
     private val binding
         get() = _binding!!
-    private val gson = Gson()
     private val type = object : TypeToken<List<Boolean>>() {}.type
     private val navOptions by lazy {
         NavOptions.Builder().setEnterAnim(R.anim.nav_default_enter_anim)
@@ -70,7 +73,8 @@ class DetailsFragment : BottomSheetDialogFragment() {
         binding.str.text = "${setTimeString(profile.shr)}:${setTimeString(profile.smin)}"
         binding.end.text = "${setTimeString(profile.ehr)}:${setTimeString(profile.emin)}"
         binding.profileNote.text = profile.notes
-        binding.profileNote.visibility = if (binding.profileNote.text.isNotBlank()) VISIBLE else GONE
+        binding.profileNote.visibility =
+            if (binding.profileNote.text.isNotBlank()) VISIBLE else GONE
         if (profile.vibSwitch) binding.audioMode.setImageResource(R.drawable.vibration)
         else binding.audioMode.setImageResource(R.drawable.mute)
         binding.repeatWeeklyIcon.visibility = if (profile.repeatWeekly) VISIBLE else GONE

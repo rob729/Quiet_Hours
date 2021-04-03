@@ -1,16 +1,18 @@
-package com.rob729.quiethours.fragments
+package com.rob729.quiethours.ui.fragments
 
 import android.app.Activity.RESULT_OK
+import android.app.NotificationManager
 import android.content.Intent
 import android.content.IntentSender
+import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -24,20 +26,27 @@ import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.android.play.core.tasks.Task
 import com.rob729.quiethours.R
-import com.rob729.quiethours.adapter.ProfileListAdapter
+import com.rob729.quiethours.ui.adapter.AdapterCallback
+import com.rob729.quiethours.ui.adapter.ProfileListAdapter
 import com.rob729.quiethours.database.Profile
 import com.rob729.quiethours.database.ProfileViewModel
 import com.rob729.quiethours.databinding.FragmentMainBinding
 import com.rob729.quiethours.util.*
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  *
  */
+@AndroidEntryPoint
 class MainFragment : Fragment() {
 
+    @Inject lateinit var audioManager: AudioManager
+    @Inject lateinit var notificationManager: NotificationManager
+
     private val profilesListData: ArrayList<Profile> = ArrayList()
-    private lateinit var profileViewModel: ProfileViewModel
+    private val profileViewModel: ProfileViewModel by viewModels()
     private lateinit var profileListAdapter: ProfileListAdapter
     private val appUpdateManager: AppUpdateManager by lazy {
         AppUpdateManagerFactory.create(
@@ -83,8 +92,15 @@ class MainFragment : Fragment() {
                 "DialogFragment"
             )
         }
-    }
 
+        override fun setAlarms(profile: Profile, startHour: Int, startMinute: Int) {
+            profileViewModel.setAlarms(profile, startHour, startMinute)
+        }
+
+        override fun cancelWorkByTag(tag: String) {
+            profileViewModel.cancelAllWorkByTag(tag)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -96,15 +112,12 @@ class MainFragment : Fragment() {
         (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
         checkForUpdates()
 
-        profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
-
-        profileListAdapter =
-            ProfileListAdapter(adapterCallback, binding.rv.rootView)
+        profileListAdapter = ProfileListAdapter(adapterCallback, audioManager)
 
         binding.rv.adapter = profileListAdapter
         binding.rv.layoutManager = LinearLayoutManager(context)
 
-        enableSwipeToDeleteAndUndo()
+        ItemTouchHelper(swipeToDeleteCallback).attachToRecyclerView(binding.rv)
 
         profileViewModel.allProfiles.observe(viewLifecycleOwner, Observer { profilesList ->
             profilesListData.clear()
@@ -157,7 +170,7 @@ class MainFragment : Fragment() {
     }
 
     private fun doNotDisturbPermissionCheck(): Boolean {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Utils.notificationManager.isNotificationPolicyAccessGranted
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !notificationManager.isNotificationPolicyAccessGranted
     }
 
     override fun onResume() {
@@ -196,7 +209,7 @@ class MainFragment : Fragment() {
                         .setMessage("Are you sure you want to delete all the profiles?")
                         .setPositiveButton("Yes") { _, dialogInterface ->
                             if (StoreSession.readInt(AppConstants.BEGIN_STATUS) != 0)
-                                Utils.audioManager.ringerMode =
+                                audioManager.ringerMode =
                                     StoreSession.readInt(AppConstants.RINGTONE_MODE)
                             deleteAllProfiles()
                             binding.activeProfile.visibility = View.GONE
@@ -218,16 +231,10 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun enableSwipeToDeleteAndUndo() {
-
-        val itemTouchhelper = ItemTouchHelper(swipeToDeleteCallback)
-        itemTouchhelper.attachToRecyclerView(binding.rv)
-    }
-
     private fun permissionDialog() {
         AlertDialog.Builder(requireContext())
             .setTitle("Permission Required")
-            .setMessage("Please give the Do Not Disturb access permission for the app to work properly. Click OK to continue.")
+            .setMessage("Please give the Do Not Disturb access permission for the app to work` properly. Click OK to continue.")
             .setCancelable(false)
             .setPositiveButton("Ok") { i, dialogInterface ->
                 val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -294,10 +301,10 @@ class MainFragment : Fragment() {
         if (profile.profileId == StoreSession.readLong(AppConstants.ACTIVE_PROFILE_ID)) {
             StoreSession.writeInt(AppConstants.BEGIN_STATUS, 0)
             binding.activeProfile.visibility = View.GONE
-            Utils.audioManager.ringerMode =
+            audioManager.ringerMode =
                 StoreSession.readInt(AppConstants.RINGTONE_MODE)
         }
-        WorkManagerHelper.cancelWork(profile.profileId.toString())
+        profileViewModel.cancelAllWorkByTag(profile.profileId.toString())
         Utils.showSnackBar(
             binding.coordLayout,
             "Profile is removed from the list.",
@@ -309,7 +316,7 @@ class MainFragment : Fragment() {
         val size: Int = profilesListData.size
         for (i in 0 until size) {
             removeItem(i)
-            WorkManagerHelper.cancelWork(profilesListData[i].profileId.toString())
+            profileViewModel.cancelAllWorkByTag(profilesListData[i].profileId.toString())
         }
         StoreSession.writeInt(AppConstants.BEGIN_STATUS, 0)
     }

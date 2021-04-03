@@ -1,7 +1,7 @@
-package com.rob729.quiethours.adapter
+package com.rob729.quiethours.ui.adapter
 
+import android.media.AudioManager
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -14,9 +14,10 @@ import kotlin.collections.ArrayList
 
 class ProfileListAdapter(
     private val adapterCallback: AdapterCallback,
-    private val parentView: View
+    private val audioManager: AudioManager
 ) : ListAdapter<Profile, ProfileListAdapter.ViewHolder>(
-        ProfileDiffCallbacks()) {
+    ProfileDiffCallbacks()
+) {
 
     var profiles = ArrayList<Profile>()
     private val current: Calendar = Calendar.getInstance()
@@ -31,13 +32,13 @@ class ProfileListAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item, adapterCallback, parentView)
+        holder.bind(item, adapterCallback)
     }
 
     inner class ViewHolder(private val binding: ItemRowBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Profile, adapterCallback: AdapterCallback, parentView: View) {
+        fun bind(item: Profile, adapterCallback: AdapterCallback) {
             binding.ProfileName.text = item.name
             binding.TxtImg.setText(item.name[0].toString())
             binding.TxtImg.avatarBackgroundColor = AppConstants.bgColors[item.colorIndex]
@@ -64,11 +65,11 @@ class ProfileListAdapter(
 
             binding.pauseSwitch.setOnClickListener {
                 item.pauseSwitch = false
-                WorkManagerHelper.cancelWork(item.profileId.toString())
+                adapterCallback.cancelWorkByTag(item.profileId.toString())
                 if (!binding.pauseSwitch.isChecked) {
                     Utils.showSnackBar(binding.card, "${item.name} is Paused")
                     if (StoreSession.readLong(AppConstants.ACTIVE_PROFILE_ID) == item.profileId)
-                        Utils.audioManager.ringerMode =
+                        audioManager.ringerMode =
                             StoreSession.readInt(AppConstants.RINGTONE_MODE)
                 } else {
                     Utils.showSnackBar(binding.card, "${item.name} is Resumed")
@@ -103,9 +104,9 @@ class ProfileListAdapter(
                 shr = currentHour
             }
             if (shr != item.ehr && smin != item.emin)
-                WorkManagerHelper.setAlarms(item, shr, smin)
+                adapterCallback.setAlarms(item, shr, smin)
         } else {
-            WorkManagerHelper.setAlarms(item)
+            adapterCallback.setAlarms(item)
         }
     }
 

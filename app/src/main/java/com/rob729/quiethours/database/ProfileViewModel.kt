@@ -1,41 +1,40 @@
 package com.rob729.quiethours.database
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import kotlinx.coroutines.CoroutineScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.work.WorkManager
+import com.rob729.quiethours.workManager.WorkManagerHelper
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ProfileViewModel(application: Application) : AndroidViewModel(Application()) {
+@HiltViewModel
+class ProfileViewModel @Inject constructor(
+    private val repository: ProfileRepository,
+    private val workManager: WorkManager
+) : ViewModel() {
 
-    private var parentJob = Job()
-    private val scope = CoroutineScope(parentJob + Dispatchers.Main)
+    val allProfiles: LiveData<List<Profile>> = repository.allProfiles
 
-    private val repository: ProfileRepository
-    val allProfiles: LiveData<List<Profile>>
-
-    init {
-        val profileDao = ProfileRoomDatabase.getDatabase(application).profileDao()
-        repository = ProfileRepository(profileDao)
-        allProfiles = repository.allProfiles
-    }
-
-    fun insert(profile: Profile) = scope.launch(Dispatchers.IO) {
+    fun insert(profile: Profile) = viewModelScope.launch(Dispatchers.IO) {
         repository.insert(profile)
     }
 
-    fun delete(profile: Profile) = scope.launch(Dispatchers.IO) {
+    fun delete(profile: Profile) = viewModelScope.launch(Dispatchers.IO) {
         repository.delete(profile)
     }
 
-    fun update(profile: Profile) = scope.launch(Dispatchers.IO) {
+    fun update(profile: Profile) = viewModelScope.launch(Dispatchers.IO) {
         repository.update(profile)
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        parentJob.cancel()
+    fun cancelAllWorkByTag(tag: String) {
+        WorkManagerHelper.cancelWork(workManager, tag)
+    }
+
+    fun setAlarms(profile: Profile, startHour: Int = profile.shr, startMinute: Int = profile.smin) {
+        WorkManagerHelper.setAlarms(workManager, profile, startHour, startMinute)
     }
 }

@@ -1,4 +1,4 @@
-package com.rob729.quiethours.fragments
+package com.rob729.quiethours.ui.fragments
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -15,10 +15,12 @@ import androidx.annotation.RequiresApi
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
-import com.rob729.quiethours.activity.MainActivity
 import com.rob729.quiethours.R
+import com.rob729.quiethours.ui.activity.MainActivity
 import com.rob729.quiethours.util.AppConstants
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class Settings : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     var pref: SwitchPreference? = null
@@ -34,7 +36,12 @@ class Settings : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenc
         format = findPreference("time format")!!
 
         rate.setOnPreferenceClickListener {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + context?.packageName)))
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("http://play.google.com/store/apps/details?id=" + context?.packageName)
+                )
+            )
             return@setOnPreferenceClickListener true
         }
 
@@ -43,12 +50,17 @@ class Settings : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenc
                 val shareIntent = Intent()
                 shareIntent.action = Intent.ACTION_SEND
                 shareIntent.type = "text/plain"
-                shareIntent.putExtra(Intent.EXTRA_TEXT,
-                    String.format(getString(R.string.promo_msg_template),
-                        String.format(getString(R.string.app_share_url), activity?.packageName)))
+                shareIntent.putExtra(
+                    Intent.EXTRA_TEXT,
+                    String.format(
+                        getString(R.string.promo_msg_template),
+                        String.format(getString(R.string.app_share_url), activity?.packageName)
+                    )
+                )
                 startActivity(shareIntent)
             } catch (e: Exception) {
-                Toast.makeText(context, getString(R.string.error_msg_retry), Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.error_msg_retry), Toast.LENGTH_SHORT)
+                    .show()
             }
             true
         }
@@ -69,7 +81,10 @@ class Settings : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenc
     private fun createToolbar(): Toolbar {
         val settingsToolBar = Toolbar(requireContext())
         settingsToolBar.title = "Settings"
-        settingsToolBar.setTitleTextAppearance(context, R.style.TextAppearance_MaterialComponents_Headline6)
+        settingsToolBar.setTitleTextAppearance(
+            context,
+            R.style.TextAppearance_MaterialComponents_Headline6
+        )
         settingsToolBar.setNavigationIcon(R.drawable.arrow)
         settingsToolBar.setNavigationOnClickListener { requireActivity().onBackPressed() }
         return settingsToolBar

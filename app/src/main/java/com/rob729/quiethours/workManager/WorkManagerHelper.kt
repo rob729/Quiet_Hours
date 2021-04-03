@@ -1,40 +1,48 @@
-package com.rob729.quiethours.util
+package com.rob729.quiethours.workManager
 
-import android.content.Context
 import androidx.work.*
 import com.rob729.quiethours.database.Profile
+import com.rob729.quiethours.util.*
+import com.rob729.quiethours.util.Utils.timeCheck
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 object WorkManagerHelper {
 
-    lateinit var workManager: WorkManager
     private val calender: Calendar by lazy {
         Calendar.getInstance()
     }
-    fun init(context: Context) {
-        workManager = WorkManager.getInstance(context)
-    }
 
-    fun setAlarms(profile: Profile, startHour: Int = profile.shr, startMinute: Int = profile.smin) {
+    fun setAlarms(
+        workManager: WorkManager,
+        profile: Profile,
+        startHour: Int,
+        startMinute: Int
+    ) {
         val days: MutableList<Boolean> by lazy { Utils.daysList(profile.d) }
         for (i in 0..6) {
             if (days[i]) {
-                setStartAlarm(i + 1, profile, startHour, startMinute)
+                setStartAlarm(workManager, i + 1, profile, startHour, startMinute)
                 if (startHour > profile.ehr) {
                     if (i == 6) {
-                        setEndAlarm(1, profile)
+                        setEndAlarm(workManager, 1, profile)
                     } else {
-                        setEndAlarm(i + 2, profile)
+                        setEndAlarm(workManager, i + 2, profile)
                     }
                 } else {
-                    setEndAlarm(i + 1, profile)
+                    setEndAlarm(workManager, i + 1, profile)
                 }
             }
         }
     }
 
-    private fun setStartAlarm(dayOfWeek: Int, profile: Profile, startHour: Int, startMinute: Int) {
+    private fun setStartAlarm(
+        workManager: WorkManager,
+        dayOfWeek: Int,
+        profile: Profile,
+        startHour: Int,
+        startMinute: Int
+    ) {
         calender.set(Calendar.DAY_OF_WEEK, dayOfWeek)
         calender.set(Calendar.HOUR_OF_DAY, startHour)
         calender.set(Calendar.MINUTE, startMinute)
@@ -58,10 +66,10 @@ object WorkManagerHelper {
             (Pair("VibrateKey", profile.vibSwitch)),
             (Pair("EndTimeKey", etime))
         )
-        setAlarmRequest(profile, profileData, calender, StartAlarm::class.java)
+        setAlarmRequest<StartAlarm>(workManager, profile, profileData, calender, StartAlarm::class.java)
     }
 
-    private fun setEndAlarm(dayOfWeek: Int, profile: Profile) {
+    private fun setEndAlarm(workManager: WorkManager, dayOfWeek: Int, profile: Profile) {
         calender.set(Calendar.DAY_OF_WEEK, dayOfWeek)
         calender.set(Calendar.HOUR_OF_DAY, profile.ehr)
         calender.set(Calendar.MINUTE, profile.emin)
@@ -70,17 +78,18 @@ object WorkManagerHelper {
 
         timeCheck(calender)
         val profileData = workDataOf(Pair("Profile_Name", profile.name))
-        setAlarmRequest(profile, profileData, calender, EndAlarm::class.java)
+        setAlarmRequest<EndAlarm>(workManager, profile, profileData, calender, EndAlarm::class.java)
     }
 
-    private fun setAlarmRequest(
+    private inline fun <reified T : ListenableWorker> setAlarmRequest(
+        workManager: WorkManager,
         profile: Profile,
         profileData: Data,
         c: Calendar,
         alarmClass: Class<out ListenableWorker>
     ) {
         val alarmRequest = if (profile.repeatWeekly) {
-            PeriodicWorkRequest.Builder(alarmClass, 7, TimeUnit.DAYS)
+            PeriodicWorkRequestBuilder<T>(7, TimeUnit.DAYS)
                 .addTag(profile.profileId.toString())
                 .setInputData(profileData)
                 .setInitialDelay(
@@ -88,8 +97,16 @@ object WorkManagerHelper {
                     TimeUnit.MILLISECONDS
                 )
                 .build()
+//            PeriodicWorkRequest.Builder(alarmClass, 7, TimeUnit.DAYS)
+//                .addTag(profile.profileId.toString())
+//                .setInputData(profileData)
+//                .setInitialDelay(
+//                    c.timeInMillis - System.currentTimeMillis(),
+//                    TimeUnit.MILLISECONDS
+//                )
+//                .build()
         } else {
-            OneTimeWorkRequest.Builder(alarmClass)
+            OneTimeWorkRequestBuilder<T>()
                 .addTag(profile.profileId.toString())
                 .setInputData(profileData)
                 .setInitialDelay(
@@ -97,17 +114,19 @@ object WorkManagerHelper {
                     TimeUnit.MILLISECONDS
                 )
                 .build()
+//            OneTimeWorkRequest.Builder(alarmClass)
+//                .addTag(profile.profileId.toString())
+//                .setInputData(profileData)
+//                .setInitialDelay(
+//                    c.timeInMillis - System.currentTimeMillis(),
+//                    TimeUnit.MILLISECONDS
+//                )
+//                .build()
         }
         workManager.enqueue(alarmRequest)
     }
 
-    fun cancelWork(tag: String) {
+    fun cancelWork(workManager: WorkManager, tag: String) {
         workManager.cancelAllWorkByTag(tag)
-    }
-
-    private fun timeCheck(calender: Calendar) {
-        if (calender.timeInMillis < System.currentTimeMillis()) {
-            calender.add(Calendar.DAY_OF_YEAR, 7)
-        }
     }
 }

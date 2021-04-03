@@ -5,27 +5,17 @@ import android.app.PendingIntent
 import android.app.TimePickerDialog
 import android.content.Context
 import android.graphics.Color
-import android.media.AudioManager
 import android.view.View
 import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
 import ca.antonious.materialdaypicker.MaterialDayPicker
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.rob729.quiethours.R
-import com.rob729.quiethours.util.Utils.setStringFormat
+import java.util.*
 
 object Utils {
-    lateinit var audioManager: AudioManager
-    lateinit var notificationManager: NotificationManager
-
-    fun init(context: Context) {
-        audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    }
 
     fun selectedDays(d: List<Boolean>, materialDayPicker: MaterialDayPicker) {
         if (d[0])
@@ -59,13 +49,7 @@ object Utils {
     }
 
     fun showSnackBar(it: View, message: String, length: Int = Snackbar.LENGTH_SHORT) {
-        Snackbar
-            .make(
-                it,
-                message,
-                length
-            )
-            .show()
+        Snackbar.make(it, message, length).show()
     }
 
     fun sendNotification(
@@ -97,10 +81,21 @@ object Utils {
         )
     }
 
-    fun Context.showTimePicker(onTimeSelected: (hour: Int, min: Int) -> Unit, hourOfDay: Int, minute: Int, is24HourViewEnabled: Boolean) = TimePickerDialog(
+    fun Context.showTimePicker(
+        onTimeSelected: (hour: Int, min: Int) -> Unit,
+        hourOfDay: Int,
+        minute: Int,
+        is24HourViewEnabled: Boolean
+    ) = TimePickerDialog(
         this,
         { _, hour, min ->
             onTimeSelected(hour, min)
         }, hourOfDay, minute, is24HourViewEnabled
     ).show()
+
+    fun timeCheck(calender: Calendar) {
+        if (calender.timeInMillis < System.currentTimeMillis()) {
+            calender.add(Calendar.DAY_OF_YEAR, 7)
+        }
+    }
 }

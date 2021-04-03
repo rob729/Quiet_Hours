@@ -1,4 +1,4 @@
-package com.rob729.quiethours.util
+package com.rob729.quiethours.workManager
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -6,12 +6,24 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
+import androidx.hilt.work.HiltWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.rob729.quiethours.activity.SplashScreen
+import com.rob729.quiethours.ui.activity.SplashScreen
+import com.rob729.quiethours.util.AppConstants
+import com.rob729.quiethours.util.StoreSession
+import com.rob729.quiethours.util.Utils
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 
-class StartAlarm(appContext: Context, workerParams: WorkerParameters) :
-    Worker(appContext, workerParams) {
+@HiltWorker
+class StartAlarm @AssistedInject constructor(
+    @Assisted appContext: Context,
+    @Assisted workerParams: WorkerParameters
+) : Worker(appContext, workerParams) {
+
+    private val audioManager: AudioManager by lazy { appContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager }
+    private val notificationManager: NotificationManager by lazy { appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }
 
     override fun doWork(): Result {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -21,7 +33,7 @@ class StartAlarm(appContext: Context, workerParams: WorkerParameters) :
                     "Default Channel",
                     NotificationManager.IMPORTANCE_DEFAULT
                 )
-            Utils.notificationManager.createNotificationChannel(notificationChannel)
+            notificationManager.createNotificationChannel(notificationChannel)
         }
         val profileName = "Currently Active Profile: ${inputData.getString("Profile_Name")}"
         val vibrate = inputData.getBoolean("VibrateKey", true)
@@ -38,7 +50,7 @@ class StartAlarm(appContext: Context, workerParams: WorkerParameters) :
         if (StoreSession.readInt(AppConstants.BEGIN_STATUS) == 0)
             StoreSession.writeInt(
                 AppConstants.RINGTONE_MODE,
-                Utils.audioManager.ringerMode
+                audioManager.ringerMode
             )
         Utils.sendNotification(applicationContext, profileName, "started", pi)
         StoreSession.writeInt(
@@ -54,7 +66,7 @@ class StartAlarm(appContext: Context, workerParams: WorkerParameters) :
             StoreSession.writeInt(AppConstants.VIBRATE_STATE_ICON, 0)
         }
         StoreSession.writeString(AppConstants.END_TIME, profileEndTime!!)
-        Utils.audioManager.ringerMode = if (vibrate) {
+        audioManager.ringerMode = if (vibrate) {
             AudioManager.RINGER_MODE_VIBRATE
         } else {
             AudioManager.RINGER_MODE_SILENT

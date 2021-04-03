@@ -1,4 +1,4 @@
-package com.rob729.quiethours.fragments
+package com.rob729.quiethours.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,10 +7,9 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.preference.PreferenceManager
-import androidx.work.WorkManager
 import ca.antonious.materialdaypicker.MaterialDayPicker
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
@@ -22,9 +21,10 @@ import com.rob729.quiethours.util.StoreSession
 import com.rob729.quiethours.util.Utils
 import com.rob729.quiethours.util.Utils.setStringFormat
 import com.rob729.quiethours.util.Utils.showTimePicker
-import com.rob729.quiethours.util.WorkManagerHelper
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 import kotlin.collections.ArrayList
 import kotlin.random.Random
 
@@ -32,14 +32,24 @@ import kotlin.random.Random
  * A simple [Fragment] subclass.
  *
  */
+
+@AndroidEntryPoint
 class NewProfileFragment : Fragment() {
+
+    @Inject
+    lateinit var gson: Gson
+
     private var shr = 0
     private var smin = 0
     private var ehr = 0
     private var emin = 0
     private var daysSelected: MutableList<Boolean> = ArrayList()
-    private lateinit var profileViewModel: ProfileViewModel
-    private val appSharedPrefs by lazy { PreferenceManager.getDefaultSharedPreferences(requireContext()) }
+    private val profileViewModel: ProfileViewModel by viewModels()
+    private val appSharedPrefs by lazy {
+        PreferenceManager.getDefaultSharedPreferences(
+            requireContext()
+        )
+    }
     private val currentTime = Calendar.getInstance()
     private val hour = currentTime.get(Calendar.HOUR_OF_DAY)
     private val minute = currentTime.get(Calendar.MINUTE)
@@ -73,7 +83,6 @@ class NewProfileFragment : Fragment() {
             }
         }
 
-        profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
         binding.dayPicker.clearSelection()
 
         binding.userToDoEditText.requestFocus()
@@ -94,7 +103,10 @@ class NewProfileFragment : Fragment() {
         binding.EndTime.setOnClickListener {
             requireContext().showTimePicker(
                 onTimeSelected = { hour, min ->
-                    binding.EndTime.setStringFormat(Utils.setTimeString(hour), Utils.setTimeString(min))
+                    binding.EndTime.setStringFormat(
+                        Utils.setTimeString(hour),
+                        Utils.setTimeString(min)
+                    )
                     ehr = Utils.setTimeString(hour).toInt()
                     emin = Utils.setTimeString(min).toInt()
                 }, hour, minute, appSharedPrefs.getBoolean("time format", false)
@@ -164,15 +176,16 @@ class NewProfileFragment : Fragment() {
         }
     }
 
-    private fun addProfile(){
-        val currentTime = SimpleDateFormat("EEE, d MMM yyyy hh:mm", Locale.getDefault()).format(Date())
+    private fun addProfile() {
+        val currentTime =
+            SimpleDateFormat("EEE, d MMM yyyy hh:mm", Locale.getDefault()).format(Date())
         val profile = Profile(
             name = binding.userToDoEditText.text.toString(),
             shr = shr,
             smin = smin,
             ehr = ehr,
             emin = emin,
-            d = Gson().toJson(daysSelected),
+            d = gson.toJson(daysSelected),
             colorIndex = Random.nextInt(0, 8),
             vibSwitch = binding.vibSwitch.isChecked,
             timeInstance = currentTime,
@@ -184,12 +197,11 @@ class NewProfileFragment : Fragment() {
             profile.profileId = System.currentTimeMillis()
             profileViewModel.insert(profile)
         } else {
-            WorkManager.getInstance(profileViewModel.getApplication())
-                .cancelAllWorkByTag(id.toString())
+            profileViewModel.cancelAllWorkByTag(id.toString())
             profile.profileId = id
             profileViewModel.update(profile)
         }
-        WorkManagerHelper.setAlarms(profile)
+        profileViewModel.setAlarms(profile)
         Navigation.findNavController(binding.root)
             .navigate(NewProfileFragmentDirections.actionNewProfileFragmentToMainFragment())
     }

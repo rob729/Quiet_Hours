@@ -1,4 +1,4 @@
-package com.rob729.quiethours.activity
+package com.rob729.quiethours.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,7 +10,9 @@ import com.github.appintro.AppIntroPageTransformerType
 import com.rob729.quiethours.R
 import com.rob729.quiethours.util.AppConstants
 import com.rob729.quiethours.util.StoreSession
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class IntroScreen : AppIntro() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

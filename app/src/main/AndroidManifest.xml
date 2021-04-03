@@ -13,11 +13,11 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
-            android:name=".QuietHoursApp">
-        <activity android:name="com.rob729.quiethours.activity.MainActivity"
+            android:name=".ui.QuietHoursApp">
+        <activity android:name="com.rob729.quiethours.ui.activity.MainActivity"
                 android:windowSoftInputMode="adjustPan">
         </activity>
-        <activity android:name="com.rob729.quiethours.activity.SplashScreen"
+        <activity android:name="com.rob729.quiethours.ui.activity.SplashScreen"
                 android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -26,12 +26,16 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.IntroScreen"
+        <activity android:name="com.rob729.quiethours.ui.activity.IntroScreen"
                 android:theme="@style/Theme.Design.NoActionBar"/>
 
         <meta-data
                 android:name="preloaded_fonts"
                 android:resource="@array/preloaded_fonts" />
+        <provider
+                android:name="androidx.work.impl.WorkManagerInitializer"
+                android:authorities="${applicationId}.workmanager-init"
+                tools:node="remove" />
     </application>
 
 </manifest>

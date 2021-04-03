@@ -1,4 +1,4 @@
-package com.rob729.quiethours.activity
+package com.rob729.quiethours.ui.activity
 
 import android.content.Intent
 import android.content.res.Configuration
@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.rob729.quiethours.R
 import com.rob729.quiethours.util.AppConstants
 import com.rob729.quiethours.util.StoreSession
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SplashScreen : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

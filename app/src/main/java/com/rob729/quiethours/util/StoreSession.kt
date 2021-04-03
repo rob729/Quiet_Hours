@@ -5,12 +5,16 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 
 object StoreSession {
+
     lateinit var sharedPreferences: SharedPreferences
     lateinit var appSharedPrefs: SharedPreferences
+
     fun init(context: Context) {
-        sharedPreferences =
-            context.getSharedPreferences(AppConstants.ACTIVE_PROFILE_NAME, Context.MODE_PRIVATE)
-        appSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
+        if (!(this::sharedPreferences.isInitialized && this::appSharedPrefs.isInitialized)) {
+            sharedPreferences =
+                context.getSharedPreferences(AppConstants.ACTIVE_PROFILE_NAME, Context.MODE_PRIVATE)
+            appSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
+        }
     }
 
     fun writeString(key: String, value: String) {
