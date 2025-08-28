@@ -19,6 +19,7 @@ import com.rob729.quiethours.R
 import com.rob729.quiethours.ui.activity.MainActivity
 import com.rob729.quiethours.util.AppConstants
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.core.net.toUri
 
 @AndroidEntryPoint
 class Settings : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -39,7 +40,7 @@ class Settings : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenc
             startActivity(
                 Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse("http://play.google.com/store/apps/details?id=" + context?.packageName)
+                    ("http://play.google.com/store/apps/details?id=" + context?.packageName).toUri()
                 )
             )
             return@setOnPreferenceClickListener true
@@ -66,7 +67,6 @@ class Settings : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenc
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -77,13 +77,12 @@ class Settings : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenc
         return view
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
     private fun createToolbar(): Toolbar {
         val settingsToolBar = Toolbar(requireContext())
         settingsToolBar.title = "Settings"
         settingsToolBar.setTitleTextAppearance(
             context,
-            R.style.TextAppearance_MaterialComponents_Headline6
+            com.google.android.material.R.style.TextAppearance_MaterialComponents_Headline6
         )
         settingsToolBar.setNavigationIcon(R.drawable.arrow)
         settingsToolBar.setNavigationOnClickListener { requireActivity().onBackPressed() }
@@ -100,13 +99,13 @@ class Settings : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenc
         super.onStop()
         // unregister the preference change listener
         preferenceScreen.sharedPreferences
-            .unregisterOnSharedPreferenceChangeListener(this)
+            ?.unregisterOnSharedPreferenceChangeListener(this)
     }
 
     override fun onStart() {
         super.onStart()
         // register the preference change listener
         preferenceScreen.sharedPreferences
-            .registerOnSharedPreferenceChangeListener(this)
+            ?.registerOnSharedPreferenceChangeListener(this)
     }
 }

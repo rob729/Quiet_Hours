@@ -40,7 +40,7 @@ class ProfileListAdapter(
 
         fun bind(item: Profile, adapterCallback: AdapterCallback) {
             binding.ProfileName.text = item.name
-            binding.TxtImg.setText(item.name[0].toString())
+            binding.TxtImg.text = item.name[0].toString()
             binding.TxtImg.avatarBackgroundColor = AppConstants.bgColors[item.colorIndex]
             binding.timeStamp.text = item.timeInstance
             binding.pauseSwitch.isChecked = item.pauseSwitch

@@ -139,7 +139,7 @@
                     android:layout_marginEnd="35dp"
                     android:visibility="visible">
 
-                <ca.antonious.materialdaypicker.MaterialDayPicker
+                <com.rob729.datepicker.MaterialDayPicker
                         android:id="@+id/day_picker"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />

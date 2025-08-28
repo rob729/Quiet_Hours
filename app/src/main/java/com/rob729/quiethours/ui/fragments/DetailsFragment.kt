@@ -8,12 +8,13 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
-import androidx.navigation.fragment.NavHostFragment.findNavController
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.rob729.quiethours.R
+import androidx.navigation.ui.R.anim
 import com.rob729.quiethours.database.Profile
 import com.rob729.quiethours.databinding.FragmentDetailsBinding
 import com.rob729.quiethours.util.AppConstants
@@ -39,10 +40,10 @@ class DetailsFragment : BottomSheetDialogFragment() {
         get() = _binding!!
     private val type = object : TypeToken<List<Boolean>>() {}.type
     private val navOptions by lazy {
-        NavOptions.Builder().setEnterAnim(R.anim.nav_default_enter_anim)
-            .setExitAnim(R.anim.nav_default_exit_anim)
-            .setPopEnterAnim(R.anim.nav_default_pop_enter_anim)
-            .setPopExitAnim(R.anim.nav_default_pop_exit_anim).build()
+        NavOptions.Builder().setEnterAnim(anim.nav_default_enter_anim)
+            .setExitAnim(anim.nav_default_exit_anim)
+            .setPopEnterAnim(anim.nav_default_pop_enter_anim)
+            .setPopExitAnim(anim.nav_default_pop_exit_anim).build()
     }
     private val bottomSheetBehavior by lazy { BottomSheetBehavior.from(requireView().parent as View) }
 
@@ -91,7 +92,7 @@ class DetailsFragment : BottomSheetDialogFragment() {
     private fun editProfile() {
         val bundle = Bundle().apply { putParcelable("Profile", profile) }
         StoreSession.writeLong(AppConstants.PROFILE_ID, profile.profileId)
-        findNavController(this).navigate(R.id.newProfileFragment, bundle, navOptions)
+        this.findNavController().navigate(R.id.newProfileFragment, bundle, navOptions)
         dismiss()
     }
 
