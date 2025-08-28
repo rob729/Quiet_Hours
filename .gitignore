@@ -1,13 +1,59 @@
+# Android/IntelliJ/Gradle ignores
+
+# Gradle build folders
+/build/
+/app/build/
+/app/build/kotlinToolingMetadata/
+/app/build/kspCaches/
+/datepicker/build/
+
+# Local configuration files
+local.properties
+
+# IDE files
+.idea/
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
+
+# Gradle wrapper
+/gradle/wrapper/gradle-wrapper.jar
+
+# APK/AAB outputs
+*.apk
+*.aab
+Quiet_Hours.apk
+
+# Other build outputs
+/app/release/
+/datepicker/release/
+
+# Generated files
+/app/build/generated/
+/app/build/intermediates/
+/app/build/kotlin/
+/app/build/outputs/
+/app/build/tmp/
+/datepicker/build/generated/
+/datepicker/build/intermediates/
+/datepicker/build/kotlin/
+/datepicker/build/outputs/
+/datepicker/build/tmp/
+
+# Reports
+/build/reports/
+
+# Gradle and build caches
+.gradle/
+*.log
+
+# Keystore files
+*.keystore
+*.jks
+
+# macOS system files
 .DS_Store
-/build
-/captures
-.externalNativeBuild
+
+# Windows system files
+Thumbs.db
+
+# Node.js modules
+node_modules/
